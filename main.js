@@ -168,51 +168,6 @@
     }
   }
 
-  // ============ 풀블리드 히어로의 화분 나뭇잎 오버레이 위치 계산 (index.html 전용) ============
-  // 실제 사진(hedaum-concept-01.png, 1448×1086)에서 나뭇가지 부분만 잘라낸 이미지를,
-  // object-fit:cover로 표시되는 원본 위 정확히 같은 자리에 겹쳐 놓기 위해 매번 다시 계산한다.
-  var heroImg = document.getElementById("heroFullImg");
-  var plantOverlay = document.getElementById("heroPlantOverlay");
-  if (heroImg && plantOverlay) {
-    var PLANT_NATURAL_W = 1448;
-    var PLANT_NATURAL_H = 1086;
-    var PLANT_BOX = { left: 1108, top: 372, right: 1324, bottom: 628 };
-    var PLANT_OBJECT_POS_X = 0.58;
-    var PLANT_OBJECT_POS_Y = 0.5;
-
-    var positionPlantOverlay = function () {
-      var rect = heroImg.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      var scale = Math.max(rect.width / PLANT_NATURAL_W, rect.height / PLANT_NATURAL_H);
-      var renderedW = PLANT_NATURAL_W * scale;
-      var renderedH = PLANT_NATURAL_H * scale;
-      var offsetX = (renderedW - rect.width) * PLANT_OBJECT_POS_X;
-      var offsetY = (renderedH - rect.height) * PLANT_OBJECT_POS_Y;
-
-      var left = PLANT_BOX.left * scale - offsetX;
-      var top = PLANT_BOX.top * scale - offsetY;
-      var width = (PLANT_BOX.right - PLANT_BOX.left) * scale;
-      var height = (PLANT_BOX.bottom - PLANT_BOX.top) * scale;
-
-      if (left < -20 || top < -20 || left + width > rect.width + 20 || top + height > rect.height + 20) {
-        plantOverlay.style.display = "none";
-        return;
-      }
-      plantOverlay.style.display = "block";
-      plantOverlay.style.left = left + "px";
-      plantOverlay.style.top = top + "px";
-      plantOverlay.style.width = width + "px";
-      plantOverlay.style.height = height + "px";
-    };
-
-    if (heroImg.complete) {
-      positionPlantOverlay();
-    } else {
-      heroImg.addEventListener("load", positionPlantOverlay);
-    }
-    window.addEventListener("resize", positionPlantOverlay);
-  }
-
   var form = document.getElementById("inquiryForm");
   if (form) {
     var status = document.getElementById("formStatus");
