@@ -209,6 +209,17 @@
   }
   .nav-minor:hover{ opacity:1; color:var(--ink); }
 
+  /* 브랜드 스위처 — 혜다움 ↔ 무타공랩, 완전히 분리된 두 사이트를 서로 오갈 수 있게 */
+  .brand-switch{
+    display:inline-flex; align-items:center; gap:.4em; font-size:.74rem; font-weight:600;
+    color:var(--ink-soft); text-decoration:none; padding:.45rem .8rem; border-radius:999px;
+    border:1px solid var(--paper-line); transition:border-color .2s, color .2s, background .2s;
+    white-space:nowrap;
+  }
+  .brand-switch:hover{ color:var(--ink); border-color:var(--accent); background:var(--paper-deep); }
+  .brand-switch svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+  @media (max-width:640px){ .brand-switch span.bs-label{ display:none; } }
+
   .nav-cta{
     display:inline-flex; align-items:center; gap:.4em;
     background:var(--ink); color:var(--paper);

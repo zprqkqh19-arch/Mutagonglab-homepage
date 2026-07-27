@@ -139,6 +139,12 @@
   var tileMount = document.getElementById("productTiles");
   if (tileMount && window.MUTAGONG_PRODUCTS) {
     var order = window.MUTAGONG_PRODUCT_ORDER || Object.keys(window.MUTAGONG_PRODUCTS);
+    var brandFilter = tileMount.getAttribute("data-brand-filter");
+    if (brandFilter) {
+      order = order.filter(function (id) {
+        return window.MUTAGONG_PRODUCTS[id].brand === brandFilter;
+      });
+    }
     tileMount.setAttribute("data-reveal-stagger", "");
     tileMount.innerHTML = order
       .map(function (id) {
