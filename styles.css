@@ -148,8 +148,8 @@
 
   /* ============ Logo (Pretendard 워드마크, BI/명함 기준) ============ */
   .logo{ display:inline-flex; align-items:baseline; gap:.5rem; text-decoration:none; }
-  .logo-kr{ font-weight:700; letter-spacing:.1em; font-size:1rem; color:var(--logo-color); }
-  .logo-en{ font-weight:500; letter-spacing:.16em; font-size:.62rem; text-transform:uppercase; color:var(--ink-soft); }
+  .logo-kr{ font-weight:700; letter-spacing:.08em; font-size:1.4rem; color:var(--logo-color); }
+  .logo-en{ font-weight:600; letter-spacing:.14em; font-size:.8rem; text-transform:uppercase; color:var(--ink-soft); }
   footer .logo-kr, footer .logo-en{ color:var(--ivory); }
   footer .logo-en{ color:rgba(246,243,238,0.6); }
 
@@ -173,6 +173,42 @@
     padding-block:.3rem; border-bottom:1px solid transparent; transition:color .2s, border-color .2s;
   }
   .nav-links a:hover{ color:var(--ink); border-color:var(--accent); }
+
+  /* ============ 상단 메뉴 호버 드롭다운 ============ */
+  .nav-item{ position:relative; }
+  .nav-item > a{ display:inline-flex; align-items:center; gap:.35em; }
+  .nav-item > a::after{
+    content:""; width:6px; height:6px; margin-top:-2px;
+    border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+    transform:rotate(45deg); opacity:.55; transition:transform .2s ease;
+  }
+  .nav-item:hover > a::after, .nav-item:focus-within > a::after{ transform:rotate(225deg); margin-top:2px; }
+  .nav-dropdown{
+    position:absolute; top:100%; left:50%; transform:translateX(-50%) translateY(2px);
+    background:var(--card); border:1px solid var(--card-border); border-radius:14px;
+    box-shadow:var(--shadow); padding:.5rem; min-width:190px;
+    display:flex; flex-direction:column; gap:.1rem;
+    opacity:0; pointer-events:none;
+    transition:opacity .16s ease, transform .16s ease;
+    z-index:60;
+  }
+  .nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown{
+    opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(6px);
+  }
+  .nav-dropdown a{
+    display:block; padding:.6rem .85rem; border-radius:9px; font-size:var(--step--1);
+    color:var(--ink-soft); text-decoration:none; white-space:nowrap; border-bottom:none;
+  }
+  .nav-dropdown a:hover, .nav-dropdown a:focus{ background:var(--paper-deep); color:var(--ink); }
+  @media (prefers-reduced-motion: reduce){ .nav-dropdown{ transition:none; } }
+
+  /* B2B 협업 — 우선순위 최하위, 메뉴 맨 끝에 작고 옅게 */
+  .nav-minor{
+    font-size:.72rem; color:var(--ink-soft); opacity:.7; text-decoration:none;
+    padding-block:.3rem; border-bottom:1px solid transparent; transition:opacity .2s, color .2s;
+  }
+  .nav-minor:hover{ opacity:1; color:var(--ink); }
+
   .nav-cta{
     display:inline-flex; align-items:center; gap:.4em;
     background:var(--ink); color:var(--paper);
@@ -352,6 +388,8 @@
     border:1px solid var(--paper-line); background:var(--card); color:var(--ink);
   }
   .field textarea{ resize:vertical; min-height:110px; }
+  .field input[type="file"]{ padding:.6rem; font-size:var(--step--1); }
+  .field-hint{ font-size:.74rem; color:var(--ink-soft); }
   .field-row{ display:flex; gap:1rem; }
   @media (max-width: 480px){ .field-row{ flex-direction:column; gap:0; } }
   .field-row .field{ flex:1; }
@@ -391,7 +429,7 @@
   .theme-toggle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; }
   /* ============ 로고 아이콘 (2026-07-09 명함 시안 기준: 지붕+포커스프레임+원) ============ */
   .logo-icon{
-    width:22px; height:22px; flex:0 0 auto;
+    width:32px; height:32px; flex:0 0 auto;
     stroke:var(--logo-color); fill:none; stroke-width:5.5; stroke-linecap:round; stroke-linejoin:round;
   }
   .logo{ display:inline-flex; align-items:center; gap:.55rem; text-decoration:none; }
@@ -646,6 +684,17 @@
     display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s ease;
   }
   .pdp-modal-close:hover{ background:var(--paper-deep); }
+
+  /* ============ 설치 제한 안내 ============ */
+  .install-limits{
+    margin-top:2rem; padding:1.4rem 1.6rem; border-radius:16px;
+    background:var(--card); border:1px solid var(--card-border);
+  }
+  .install-limits h3{ font-size:var(--step-0); font-weight:700; }
+  .install-limits ul{ margin-top:.8rem; display:flex; flex-direction:column; gap:.5rem; padding-left:0; list-style:none; }
+  .install-limits li{ font-size:var(--step--1); color:var(--ink-soft); padding-left:1.1em; position:relative; }
+  .install-limits li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
+  .install-limits-note{ margin-top:1rem; font-size:.74rem; color:var(--ink-soft); }
 
   /* ============ 후기(비어있음 상태) ============ */
   .reviews-empty{

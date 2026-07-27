@@ -16,10 +16,31 @@
       <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
     </a>
     <nav class="nav-links" aria-label="주요 메뉴">
-      <a href="brand.html">브랜드</a>
-      <a href="products.html">제품</a>
-      <a href="b2b.html">B2B 협업</a>
-      <a href="contact.html">상담 문의</a>
+      <div class="nav-item">
+        <a href="brand.html">브랜드</a>
+        <div class="nav-dropdown">
+          <a href="brand.html">기업 소개</a>
+          <a href="technology.html">무타공연구소</a>
+          <a href="design.html">제품디자인</a>
+          <a href="brand.html#interior">인테리어디자인</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="products.html">제품</a>
+        <div class="nav-dropdown">
+          <a href="products.html#mutagonglab">무타공랩</a>
+          <a href="products.html#hedaum">혜다움</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="contact.html">상담 문의</a>
+        <div class="nav-dropdown">
+          <a href="contact.html#b2c">B2C 고객 상담</a>
+          <a href="service.html">서비스 안내</a>
+          <a href="b2b.html">B2B 협업 문의</a>
+        </div>
+      </div>
+      <a href="b2b.html" class="nav-minor">B2B 협업</a>
     </nav>
     <a href="products.html" class="nav-cta">제품 구매</a>
     <button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>
@@ -27,8 +48,8 @@
   <div class="mobile-panel" id="mobilePanel">
     <a href="brand.html">브랜드</a>
     <a href="products.html">제품</a>
-    <a href="b2b.html">B2B 협업</a>
     <a href="contact.html">상담 문의</a>
+    <a href="b2b.html">B2B 협업</a>
   </div>
 </header>
 
@@ -58,7 +79,7 @@
   <section>
     <div class="wrap">
       <div class="b2b-grid" data-reveal-stagger>
-        <div class="b2b-card">
+        <div class="b2b-card" id="product-design">
           <h3>제품디자인 의뢰</h3>
           <p>중문·파티션 외 제품의 외관, 마감, 구조 디자인을 의뢰하고 싶은 경우입니다.</p>
           <ul>
@@ -67,7 +88,7 @@
             <li>BI 적용 제품 디자인</li>
           </ul>
         </div>
-        <div class="b2b-card">
+        <div class="b2b-card" id="interior-collab">
           <h3>인테리어 디자인 협업</h3>
           <p>공간 전체의 인테리어 디자인을 함께 진행하고 싶은 경우입니다.</p>
           <ul>
@@ -76,7 +97,7 @@
             <li>시공사·디자인 스튜디오 협업</li>
           </ul>
         </div>
-        <div class="b2b-card">
+        <div class="b2b-card" id="space-solution-b2b">
           <h3>공간 솔루션 제안</h3>
           <p>특정 공간의 문제를 무타공 방식으로 해결하는 방안을 제안받고 싶은 경우입니다.</p>
           <ul>
@@ -85,7 +106,7 @@
             <li>단기 사용 후 철거가 필요한 공간</li>
           </ul>
         </div>
-        <div class="b2b-card">
+        <div class="b2b-card" id="enterprise">
           <h3>기업 및 상업공간 문의</h3>
           <p>사무실, 매장, 상업시설 등 다량 구매나 시설 단위 프로젝트 문의입니다.</p>
           <ul>

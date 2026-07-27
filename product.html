@@ -16,10 +16,31 @@
       <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
     </a>
     <nav class="nav-links" aria-label="주요 메뉴">
-      <a href="brand.html">브랜드</a>
-      <a href="products.html">제품</a>
-      <a href="b2b.html">B2B 협업</a>
-      <a href="contact.html">상담 문의</a>
+      <div class="nav-item">
+        <a href="brand.html">브랜드</a>
+        <div class="nav-dropdown">
+          <a href="brand.html">기업 소개</a>
+          <a href="technology.html">무타공연구소</a>
+          <a href="design.html">제품디자인</a>
+          <a href="brand.html#interior">인테리어디자인</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="products.html">제품</a>
+        <div class="nav-dropdown">
+          <a href="products.html#mutagonglab">무타공랩</a>
+          <a href="products.html#hedaum">혜다움</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="contact.html">상담 문의</a>
+        <div class="nav-dropdown">
+          <a href="contact.html#b2c">B2C 고객 상담</a>
+          <a href="service.html">서비스 안내</a>
+          <a href="b2b.html">B2B 협업 문의</a>
+        </div>
+      </div>
+      <a href="b2b.html" class="nav-minor">B2B 협업</a>
     </nav>
     <a href="products.html" class="nav-cta">제품 구매</a>
     <button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>
@@ -27,8 +48,8 @@
   <div class="mobile-panel" id="mobilePanel">
     <a href="brand.html">브랜드</a>
     <a href="products.html">제품</a>
-    <a href="b2b.html">B2B 협업</a>
     <a href="contact.html">상담 문의</a>
+    <a href="b2b.html">B2B 협업</a>
   </div>
 </header>
 
@@ -101,6 +122,23 @@
   </section>
 
   <div id="comingSoonNoteWrap" class="wrap" style="display:none;"></div>
+
+  <!-- ============ 배송 패키지 & 설치 방법 (셀프시공 제품만) ============ -->
+  <section class="band" id="installSection" style="display:none;">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">배송 · 설치</span>
+        <h2>이렇게 배송되고, 이렇게 설치합니다</h2>
+        <p class="scene-caption" style="margin-top:.4rem;">실제 배송 패키지 사진 확보 전까지 과정 설명으로 안내해 드립니다.</p>
+      </div>
+      <div class="process-list" data-reveal-stagger id="installStepsList"></div>
+      <div class="install-limits reveal" data-reveal id="installLimitsBox">
+        <h3>이런 경우 설치가 어려울 수 있어요</h3>
+        <ul id="installLimitsList"></ul>
+        <p class="install-limits-note">정확한 설치 가능 여부는 사진과 함께 상담 주시면 확인해 드립니다.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ 후기 ============ -->
   <section class="band" id="reviews">
@@ -310,6 +348,26 @@
 
   window.MUTAGONG_initConfigurator(product, document.getElementById("configuratorMount"), presetType ? { doorType: presetType } : null);
 
+  // ============ 배송 패키지 & 설치 방법 (installSteps가 있는 셀프시공 제품만) ============
+  if (product.installSteps && product.installSteps.length) {
+    document.getElementById("installStepsList").innerHTML = product.installSteps
+      .map(function (s, i) {
+        var num = String(i + 1).padStart(2, "0");
+        return '<div class="process-step"><span class="num">' + num + "</span><h3>" + s.title + "</h3><p>" + s.desc + "</p></div>";
+      })
+      .join("");
+    if (product.installLimits && product.installLimits.length) {
+      document.getElementById("installLimitsList").innerHTML = product.installLimits
+        .map(function (l) {
+          return "<li>" + l + "</li>";
+        })
+        .join("");
+    } else {
+      document.getElementById("installLimitsBox").style.display = "none";
+    }
+    document.getElementById("installSection").style.display = "block";
+  }
+
   // ============ 상세보기 미니 팝업 — 설명 + (있으면) 유형 비교표 ============
   var doorTypeOpt = product.options.filter(function (o) {
     return o.kind === "doorType";
@@ -356,6 +414,7 @@
   var subnavSections = [
     { id: "overview", label: "소개" },
     { id: "customize", label: "커스터마이징" },
+    { id: "installSection", label: "배송·설치" },
     { id: "reviews", label: "후기" },
     { id: "buy", label: "구매" },
   ].filter(function (s) {

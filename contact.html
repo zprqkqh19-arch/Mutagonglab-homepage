@@ -16,10 +16,31 @@
       <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
     </a>
     <nav class="nav-links" aria-label="주요 메뉴">
-      <a href="brand.html">브랜드</a>
-      <a href="products.html">제품</a>
-      <a href="b2b.html">B2B 협업</a>
-      <a href="contact.html">상담 문의</a>
+      <div class="nav-item">
+        <a href="brand.html">브랜드</a>
+        <div class="nav-dropdown">
+          <a href="brand.html">기업 소개</a>
+          <a href="technology.html">무타공연구소</a>
+          <a href="design.html">제품디자인</a>
+          <a href="brand.html#interior">인테리어디자인</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="products.html">제품</a>
+        <div class="nav-dropdown">
+          <a href="products.html#mutagonglab">무타공랩</a>
+          <a href="products.html#hedaum">혜다움</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="contact.html">상담 문의</a>
+        <div class="nav-dropdown">
+          <a href="contact.html#b2c">B2C 고객 상담</a>
+          <a href="service.html">서비스 안내</a>
+          <a href="b2b.html">B2B 협업 문의</a>
+        </div>
+      </div>
+      <a href="b2b.html" class="nav-minor">B2B 협업</a>
     </nav>
     <a href="products.html" class="nav-cta">제품 구매</a>
     <button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>
@@ -27,8 +48,8 @@
   <div class="mobile-panel" id="mobilePanel">
     <a href="brand.html">브랜드</a>
     <a href="products.html">제품</a>
-    <a href="b2b.html">B2B 협업</a>
     <a href="contact.html">상담 문의</a>
+    <a href="b2b.html">B2B 협업</a>
   </div>
 </header>
 
@@ -81,18 +102,34 @@
               <input id="fPhone" name="phone" type="tel" autocomplete="tel" placeholder="010-0000-0000">
             </div>
           </div>
-          <div class="field">
-            <label for="fProduct">관심 제품</label>
-            <select id="fProduct" name="product">
-              <option>무타공 중문</option>
-              <option>시공형 중문</option>
-              <option>파티션</option>
-              <option>잘 모르겠음</option>
-            </select>
+          <div class="field-row">
+            <div class="field">
+              <label for="fType">문의 유형</label>
+              <select id="fType" name="type">
+                <option>구매 상담</option>
+                <option>시공 상담</option>
+                <option>A/S 상담</option>
+                <option>기타</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fProduct">관심 제품</label>
+              <select id="fProduct" name="product">
+                <option>무타공 중문</option>
+                <option>시공형 중문</option>
+                <option>파티션</option>
+                <option>잘 모르겠음</option>
+              </select>
+            </div>
           </div>
           <div class="field">
             <label for="fMessage">문의 내용</label>
             <textarea id="fMessage" name="message" placeholder="공간 크기, 원하는 일정 등을 적어주시면 상담이 빨라집니다."></textarea>
+          </div>
+          <div class="field">
+            <label for="fPhoto">사진 첨부 (선택)</label>
+            <input id="fPhoto" name="photo" type="file" accept="image/*" multiple>
+            <span class="field-hint">시공 상담·A/S 상담은 현장·제품 사진을 함께 보내주시면 확인이 빨라집니다.</span>
           </div>
           <label class="consent">
             <input type="checkbox" required>
