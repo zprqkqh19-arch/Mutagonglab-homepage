@@ -427,8 +427,21 @@
   // products.html 브랜드별 그룹핑 — 혜다움(시공형) vs 무타공랩(무타공 셀프시공형)
   window.MUTAGONG_BRAND_GROUPS = [
     {
+      brand: "무타공랩",
+      brandSub: "중문 · 파티션",
+      anchor: "mutagonglab",
+      tint: "#2e2a22",
+      items: [
+        { id: "diy-door", type: "3연동", label: "3연동" },
+        { id: "diy-door", type: "원슬라이딩", label: "원슬라이딩" },
+        { id: "diy-door", type: "스윙폴딩", label: "스윙폴딩" },
+        { id: "diy-door", type: "여닫이", label: "여닫이" },
+        { id: "partition", type: null, label: "파티션" },
+      ],
+    },
+    {
       brand: "혜다움",
-      brandSub: "시공형 중문 · 파티션",
+      brandSub: "중문 · 파티션",
       anchor: "hedaum",
       tint: "#241f19",
       items: [
@@ -438,19 +451,6 @@
         { id: "standard-door", type: "여닫이", label: "여닫이" },
         { id: "standard-door", type: "자동문", label: "자동문" },
         { id: "standard-partition", type: null, label: "파티션" },
-      ],
-    },
-    {
-      brand: "무타공랩",
-      brandSub: "무타공 셀프시공형",
-      anchor: "mutagonglab",
-      tint: "#2e2a22",
-      items: [
-        { id: "diy-door", type: "3연동", label: "3연동" },
-        { id: "diy-door", type: "원슬라이딩", label: "원슬라이딩" },
-        { id: "diy-door", type: "스윙폴딩", label: "스윙폴딩" },
-        { id: "diy-door", type: "여닫이", label: "여닫이" },
-        { id: "partition", type: null, label: "파티션" },
       ],
     },
   ];
