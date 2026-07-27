@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>디자인 | 무타공랩</title>
+<meta name="description" content="무타공랩의 디자인 철학 — 빛과 그림자를 시그니처로 하는 소재·컬러 톤앤매너." />
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a href="index.html" class="logo">
+      <svg class="logo-icon" viewBox="0 0 100 100" aria-hidden="true"><path d="M18 42 L50 16 L82 42"></path><path d="M30 40 L30 51 M30 40 L41 40"></path><path d="M70 40 L70 51 M70 40 L59 40"></path><path d="M30 80 L30 69 M30 80 L41 80"></path><path d="M70 80 L70 69 M70 80 L59 80"></path><circle cx="50" cy="60" r="9"></circle></svg>
+      <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
+    </a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="brand.html">브랜드</a>
+      <a href="products.html">제품</a>
+      <a href="b2b.html">B2B 협업</a>
+      <a href="contact.html">상담 문의</a>
+    </nav>
+    <a href="contact.html" class="nav-cta">상담 문의하기</a>
+    <button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="brand.html">브랜드</a>
+    <a href="products.html">제품</a>
+    <a href="b2b.html">B2B 협업</a>
+    <a href="contact.html">상담 문의</a>
+  </div>
+</header>
+
+<main>
+  <!-- ============ HERO SCENE ============ -->
+  <section class="hero-scene" style="--scene-tint:#332417;">
+    <div class="scene-bg">
+      <div class="light-shadow" style="position:absolute; inset:0; opacity:.6;"></div>
+      <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMax slice" aria-hidden="true" style="position:absolute; inset:0; width:100%; height:100%;">
+        <defs><radialGradient id="glowDesign" cx="50%" cy="32%" r="55%"><stop offset="0%" stop-color="#EFC98F" stop-opacity=".4"></stop><stop offset="100%" stop-color="#EFC98F" stop-opacity="0"></stop></radialGradient></defs>
+        <rect x="0" y="0" width="800" height="500" fill="url(#glowDesign)"></rect>
+        <path d="M300,500 L300,150 A100,100 0 0 1 500,150 L500,500" fill="none" stroke="#E8D2A8" stroke-width="3" opacity=".55"></path>
+        <line x1="0" y1="490" x2="800" y2="490" stroke="#E8D2A8" stroke-width="1" opacity=".3"></line>
+      </svg>
+    </div>
+    <div class="scene-overlay"></div>
+    <div class="scene-content">
+      <div class="wrap">
+        <span class="eyebrow">디자인</span>
+        <h1 style="font-size:var(--step-4); margin-top:.6rem; max-width:20ch;">시그니처는 패턴이 아니라, 빛과 그림자입니다</h1>
+        <p class="lede" style="font-size:var(--step-1); margin-top:1rem; max-width:58ch;">무타공랩은 제품디자이너인 대표가 자연광이 만들어내는 그림자를 브랜드의 일관된 시각 언어로 사용합니다. 화려한 장식 대신, 공간에 스며드는 빛의 흔적을 디자인합니다.</p>
+        <p class="scene-caption">이미지는 실사진 확보 전 사용하는 개념 비주얼입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 시그니처 비주얼 ============ -->
+  <section>
+    <div class="wrap">
+      <div class="pdp-media reveal" data-reveal style="aspect-ratio:16/6; max-width:100%;">
+        <div class="light-shadow" style="position:absolute; inset:0;"></div>
+      </div>
+      <p style="text-align:center; color:var(--ink-soft); font-size:var(--step--1); margin-top:1rem;">시그니처 패턴 — 실제 자연광 사진이 준비되면 이 자리에 교체될 개념 비주얼입니다.</p>
+    </div>
+  </section>
+
+  <!-- ============ 소재·컬러 무드 ============ -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">소재 · 컬러</span>
+        <h2>따뜻하고 단정한 톤</h2>
+        <p>한지의 질감, 브론즈의 무게감, 원목의 온기를 기준으로 컬러와 마감을 정합니다.</p>
+      </div>
+      <div class="material-grid" data-reveal-stagger>
+        <div class="material-card"><div class="material-swatch" style="background:#F6F3EE;"></div><h4>Warm Ivory</h4><p>따뜻한 아이보리 · 배경</p></div>
+        <div class="material-card"><div class="material-swatch" style="background:#DCCCB3;"></div><h4>Sand Beige</h4><p>샌드 베이지 · 보조 배경</p></div>
+        <div class="material-card"><div class="material-swatch" style="background:#B88A5A;"></div><h4>Soft Bronze</h4><p>소프트 브론즈 · 포인트</p></div>
+        <div class="material-card"><div class="material-swatch" style="background:#6F4E37;"></div><h4>Walnut Brown</h4><p>월넛 브라운 · 딥 포인트</p></div>
+        <div class="material-card"><div class="material-swatch" style="background:#2D2D2D;"></div><h4>Deep Charcoal</h4><p>딥 차콜 · 다크 톤</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 브랜드 키워드 → 디자인 원칙 ============ -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">디자인 원칙</span>
+        <h2>다섯 개의 키워드로 디자인합니다</h2>
+      </div>
+      <div class="feature-grid" data-reveal-stagger>
+        <div class="feature-card"><h3>흔적없이</h3><p>구조가 벽을 침범하지 않는 만큼, 디자인도 공간을 과하게 침범하지 않습니다.</p></div>
+        <div class="feature-card"><h3>자연스럽게</h3><p>직선보다 결을 따라가는 형태와 마감을 우선합니다.</p></div>
+        <div class="feature-card"><h3>따뜻하게</h3><p>차가운 메탈 톤 대신 브론즈·원목 계열의 따뜻한 색온도를 기본으로 합니다.</p></div>
+        <div class="feature-card"><h3>오래도록</h3><p>유행보다 오래 두고 봐도 질리지 않는 비례와 색을 선택합니다.</p></div>
+        <div class="feature-card"><h3>가치있게</h3><p>장식을 더하는 대신, 불필요한 요소를 덜어 완성도를 높입니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 협업 방식 ============ -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">연구와 디자인</span>
+        <h2>한 사람이 구조부터 디자인까지 봅니다</h2>
+        <p>대표가 연구자와 디자이너 역할을 함께 맡고 있어, 구조와 디자인이 따로 움직이지 않습니다.</p>
+      </div>
+      <div class="feature-grid" data-reveal-stagger>
+        <div class="feature-card"><h3>구조와 디자인의 균형</h3><p>고정 구조가 만드는 형태 제약 안에서, 가장 자연스러운 비례를 찾습니다.</p></div>
+        <div class="feature-card"><h3>소재 기준의 마감</h3><p>사진이 아니라 실제 소재(브론즈, 원목, 패브릭)를 기준으로 색과 질감을 정합니다.</p></div>
+        <div class="feature-card"><h3>브랜드 일관성</h3><p>어떤 제품이든 같은 브랜드 언어(컬러·타이포·시그니처 패턴)를 유지합니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pdp-cta-section">
+    <div class="wrap">
+      <span class="eyebrow">문의</span>
+      <h2 style="font-size:var(--step-3); margin-top:.6rem;">디자인 협업을 제안하고 싶으신가요</h2>
+      <div class="pdp-cta" style="justify-content:center; margin-top:1.6rem;">
+        <a href="b2b.html" class="btn btn-primary">B2B 협업 보기</a>
+        <a href="#" class="btn btn-kakao">카카오톡으로 문의</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <a href="index.html" class="logo">
+          <svg class="logo-icon" viewBox="0 0 100 100" aria-hidden="true"><path d="M18 42 L50 16 L82 42"></path><path d="M30 40 L30 51 M30 40 L41 40"></path><path d="M70 40 L70 51 M70 40 L59 40"></path><path d="M30 80 L30 69 M30 80 L41 80"></path><path d="M70 80 L70 69 M70 80 L59 80"></path><circle cx="50" cy="60" r="9"></circle></svg>
+          <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
+        </a>
+        <p class="footer-tagline">흔적 없이, 공간의 가치를 높이다.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>브랜드</h4>
+          <ul>
+            <li><a href="brand.html">기업 소개</a></li>
+            <li><a href="technology.html">무타공연구소</a></li>
+            <li><a href="design.html">제품디자인</a></li>
+            <li><a href="brand.html#interior">인테리어디자인</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>제품</h4>
+          <ul>
+            <li><a href="products.html">제품 라인업</a></li>
+            <li><a href="b2b.html">B2B 협업</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>채널</h4>
+          <ul>
+            <li><a href="contact.html">상담 문의</a></li>
+            <li><a href="https://blog.naver.com/mutagonglab" target="_blank" rel="noopener">네이버 블로그</a></li>
+            <li><a href="https://www.instagram.com/mutagonglab" target="_blank" rel="noopener">인스타그램</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MUTAGONGLAB. 대표 심혜미. All rights reserved.</span>
+      <span>사업자등록번호 896-15-02645 · 대구광역시 남구 명덕로 104 계명대학교 비사관 6층 무타공랩</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

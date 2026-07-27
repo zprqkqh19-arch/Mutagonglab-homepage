@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title id="pageTitle">제품 | 무타공랩</title>
+<meta name="description" content="무타공랩 제품 상세 페이지 — 옵션을 선택해 내 공간에 맞는 구성을 직접 만들어 보세요." />
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a href="index.html" class="logo">
+      <svg class="logo-icon" viewBox="0 0 100 100" aria-hidden="true"><path d="M18 42 L50 16 L82 42"></path><path d="M30 40 L30 51 M30 40 L41 40"></path><path d="M70 40 L70 51 M70 40 L59 40"></path><path d="M30 80 L30 69 M30 80 L41 80"></path><path d="M70 80 L70 69 M70 80 L59 80"></path><circle cx="50" cy="60" r="9"></circle></svg>
+      <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
+    </a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="brand.html">브랜드</a>
+      <a href="products.html">제품</a>
+      <a href="b2b.html">B2B 협업</a>
+      <a href="contact.html">상담 문의</a>
+    </nav>
+    <a href="contact.html" class="nav-cta">상담 문의하기</a>
+    <button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="brand.html">브랜드</a>
+    <a href="products.html">제품</a>
+    <a href="b2b.html">B2B 협업</a>
+    <a href="contact.html">상담 문의</a>
+  </div>
+</header>
+
+<main>
+  <section style="padding-block:clamp(2rem,4vw,3rem) 0;">
+    <div class="wrap">
+      <p class="breadcrumb"><a href="index.html">홈</a><span>／</span><a href="products.html">제품</a><span>／</span><span id="crumbName">-</span></p>
+    </div>
+  </section>
+
+  <!-- ============ 섹션 점프 서브내비 (애플스토어 벤치마킹) ============ -->
+  <nav class="pdp-subnav" id="pdpSubnav" aria-label="상세 페이지 섹션 이동">
+    <div class="wrap"></div>
+  </nav>
+
+  <!-- ============ 대표 이미지 + 제목 + 간략 특징/적용사례 ============ -->
+  <section id="overview" style="padding-top:0;">
+    <div class="pdp-hero-media reveal" data-reveal id="pdpMedia">
+      <div class="light-shadow"></div>
+      <div id="heroPreviewMount" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:14%;"></div>
+    </div>
+    <div class="wrap">
+      <div class="pdp-copy-wide reveal" data-reveal>
+        <div class="pdp-title-row">
+          <span class="eyebrow" id="crumbCategory">제품</span>
+          <span id="statusBadge"></span>
+        </div>
+        <h1 id="productName">-</h1>
+        <span class="brand-tag" id="productBrandTag" style="display:none;"></span>
+        <p class="lede" id="productTagline"></p>
+
+        <div class="pdp-brief" id="briefFeatures" style="display:none;">
+          <span class="pdp-brief-label">특징</span>
+          <ul class="pdp-brief-list" id="briefFeaturesList"></ul>
+        </div>
+        <div class="pdp-brief" id="briefUsecases" style="display:none;">
+          <span class="pdp-brief-label">적용 공간</span>
+          <ul class="pdp-brief-list" id="briefUsecasesList"></ul>
+        </div>
+
+        <button type="button" class="pdp-detail-link" id="detailModalTrigger">제품 설명 · 유형 비교 상세보기 <span class="chev">›</span></button>
+
+        <div class="pdp-cta" id="heroCta"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 커스터마이징 (핵심 기능 — 바로 이어서 노출) ============ -->
+  <section id="customize">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="configurator-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-6M4 10V3M12 21v-9M12 7V3M20 21v-4M20 12V3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path><circle cx="4" cy="12" r="2" fill="currentColor" stroke="none"></circle><circle cx="12" cy="9" r="2" fill="currentColor" stroke="none"></circle><circle cx="20" cy="15" r="2" fill="currentColor" stroke="none"></circle></svg>
+          <span id="configuratorBadgeText">커스터마이징</span>
+        </span>
+        <h2>내 공간에 맞게, 직접 만들어보세요</h2>
+        <p>옵션을 하나씩 선택하면 예상 이미지가 바로 바뀝니다. 아래 구성 그대로 상담·구매를 진행할 수 있습니다.</p>
+      </div>
+
+      <div class="configurator reveal" data-reveal id="configuratorMount">
+        <div class="preview-pane">
+          <div class="preview-stage" data-preview-stage></div>
+          <div class="preview-dim" data-preview-dim></div>
+          <div class="spec-summary" data-spec-summary></div>
+        </div>
+        <div class="opt-groups" data-opt-groups></div>
+        <p class="configurator-note">* 1차 버전은 개념도 기반 예상 이미지입니다. 실사진 기반 시뮬레이션으로 순차 확장할 예정입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="comingSoonNoteWrap" class="wrap" style="display:none;"></div>
+
+  <!-- ============ 후기 ============ -->
+  <section class="band" id="reviews">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">후기</span>
+        <h2>구매하신 분들의 이야기</h2>
+      </div>
+      <div class="reviews-empty reveal" data-reveal id="reviewsMount">
+        <p>아직 등록된 후기가 없습니다. 첫 구매 후기를 남겨주시면 이 자리에 소개해드립니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 다른 구조 추천(크로스셀) ============ -->
+  <section id="crossSellSection" style="display:none;">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">함께 보면 좋은 구조</span>
+        <h2 id="crossSellHeading">같은 브랜드의 다른 구조도 살펴보세요</h2>
+      </div>
+      <div class="cross-sell-strip" id="crossSellStrip"></div>
+    </div>
+  </section>
+
+  <!-- ============ 구매 전 확인사항 (반품/A·S 정책 사전고지) ============ -->
+  <section>
+    <div class="wrap">
+      <div class="coming-soon-note reveal" data-reveal id="purchaseNoticeBox">
+        <svg viewBox="0 0 24 24" width="20" height="20" style="flex:0 0 auto; margin-top:.1rem;" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5l3 2"></path></svg>
+        <span><strong style="color:var(--ink);">구매 전 꼭 확인해주세요.</strong> <span id="purchaseNoticeText"></span> 자세한 내용은 <a href="service.html#faq" style="text-decoration:underline;">자주 묻는 질문</a>에서 확인하실 수 있습니다.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 구매 / 상담 ============ -->
+  <section class="band pdp-cta-section" id="buy">
+    <div class="wrap">
+      <span class="eyebrow">다음 단계</span>
+      <h2 style="font-size:var(--step-3); margin-top:.6rem;">선택한 구성으로 진행해 보세요</h2>
+      <div class="pdp-cta" id="finalCta" style="justify-content:center; margin-top:1.6rem;"></div>
+      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;" id="orderConfirmNote">카카오톡 상담으로 실측값을 다시 한번 확인한 뒤 주문이 확정됩니다. 주문 확정 안내에 "네, 확인했습니다"로 답변해 주시면 접수가 완료됩니다.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 상세보기 미니 팝업 (설명 + 유형 비교) ============ -->
+<div class="pdp-modal-overlay" id="detailModal" hidden>
+  <div class="pdp-modal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+    <button type="button" class="pdp-modal-close" id="detailModalClose" aria-label="닫기">
+      <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+    <span class="eyebrow">제품 설명</span>
+    <h3 id="detailModalTitle">-</h3>
+    <p id="detailModalSummary" class="pdp-modal-summary"></p>
+    <div id="detailModalCompareWrap" style="display:none;">
+      <h4 class="pdp-modal-subhead">유형 비교</h4>
+      <p class="pdp-modal-note">정확한 사이즈와 비용은 공간마다 달라 상담 시 안내해 드립니다. 아래는 구조를 고르는 데 참고할 일반적인 특징입니다.</p>
+      <div class="spec-table-wrap"><table class="spec-table" id="detailModalSpecTable"></table></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <a href="index.html" class="logo">
+          <svg class="logo-icon" viewBox="0 0 100 100" aria-hidden="true"><path d="M18 42 L50 16 L82 42"></path><path d="M30 40 L30 51 M30 40 L41 40"></path><path d="M70 40 L70 51 M70 40 L59 40"></path><path d="M30 80 L30 69 M30 80 L41 80"></path><path d="M70 80 L70 69 M70 80 L59 80"></path><circle cx="50" cy="60" r="9"></circle></svg>
+          <span class="logo-text"><span class="logo-kr">무타공랩<span class="logo-cobrand">× 혜다움</span></span><span class="logo-en">MUTAGONGLAB</span></span>
+        </a>
+        <p class="footer-tagline">흔적 없이, 공간의 가치를 높이다.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>브랜드</h4>
+          <ul>
+            <li><a href="brand.html">기업 소개</a></li>
+            <li><a href="technology.html">무타공연구소</a></li>
+            <li><a href="design.html">제품디자인</a></li>
+            <li><a href="brand.html#interior">인테리어디자인</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>제품</h4>
+          <ul>
+            <li><a href="products.html">제품 라인업</a></li>
+            <li><a href="b2b.html">B2B 협업</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>채널</h4>
+          <ul>
+            <li><a href="contact.html">상담 문의</a></li>
+            <li><a href="https://blog.naver.com/mutagonglab" target="_blank" rel="noopener">네이버 블로그</a></li>
+            <li><a href="https://www.instagram.com/mutagonglab" target="_blank" rel="noopener">인스타그램</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MUTAGONGLAB. 대표 심혜미. All rights reserved.</span>
+      <span>사업자등록번호 896-15-02645 · 대구광역시 남구 명덕로 104 계명대학교 비사관 6층 무타공랩</span>
+    </div>
+  </div>
+</footer>
+
+<script src="products-data.js"></script>
+<script src="configurator.js"></script>
+<script src="main.js"></script>
+<script>
+(function () {
+  "use strict";
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get("id") || "standard-door";
+  var product = window.MUTAGONG_PRODUCTS[id];
+
+  if (!product) {
+    document.querySelector("main").innerHTML =
+      '<section class="wrap" style="padding-block:4rem;"><p>제품을 찾을 수 없습니다. <a href="index.html">홈으로 돌아가기</a></p></section>';
+    return;
+  }
+
+  document.getElementById("pageTitle").textContent = product.name + " | 무타공랩";
+  document.getElementById("crumbName").textContent = product.name;
+  document.getElementById("crumbCategory").textContent = product.category;
+  document.getElementById("productName").textContent = product.name;
+  var brandTagEl = document.getElementById("productBrandTag");
+  if (product.brandTag) {
+    brandTagEl.textContent = product.brandTag;
+    brandTagEl.style.display = "inline-block";
+  }
+  document.getElementById("productTagline").textContent = product.tagline;
+
+  var configuratorBadgeText = document.getElementById("configuratorBadgeText");
+  if (configuratorBadgeText) {
+    configuratorBadgeText.textContent = (product.brand || "무타공랩") + " 커스터마이징";
+  }
+
+  var isAvailable = product.saleStatus === "available";
+  document.getElementById("statusBadge").innerHTML = isAvailable
+    ? '<span class="sale-badge sale-badge--available">판매 중</span>'
+    : '<span class="sale-badge sale-badge--soon">출시 예정</span>';
+
+  function ctaMarkup() {
+    if (isAvailable) {
+      return (
+        '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">카카오톡으로 구매·상담 문의</a>' +
+        '<a href="contact.html" class="btn btn-ghost">문의 폼 남기기</a>'
+      );
+    }
+    return (
+      '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">출시 알림 · 카카오톡 상담</a>' +
+      '<a href="contact.html" class="btn btn-ghost">문의 폼 남기기</a>'
+    );
+  }
+  document.getElementById("heroCta").innerHTML = ctaMarkup();
+  document.getElementById("finalCta").innerHTML = ctaMarkup();
+
+  if (product.purchaseNotice) {
+    document.getElementById("purchaseNoticeText").textContent = product.purchaseNotice;
+  } else {
+    document.getElementById("purchaseNoticeBox").style.display = "none";
+  }
+
+  if (!isAvailable) {
+    document.getElementById("comingSoonNoteWrap").style.display = "block";
+    document.getElementById("comingSoonNoteWrap").innerHTML =
+      '<div class="coming-soon-note"><svg viewBox="0 0 24 24" width="20" height="20" style="flex:0 0 auto; margin-top:.1rem;" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5l3 2"></path></svg>' +
+      "<span><strong style=\"color:var(--ink);\">" + product.name + "은 출시 전입니다.</strong> 지금 구성을 미리 살펴보고 상담을 남겨주시면, 출시 시점에 가장 먼저 안내드립니다.</span></div>";
+  }
+
+  // ============ 대표 이미지: 실사진(heroPhoto) 있으면 그걸, 없으면 커스터마이징 기본 프리뷰 SVG ============
+  var presetType = params.get("type");
+  var pdpMedia = document.getElementById("pdpMedia");
+  if (product.heroPhoto) {
+    pdpMedia.innerHTML =
+      '<img src="' + product.heroPhoto + '" alt="' + product.name + ' 설치 예시" style="width:100%; height:100%; object-fit:cover;">' +
+      '<span class="pdp-fullbleed-caption">AI 컨셉 이미지 — 실제 시공 사진이 아닌 참고용 이미지입니다.</span>';
+  } else {
+    var heroMount = document.getElementById("heroPreviewMount");
+    heroMount.innerHTML = product.previewSVG();
+    if (presetType) {
+      heroMount.querySelectorAll(".shape-group").forEach(function (g) {
+        g.style.display = g.getAttribute("data-shape") === presetType ? "inline" : "none";
+      });
+    }
+  }
+
+  // ============ 특징 · 적용사례 — 제목 아래 간략히(칩 목록) ============
+  if (product.features && product.features.length) {
+    document.getElementById("briefFeaturesList").innerHTML = product.features
+      .map(function (f) {
+        return "<li>" + f.title + "</li>";
+      })
+      .join("");
+    document.getElementById("briefFeatures").style.display = "block";
+  }
+  if (product.useCases && product.useCases.length) {
+    document.getElementById("briefUsecasesList").innerHTML = product.useCases
+      .map(function (u) {
+        return "<li>" + u.tag + "</li>";
+      })
+      .join("");
+    document.getElementById("briefUsecases").style.display = "block";
+  }
+
+  window.MUTAGONG_initConfigurator(product, document.getElementById("configuratorMount"), presetType ? { doorType: presetType } : null);
+
+  // ============ 상세보기 미니 팝업 — 설명 + (있으면) 유형 비교표 ============
+  var doorTypeOpt = product.options.filter(function (o) {
+    return o.kind === "doorType";
+  })[0];
+  document.getElementById("detailModalTitle").textContent = product.name;
+  document.getElementById("detailModalSummary").textContent = product.summary;
+  if (doorTypeOpt && window.MUTAGONG_DOOR_TYPE_INFO) {
+    var info = window.MUTAGONG_DOOR_TYPE_INFO;
+    var rows = doorTypeOpt.choices
+      .map(function (c) {
+        var row = info[c.value];
+        if (!row) return "";
+        return "<tr><td>" + c.value + "</td><td>" + row.recommend + "</td><td>" + row.feature + "</td></tr>";
+      })
+      .join("");
+    document.getElementById("detailModalSpecTable").innerHTML =
+      "<thead><tr><th>유형</th><th>추천 현장</th><th>특징</th></tr></thead><tbody>" + rows + "</tbody>";
+    document.getElementById("detailModalCompareWrap").style.display = "block";
+  }
+
+  var detailModal = document.getElementById("detailModal");
+  var detailModalTrigger = document.getElementById("detailModalTrigger");
+  var detailModalClose = document.getElementById("detailModalClose");
+  function openDetailModal() {
+    detailModal.hidden = false;
+    document.body.style.overflow = "hidden";
+    detailModalClose.focus();
+  }
+  function closeDetailModal() {
+    detailModal.hidden = true;
+    document.body.style.overflow = "";
+    detailModalTrigger.focus();
+  }
+  detailModalTrigger.addEventListener("click", openDetailModal);
+  detailModalClose.addEventListener("click", closeDetailModal);
+  detailModal.addEventListener("click", function (e) {
+    if (e.target === detailModal) closeDetailModal();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !detailModal.hidden) closeDetailModal();
+  });
+
+  // ============ 섹션 점프 서브내비 ============
+  var subnavSections = [
+    { id: "overview", label: "소개" },
+    { id: "customize", label: "커스터마이징" },
+    { id: "reviews", label: "후기" },
+    { id: "buy", label: "구매" },
+  ].filter(function (s) {
+    var el = document.getElementById(s.id);
+    return el && getComputedStyle(el).display !== "none";
+  });
+  var subnavWrap = document.querySelector("#pdpSubnav .wrap");
+  subnavWrap.innerHTML = subnavSections
+    .map(function (s) {
+      return '<a href="#' + s.id + '" data-subnav-target="' + s.id + '">' + s.label + "</a>";
+    })
+    .join("");
+  subnavWrap.querySelectorAll("a").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      var target = document.getElementById(a.getAttribute("data-subnav-target"));
+      if (!target) return;
+      var top = target.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top: top, behavior: "smooth" });
+    });
+  });
+  if ("IntersectionObserver" in window) {
+    var subnavObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var link = subnavWrap.querySelector('[data-subnav-target="' + entry.target.id + '"]');
+          if (!link) return;
+          if (entry.isIntersecting) {
+            subnavWrap.querySelectorAll("a").forEach(function (a) {
+              a.classList.remove("is-active");
+            });
+            link.classList.add("is-active");
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    subnavSections.forEach(function (s) {
+      var el = document.getElementById(s.id);
+      if (el) subnavObserver.observe(el);
+    });
+  }
+
+  // ============ 다른 구조 추천(크로스셀) — 같은 브랜드 그룹의 다른 항목 ============
+  if (window.MUTAGONG_BRAND_GROUPS) {
+    var myGroup = window.MUTAGONG_BRAND_GROUPS.filter(function (g) {
+      return g.items.some(function (it) {
+        return it.id === id;
+      });
+    })[0];
+    if (myGroup) {
+      var siblings = myGroup.items.filter(function (it) {
+        return !(it.id === id && (it.type || "") === (presetType || ""));
+      });
+      if (siblings.length) {
+        document.getElementById("crossSellHeading").textContent = myGroup.brand + "의 다른 구조도 살펴보세요";
+        document.getElementById("crossSellStrip").innerHTML = siblings
+          .map(function (it) {
+            var p = window.MUTAGONG_PRODUCTS[it.id];
+            var qs = "id=" + it.id + (it.type ? "&type=" + encodeURIComponent(it.type) : "");
+            return (
+              '<a class="cross-sell-card" href="product.html?' +
+              qs +
+              '"><div class="cs-visual">' +
+              p.previewSVG() +
+              "</div><h4>" +
+              it.label +
+              "</h4></a>"
+            );
+          })
+          .join("");
+        document.getElementById("crossSellSection").style.display = "block";
+        Array.prototype.forEach.call(document.getElementById("crossSellStrip").children, function (card, i) {
+          var it = siblings[i];
+          if (!it.type) return;
+          card.querySelectorAll(".shape-group").forEach(function (g) {
+            g.style.display = g.getAttribute("data-shape") === it.type ? "inline" : "none";
+          });
+        });
+      }
+    }
+  }
+
+  var stickyBar = document.createElement("div");
+  stickyBar.className = "sticky-cta";
+  stickyBar.innerHTML =
+    '<span class="price-hint">' + product.name + "</span>" +
+    '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao" style="padding:.6rem 1.1rem;">' +
+    (isAvailable ? "구매·상담 문의" : "출시 알림 문의") +
+    "</a>";
+  document.querySelector("main").appendChild(stickyBar);
+})();
+</script>
+
+</body>
+</html>
