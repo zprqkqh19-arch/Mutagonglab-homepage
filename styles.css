@@ -308,6 +308,40 @@
   .hero-brandline .rule{ width:34px; height:1px; background:var(--accent); flex:0 0 auto; }
   .hero-brandline span{ font-size:var(--step--1); letter-spacing:.08em; color:var(--ink-soft); }
 
+  /* ============ 풀블리드 사진 히어로 (index.html) ============ */
+  .hero-fullbleed{
+    position:relative; height:100vh; min-height:560px; max-height:980px;
+    display:flex; align-items:flex-end; overflow:hidden; padding-block:0;
+  }
+  .hero-fullbleed-media{ position:absolute; inset:0; z-index:0; }
+  .hero-fullbleed-media img{ width:100%; height:100%; object-fit:cover; object-position:58% 50%; display:block; }
+  .hero-fullbleed-scrim{
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(to top, rgba(20,17,14,.74) 0%, rgba(20,17,14,.34) 40%, rgba(20,17,14,0) 70%);
+  }
+  .hero-fullbleed-content{ position:relative; z-index:2; width:100%; padding-block:clamp(2.4rem,6vw,4.5rem) clamp(2.8rem,6vw,4.2rem); color:#fff; }
+  .hero-fullbleed-content .eyebrow{ color:rgba(255,255,255,.85); }
+  .hero-fullbleed-content h1{ color:#fff; font-size:var(--step-5); line-height:1.16; margin-block:.6rem 1rem; text-wrap:balance; }
+  .hero-fullbleed-content .lede{ color:rgba(255,255,255,.9); font-size:var(--step-1); max-width:48ch; }
+  .hero-fullbleed-links{ display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-top:1.7rem; }
+  .hero-secondary-link{ border-color:rgba(255,255,255,.55); color:#fff; }
+  .hero-secondary-link:hover{ border-color:#fff; color:#fff; background:rgba(255,255,255,.14); }
+  .hero-fullbleed-caption{ position:absolute; left:0; right:0; bottom:.8rem; z-index:2; text-align:center; font-size:var(--step--2); color:rgba(255,255,255,.6); }
+
+  /* 화분 나뭇잎 살랑임 — 실제 사진의 나뭇가지 부분만 잘라낸 레이어를 미세 회전시켜 표현 */
+  .hero-plant-overlay{
+    position:absolute; z-index:1; pointer-events:none; transform-origin:50% 100%;
+    animation:leaf-sway 6s ease-in-out infinite;
+  }
+  .hero-plant-overlay img{ width:100%; height:100%; display:block; }
+  @keyframes leaf-sway{
+    0%,100%{ transform:rotate(-1.1deg); }
+    50%{ transform:rotate(1.3deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-plant-overlay{ animation:none; }
+  }
+
   /* ============ Section shell ============ */
   section{ padding-block:clamp(3.5rem, 7vw, 6.5rem); }
   .band{ background:var(--paper-deep); border-block:1px solid var(--paper-line); }
@@ -440,6 +474,20 @@
     box-shadow:var(--shadow);
   }
   .theme-toggle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; }
+
+  /* ============ 배경음 재생 토글 (헤더 안, 상단 메뉴라인에 함께 고정) ============ */
+  .sound-toggle{
+    display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto;
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--paper-line);
+    background:transparent; color:var(--ink-soft); cursor:pointer;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .sound-toggle:hover{ border-color:var(--accent); color:var(--accent); }
+  .sound-toggle svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .sound-toggle .icon-on{ display:none; }
+  .sound-toggle[data-playing="true"] .icon-off{ display:none; }
+  .sound-toggle[data-playing="true"] .icon-on{ display:inline; }
+  .sound-toggle[data-playing="true"]{ border-color:var(--accent); color:var(--accent); }
   /* ============ 로고 아이콘 (2026-07-09 명함 시안 기준: 지붕+포커스프레임+원) ============ */
   .logo-icon{
     width:69px; height:69px; flex:0 0 auto;

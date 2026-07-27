@@ -27,6 +27,81 @@
         });
       });
     }
+
+    // ============ 배경음 재생 토글 — 상단 메뉴라인(고정 헤더) 안, 버거 버튼 앞자리에 삽입 ============
+    var navWrap = header.querySelector(".wrap.nav");
+    if (navWrap && !navWrap.querySelector(".sound-toggle")) {
+      var audio = document.getElementById("ambientAudio");
+      if (!audio) {
+        audio = document.createElement("audio");
+        audio.id = "ambientAudio";
+        audio.loop = true;
+        audio.preload = "none";
+        var src = document.createElement("source");
+        src.src = "assets/forest-ambience.mp3";
+        src.type = "audio/mpeg";
+        audio.appendChild(src);
+        document.body.appendChild(audio);
+      }
+      var soundBtn = document.createElement("button");
+      soundBtn.type = "button";
+      soundBtn.className = "sound-toggle";
+      soundBtn.setAttribute("aria-pressed", "false");
+      soundBtn.setAttribute("data-playing", "false");
+      soundBtn.setAttribute("aria-label", "배경음 켜기");
+      soundBtn.innerHTML =
+        '<svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="M16.5 9.5l5 5M21.5 9.5l-5 5"></path></svg>' +
+        '<svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"></path><path d="M16 8.5a4.5 4.5 0 0 1 0 7"></path><path d="M18.7 6a8 8 0 0 1 0 12"></path></svg>';
+
+      var setPlaying = function (on) {
+        soundBtn.setAttribute("data-playing", on ? "true" : "false");
+        soundBtn.setAttribute("aria-pressed", on ? "true" : "false");
+        soundBtn.setAttribute("aria-label", on ? "배경음 끄기" : "배경음 켜기");
+        try {
+          localStorage.setItem("mutagong-sound", on ? "on" : "off");
+        } catch (err) {}
+      };
+
+      soundBtn.addEventListener("click", function () {
+        if (audio.paused) {
+          audio
+            .play()
+            .then(function () {
+              setPlaying(true);
+            })
+            .catch(function () {
+              setPlaying(false);
+            });
+        } else {
+          audio.pause();
+          setPlaying(false);
+        }
+      });
+
+      var burgerForSound = navWrap.querySelector(".burger");
+      if (burgerForSound) {
+        navWrap.insertBefore(soundBtn, burgerForSound);
+      } else {
+        navWrap.appendChild(soundBtn);
+      }
+
+      // 직전 방문에서 재생을 켜둔 상태였다면 이어서 자동재생 시도 — 브라우저 자동재생 정책상 차단될 수 있고,
+      // 그 경우 그냥 꺼짐 아이콘으로 남고 사용자가 다시 클릭하면 재생됨(에러 아님).
+      var wantsSound = null;
+      try {
+        wantsSound = localStorage.getItem("mutagong-sound");
+      } catch (err) {}
+      if (wantsSound === "on") {
+        audio
+          .play()
+          .then(function () {
+            setPlaying(true);
+          })
+          .catch(function () {
+            setPlaying(false);
+          });
+      }
+    }
   }
 
   // ============ 등장 모션(reveal) ============
@@ -91,6 +166,51 @@
         });
       });
     }
+  }
+
+  // ============ 풀블리드 히어로의 화분 나뭇잎 오버레이 위치 계산 (index.html 전용) ============
+  // 실제 사진(hedaum-concept-01.png, 1448×1086)에서 나뭇가지 부분만 잘라낸 이미지를,
+  // object-fit:cover로 표시되는 원본 위 정확히 같은 자리에 겹쳐 놓기 위해 매번 다시 계산한다.
+  var heroImg = document.getElementById("heroFullImg");
+  var plantOverlay = document.getElementById("heroPlantOverlay");
+  if (heroImg && plantOverlay) {
+    var PLANT_NATURAL_W = 1448;
+    var PLANT_NATURAL_H = 1086;
+    var PLANT_BOX = { left: 1108, top: 372, right: 1324, bottom: 628 };
+    var PLANT_OBJECT_POS_X = 0.58;
+    var PLANT_OBJECT_POS_Y = 0.5;
+
+    var positionPlantOverlay = function () {
+      var rect = heroImg.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var scale = Math.max(rect.width / PLANT_NATURAL_W, rect.height / PLANT_NATURAL_H);
+      var renderedW = PLANT_NATURAL_W * scale;
+      var renderedH = PLANT_NATURAL_H * scale;
+      var offsetX = (renderedW - rect.width) * PLANT_OBJECT_POS_X;
+      var offsetY = (renderedH - rect.height) * PLANT_OBJECT_POS_Y;
+
+      var left = PLANT_BOX.left * scale - offsetX;
+      var top = PLANT_BOX.top * scale - offsetY;
+      var width = (PLANT_BOX.right - PLANT_BOX.left) * scale;
+      var height = (PLANT_BOX.bottom - PLANT_BOX.top) * scale;
+
+      if (left < -20 || top < -20 || left + width > rect.width + 20 || top + height > rect.height + 20) {
+        plantOverlay.style.display = "none";
+        return;
+      }
+      plantOverlay.style.display = "block";
+      plantOverlay.style.left = left + "px";
+      plantOverlay.style.top = top + "px";
+      plantOverlay.style.width = width + "px";
+      plantOverlay.style.height = height + "px";
+    };
+
+    if (heroImg.complete) {
+      positionPlantOverlay();
+    } else {
+      heroImg.addEventListener("load", positionPlantOverlay);
+    }
+    window.addEventListener("resize", positionPlantOverlay);
   }
 
   var form = document.getElementById("inquiryForm");
