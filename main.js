@@ -168,6 +168,52 @@
     }
   }
 
+  // ============ 풀블리드 히어로의 화분 나뭇잎 오버레이 위치 계산 (index.html 전용) ============
+  // hedaum-concept-01-plantless.png(나뭇가지를 지워 채워 넣은 배경)를 기준 이미지로 쓰고,
+  // hedaum-plant-branches.png(나뭇가지만 오려낸 레이어)를 그 위 정확히 같은 자리에 겹쳐서
+  // 나뭇가지 레이어만 회전시킨다 — 배경에는 나뭇가지가 아예 없으므로 흔들려도 배경은 그대로.
+  var heroImg = document.getElementById("heroFullImg");
+  var plantOverlay = document.getElementById("heroPlantOverlay");
+  if (heroImg && plantOverlay) {
+    var PLANT_NATURAL_W = 1448;
+    var PLANT_NATURAL_H = 1086;
+    var PLANT_BOX = { left: 1108, top: 372, right: 1324, bottom: 628 };
+    var PLANT_OBJECT_POS_X = 0.58;
+    var PLANT_OBJECT_POS_Y = 0.5;
+
+    var positionPlantOverlay = function () {
+      var rect = heroImg.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var scale = Math.max(rect.width / PLANT_NATURAL_W, rect.height / PLANT_NATURAL_H);
+      var renderedW = PLANT_NATURAL_W * scale;
+      var renderedH = PLANT_NATURAL_H * scale;
+      var offsetX = (renderedW - rect.width) * PLANT_OBJECT_POS_X;
+      var offsetY = (renderedH - rect.height) * PLANT_OBJECT_POS_Y;
+
+      var left = PLANT_BOX.left * scale - offsetX;
+      var top = PLANT_BOX.top * scale - offsetY;
+      var width = (PLANT_BOX.right - PLANT_BOX.left) * scale;
+      var height = (PLANT_BOX.bottom - PLANT_BOX.top) * scale;
+
+      if (left < -20 || top < -20 || left + width > rect.width + 20 || top + height > rect.height + 20) {
+        plantOverlay.style.display = "none";
+        return;
+      }
+      plantOverlay.style.display = "block";
+      plantOverlay.style.left = left + "px";
+      plantOverlay.style.top = top + "px";
+      plantOverlay.style.width = width + "px";
+      plantOverlay.style.height = height + "px";
+    };
+
+    if (heroImg.complete) {
+      positionPlantOverlay();
+    } else {
+      heroImg.addEventListener("load", positionPlantOverlay);
+    }
+    window.addEventListener("resize", positionPlantOverlay);
+  }
+
   var form = document.getElementById("inquiryForm");
   if (form) {
     var status = document.getElementById("formStatus");

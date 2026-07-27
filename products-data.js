@@ -192,11 +192,11 @@
     default: "3연동",
   };
 
-  // W 1000~1800(100단위) × H 2000~2500(100단위)
+  // W 1100~1400(100단위) × H 2000~2400(100단위)
   var SIZE_CHOICES = (function () {
     var out = [];
-    for (var w = 1000; w <= 1800; w += 100) {
-      for (var h = 2000; h <= 2500; h += 100) {
+    for (var w = 1100; w <= 1400; w += 100) {
+      for (var h = 2000; h <= 2400; h += 100) {
         out.push({ value: w + "x" + h, label: "W" + w + " × H" + h });
       }
     }
