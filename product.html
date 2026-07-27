@@ -81,6 +81,16 @@
 
   <div id="comingSoonNoteWrap" class="wrap" style="display:none;"></div>
 
+  <!-- ============ 구매 / 상담 (커스터마이징 바로 다음 — 클릭 최소화) ============ -->
+  <section class="band pdp-cta-section" id="buy">
+    <div class="wrap">
+      <span class="eyebrow">다음 단계</span>
+      <h2 style="font-size:var(--step-3); margin-top:.6rem;">선택한 구성으로 진행해 보세요</h2>
+      <div class="pdp-cta" id="finalCta" style="justify-content:center; margin-top:1.6rem;"></div>
+      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;" id="orderConfirmNote">카카오톡 상담으로 실측값을 다시 한번 확인한 뒤 주문이 확정됩니다. 주문 확정 안내에 "네, 확인했습니다"로 답변해 주시면 접수가 완료됩니다.</p>
+    </div>
+  </section>
+
   <!-- ============ 배송 패키지 & 설치 방법 (셀프시공 제품만) ============ -->
   <section class="band" id="installSection" style="display:none;">
     <div class="wrap">
@@ -131,16 +141,6 @@
       </div>
     </div>
   </section>
-
-  <!-- ============ 구매 / 상담 ============ -->
-  <section class="band pdp-cta-section" id="buy">
-    <div class="wrap">
-      <span class="eyebrow">다음 단계</span>
-      <h2 style="font-size:var(--step-3); margin-top:.6rem;">선택한 구성으로 진행해 보세요</h2>
-      <div class="pdp-cta" id="finalCta" style="justify-content:center; margin-top:1.6rem;"></div>
-      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;" id="orderConfirmNote">카카오톡 상담으로 실측값을 다시 한번 확인한 뒤 주문이 확정됩니다. 주문 확정 안내에 "네, 확인했습니다"로 답변해 주시면 접수가 완료됩니다.</p>
-    </div>
-  </section>
 </main>
 
 <!-- ============ 상세보기 미니 팝업 (설명 + 유형 비교) ============ -->
@@ -178,12 +178,16 @@
       '<a href="index.html" class="logo"><span class="logo-text"><span class="logo-kr">혜다움</span><span class="logo-en">HEDAUM</span></span></a>' +
       '<nav class="nav-links" aria-label="주요 메뉴">' +
       '<div class="nav-item"><a href="products.html">제품</a><div class="nav-dropdown">' +
-      '<a href="product.html?id=standard-door">일반 시공형 중문</a><a href="product.html?id=standard-partition">시공형 파티션</a>' +
+      '<a href="product.html?id=standard-door&type=3연동#customize">3연동</a>' +
+      '<a href="product.html?id=standard-door&type=원슬라이딩#customize">원슬라이딩</a>' +
+      '<a href="product.html?id=standard-door&type=스윙폴딩#customize">스윙폴딩</a>' +
+      '<a href="product.html?id=standard-door&type=여닫이#customize">여닫이</a>' +
+      '<a href="product.html?id=standard-door&type=자동문#customize">자동문</a>' +
       '</div></div>' +
       '<a href="service.html">서비스</a><a href="contact.html">상담 문의</a>' +
       '</nav>' +
       '<a href="mutagonglab.html" class="brand-switch"><span class="bs-label">무타공랩 홈페이지</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>' +
-      '<a href="product.html?id=standard-door#customize" class="nav-cta">지금 구성하기</a>' +
+      '<a href="product.html?id=standard-door#customize" class="nav-cta">내 중문 만들기</a>' +
       '<button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>' +
       '</div>' +
       '<div class="mobile-panel" id="mobilePanel">' +
@@ -198,14 +202,14 @@
       '<div class="nav-item"><a href="mutagonglab.html#products">DIY 제품</a><div class="nav-dropdown">' +
       '<a href="product.html?id=diy-door">무타공 DIY 중문</a><a href="product.html?id=partition">무타공 파티션</a>' +
       '</div></div>' +
-      '<a href="contact.html">상담 문의</a>' +
+      '<a href="contact.html?brand=mutagonglab">상담 문의</a>' +
       '</nav>' +
       '<a href="index.html" class="brand-switch"><span class="bs-label">혜다움 홈페이지</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>' +
-      '<a href="contact.html" class="nav-cta">출시 알림 신청</a>' +
+      '<a href="contact.html?brand=mutagonglab" class="nav-cta">출시 알림 신청</a>' +
       '<button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>' +
       '</div>' +
       '<div class="mobile-panel" id="mobilePanel">' +
-      '<a href="technology.html">무타공연구소</a><a href="design.html">제품디자인</a><a href="mutagonglab.html#products">DIY 제품</a><a href="contact.html">상담 문의</a><a href="index.html">혜다움 홈페이지</a>' +
+      '<a href="technology.html">무타공연구소</a><a href="design.html">제품디자인</a><a href="mutagonglab.html#products">DIY 제품</a><a href="contact.html?brand=mutagonglab">상담 문의</a><a href="index.html">혜다움 홈페이지</a>' +
       '</div>'
   };
 
@@ -214,23 +218,23 @@
       '<a href="index.html" class="logo"><span class="logo-text"><span class="logo-kr">혜다움</span><span class="logo-en">HEDAUM</span></span></a>' +
       '<p class="footer-tagline">옵션을 고르면, 우리 집 중문이 완성됩니다.</p></div>' +
       '<div class="footer-links"><div><h4>제품</h4><ul>' +
-      '<li><a href="products.html">전체 제품</a></li><li><a href="product.html?id=standard-door">일반 시공형 중문</a></li><li><a href="product.html?id=standard-partition">시공형 파티션</a></li>' +
+      '<li><a href="products.html">전체 제품</a></li><li><a href="product.html?id=standard-door">시공형 중문</a></li>' +
       '</ul></div><div><h4>안내</h4><ul>' +
       '<li><a href="service.html">서비스 방식</a></li><li><a href="service.html#faq">자주 묻는 질문</a></li><li><a href="contact.html">상담 문의</a></li>' +
       '</ul></div><div><h4>채널</h4><ul>' +
       '<li><a href="https://blog.naver.com/mutagonglab" target="_blank" rel="noopener">네이버 블로그</a></li><li><a href="https://www.instagram.com/mutagonglab" target="_blank" rel="noopener">인스타그램</a></li><li><a href="mutagonglab.html">무타공랩 홈페이지</a></li>' +
       '</ul></div></div></div>' +
-      '<div class="footer-bottom"><span>혜다움은 무타공랩이 운영하는 시공형 중문·파티션 브랜드입니다.</span><span>사업자등록번호 896-15-02645 · 대구광역시 남구 명덕로 104 계명대학교 비사관 6층 무타공랩</span></div></div>',
+      '<div class="footer-bottom"><span>사업자등록번호 896-15-02645 · 대구광역시 남구 명덕로 104 계명대학교 비사관 6층 무타공랩</span></div></div>',
     "무타공랩": '<div class="wrap"><div class="footer-top"><div>' +
       '<a href="mutagonglab.html" class="logo"><svg class="logo-icon" viewBox="0 0 100 100" aria-hidden="true"><path d="M18 42 L50 16 L82 42"></path><path d="M30 40 L30 51 M30 40 L41 40"></path><path d="M70 40 L70 51 M70 40 L59 40"></path><path d="M30 80 L30 69 M30 80 L41 80"></path><path d="M70 80 L70 69 M70 80 L59 80"></path><circle cx="50" cy="60" r="9"></circle></svg>' +
       '<span class="logo-text"><span class="logo-kr">무타공랩</span><span class="logo-en">MUTAGONGLAB</span></span></a>' +
       '<p class="footer-tagline">흔적 없이, 공간의 가치를 높이다.</p></div>' +
       '<div class="footer-links"><div><h4>브랜드</h4><ul>' +
-      '<li><a href="mutagonglab.html">기업 소개</a></li><li><a href="technology.html">무타공연구소</a></li><li><a href="design.html">제품디자인</a></li><li><a href="mutagonglab.html#interior">인테리어디자인</a></li>' +
+      '<li><a href="mutagonglab.html">기업 소개</a></li><li><a href="technology.html">무타공연구소</a></li><li><a href="design.html">제품디자인</a></li>' +
       '</ul></div><div><h4>제품</h4><ul>' +
       '<li><a href="mutagonglab.html#products">DIY 제품</a></li><li><a href="b2b.html">B2B 협업</a></li>' +
       '</ul></div><div><h4>채널</h4><ul>' +
-      '<li><a href="contact.html">상담 문의</a></li><li><a href="https://blog.naver.com/mutagonglab" target="_blank" rel="noopener">네이버 블로그</a></li><li><a href="https://www.instagram.com/mutagonglab" target="_blank" rel="noopener">인스타그램</a></li><li><a href="index.html">혜다움 홈페이지</a></li>' +
+      '<li><a href="contact.html?brand=mutagonglab">상담 문의</a></li><li><a href="https://blog.naver.com/mutagonglab" target="_blank" rel="noopener">네이버 블로그</a></li><li><a href="https://www.instagram.com/mutagonglab" target="_blank" rel="noopener">인스타그램</a></li><li><a href="index.html">혜다움 홈페이지</a></li>' +
       '</ul></div></div></div>' +
       '<div class="footer-bottom"><span>© 2026 MUTAGONGLAB. 대표 심혜미. All rights reserved.</span><span>사업자등록번호 896-15-02645 · 대구광역시 남구 명덕로 104 계명대학교 비사관 6층 무타공랩</span></div></div>'
   };
@@ -257,6 +261,7 @@
   var params = new URLSearchParams(window.location.search);
   var id = params.get("id") || "standard-door";
   var product = window.MUTAGONG_PRODUCTS[id];
+  var brand = (product && product.brand) || "무타공랩";
 
   if (!product) {
     document.querySelector("main").innerHTML =
@@ -285,16 +290,17 @@
     ? '<span class="sale-badge sale-badge--available">판매 중</span>'
     : '<span class="sale-badge sale-badge--soon">출시 예정</span>';
 
+  var contactHref = brand === "무타공랩" ? "contact.html?brand=mutagonglab" : "contact.html";
   function ctaMarkup() {
     if (isAvailable) {
       return (
         '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">카카오톡으로 구매·상담 문의</a>' +
-        '<a href="contact.html" class="btn btn-ghost">문의 폼 남기기</a>'
+        '<a href="' + contactHref + '" class="btn btn-ghost">문의 폼 남기기</a>'
       );
     }
     return (
       '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">출시 알림 · 카카오톡 상담</a>' +
-      '<a href="contact.html" class="btn btn-ghost">문의 폼 남기기</a>'
+      '<a href="' + contactHref + '" class="btn btn-ghost">문의 폼 남기기</a>'
     );
   }
   document.getElementById("heroCta").innerHTML = ctaMarkup();
@@ -416,9 +422,9 @@
   var subnavSections = [
     { id: "overview", label: "소개" },
     { id: "customize", label: "커스터마이징" },
+    { id: "buy", label: "구매" },
     { id: "installSection", label: "배송·설치" },
     { id: "reviews", label: "후기" },
-    { id: "buy", label: "구매" },
   ].filter(function (s) {
     var el = document.getElementById(s.id);
     return el && getComputedStyle(el).display !== "none";

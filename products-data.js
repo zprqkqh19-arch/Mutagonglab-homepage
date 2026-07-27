@@ -52,6 +52,7 @@
       '  <line class="muntin-line muntin-h" x1="20" y1="82" x2="84" y2="82"></line>' +
       '  <line class="muntin-line muntin-v" x1="38" y1="14" x2="38" y2="106"></line>' +
       '  <line class="muntin-line muntin-v" x1="56" y1="14" x2="56" y2="106"></line>' +
+      '  <path class="muntin-line muntin-arch" d="M20,32 Q52,12 84,32" fill="none"></path>' +
       '</g>' +
       '<g class="handle-group" data-handle="basic" style="display:none"><rect x="0" y="0" width="3" height="10" rx="1.5" class="handle"></rect></g>' +
       '<g class="foot-group" data-addon="foot" style="display:none"><circle cx="30" cy="110" r="2" class="foot"></circle><circle cx="66" cy="110" r="2" class="foot"></circle></g>' +
@@ -73,6 +74,7 @@
       '  <line class="muntin-line muntin-h" x1="14" y1="68" x2="86" y2="68"></line>' +
       '  <line class="muntin-line muntin-v" x1="40" y1="10" x2="40" y2="104"></line>' +
       '  <line class="muntin-line muntin-v" x1="66" y1="10" x2="66" y2="104"></line>' +
+      '  <path class="muntin-line muntin-arch" d="M14,34 Q50,14 86,34" fill="none"></path>' +
       '</g>' +
       '<g class="foot-group" data-addon="foot" style="display:none"><circle cx="24" cy="106" r="2" class="foot"></circle><circle cx="76" cy="106" r="2" class="foot"></circle></g>' +
       "</svg>"
@@ -128,6 +130,11 @@
       value: "grid",
       label: "격자간살",
       icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="24" height="36" rx="1"></rect><path d="M4,16 h24 M4,28 h24 M12,4 v36 M20,4 v36"></path></svg>',
+    },
+    {
+      value: "arch",
+      label: "아치형",
+      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2"><path d="M4,40 V16 A12,12 0 0 1 28,16 V40"></path><path d="M4,24 h24 M4,32 h24"></path></svg>',
     },
   ];
 
@@ -268,10 +275,19 @@
     default: false,
   };
 
+  // 시공형 파티션 — 별도 상품이 아니라 시공형 중문 커스터마이징의 마지막 옵션에서 추가 여부를 선택
+  var PARTITION_ADDON_OPTION = {
+    id: "partitionAddon",
+    kind: "addon",
+    label: "시공형 파티션 추가",
+    description: "중문과 함께 시공하는 파티션을 추가합니다. 가벽 없는 개방형 구조에 픽스(파티션)와 중문을 동시에 시공합니다.",
+    default: false,
+  };
+
   window.MUTAGONG_PRODUCTS = {
     "standard-door": {
       id: "standard-door",
-      name: "일반 시공형 중문",
+      name: "시공형 중문",
       brand: "혜다움",
       heroPhoto: "assets/hedaum-concept-01.png",
       tagline: "지금 바로 상담·구매가 가능한 시공형 중문입니다.",
@@ -299,31 +315,8 @@
         GLASS_TYPE_OPTION,
         GLASS_PATTERN_OPTION,
         HANDLE_OPTION,
+        PARTITION_ADDON_OPTION,
       ],
-      purchaseNotice:
-        "본 상품은 시공팀이 서울·경기·경상권 기준 무료로 현장 방문 실측을 진행한 뒤 제작·시공에 들어가는 시공형 제품입니다. 그 외 지역은 무료 실측이 어려워 별도 비용이 발생하며, 정확한 금액은 상담 시 안내드립니다. 실측 후 제작 시작 전에 취소하실 경우 3만원을 제외하고 환불되며, 제작이 시작된 이후에는 단순 변심에 의한 취소·반품이 불가합니다. 제품 또는 시공 하자가 확인되는 경우 구매일로부터 1년간 무상 A/S가 적용됩니다(고객 과실로 인한 하자는 비용이 발생할 수 있습니다). A/S 출장비는 실측과 동일한 기준으로 안내드립니다.",
-    },
-
-    "standard-partition": {
-      id: "standard-partition",
-      name: "시공형 파티션",
-      brand: "혜다움",
-      tagline: "시공형 중문과 함께 시공하는 파티션입니다.",
-      saleStatus: "available",
-      category: "파티션",
-      summary:
-        "혜다움의 시공형 파티션입니다. 가벽이 없는 완전 개방형 구조에 픽스(파티션)와 중문을 함께 시공해, 목공사보다 저렴하게 공간을 구획합니다.",
-      features: [
-        { title: "완전개방형 대응", desc: "가벽이 없는 구축·신축 현장에 파티션과 중문을 동시에 시공합니다." },
-        { title: "다양한 마감", desc: "도장·필름 프레임 색상과 간살·유리 디자인을 선택할 수 있습니다." },
-        { title: "정확한 실측 필요", desc: "파티션과 중문이 만나는 자리는 특히 정확한 실측이 필요합니다." },
-      ],
-      useCases: [
-        { tag: "완전 개방형 구조", desc: "가벽 없는 구축·신축 현장" },
-        { tag: "현관·거실 분리", desc: "외부 시선 차단이 필요한 공간" },
-      ],
-      previewSVG: partitionPreviewSVG,
-      options: [SIZE_OPTION, FINISH_TYPE_OPTION, FRAME_COLOR_OPTION, MUNTIN_OPTION, GLASS_TYPE_OPTION, GLASS_PATTERN_OPTION],
       purchaseNotice:
         "본 상품은 시공팀이 서울·경기·경상권 기준 무료로 현장 방문 실측을 진행한 뒤 제작·시공에 들어가는 시공형 제품입니다. 그 외 지역은 무료 실측이 어려워 별도 비용이 발생하며, 정확한 금액은 상담 시 안내드립니다. 실측 후 제작 시작 전에 취소하실 경우 3만원을 제외하고 환불되며, 제작이 시작된 이후에는 단순 변심에 의한 취소·반품이 불가합니다. 제품 또는 시공 하자가 확인되는 경우 구매일로부터 1년간 무상 A/S가 적용됩니다(고객 과실로 인한 하자는 비용이 발생할 수 있습니다). A/S 출장비는 실측과 동일한 기준으로 안내드립니다.",
     },
@@ -340,7 +333,7 @@
       features: [
         { title: "타공 없이 고정", desc: "벽과 문틀에 구멍을 내지 않아 원상복구가 쉽고, 전월세 공간에도 설치할 수 있습니다." },
         { title: "가변형 구조", desc: "길이조절발·마감판으로 공간 크기 변화에 맞춰 조정할 수 있습니다." },
-        { title: "알루미늄 소재", desc: "저가형 플라스틱이 아닌, 일반 시공형 중문과 동일한 알루미늄 프레임으로 내구성과 심미성을 갖췄습니다." },
+        { title: "알루미늄 소재", desc: "저가형 플라스틱이 아닌, 시공형 중문과 동일한 알루미늄 프레임으로 내구성과 심미성을 갖췄습니다." },
         { title: "완조립 셀프 설치", desc: "조립된 상태로 배송되어, 별도 시공비 없이 직접 설치할 수 있습니다." },
         { title: "고정 후 바로 사용", desc: "고정 설치와 마감재 부착까지 마치면 바로 사용할 수 있습니다." },
         { title: "구조 안전성 검증", desc: "하중과 고정력을 직접 검토하며 안전성을 확인합니다." },
@@ -363,9 +356,9 @@
         ADDON_OPTION,
       ],
       installSteps: [
-        { title: "패키지 확인", desc: "완조립된 프레임·패널과 길이조절발·마감판 등 부속품이 함께 배송됩니다." },
-        { title: "고정 설치", desc: "가이드에 따라 문틀에 밀착시키고 텐션바를 압착해 고정합니다." },
-        { title: "마감재 부착", desc: "마감판을 부착해 틈을 정리하면 바로 사용할 수 있습니다." },
+        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(유리 포함), 고정용 텐션바, 길이조절발·마감판, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
+        { title: "고정 설치", desc: "가이드에 따라 문틀 자리에 프레임을 세워 밀착시킨 뒤, 내부 텐션바를 압착해 벽과 문틀에 구멍 없이 고정합니다." },
+        { title: "마감재 부착", desc: "동봉된 마감판을 프레임과 벽 사이 틈에 부착해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
       ],
       installLimits: [
         "콘크리트·대리석 등 압착 고정이 어려운 초경질 벽체",
@@ -388,7 +381,7 @@
       features: [
         { title: "타공 없이 구획", desc: "벽 손상 없이 공간을 나눌 수 있고, 전월세 공간에도 설치할 수 있습니다." },
         { title: "가변형 구조", desc: "길이조절발·마감판으로 공간 크기 변화에 맞춰 조정할 수 있습니다." },
-        { title: "알루미늄 소재", desc: "저가형 플라스틱이 아닌, 일반 시공형 제품과 동일한 알루미늄 프레임으로 내구성과 심미성을 갖췄습니다." },
+        { title: "알루미늄 소재", desc: "저가형 플라스틱이 아닌, 시공형 제품과 동일한 알루미늄 프레임으로 내구성과 심미성을 갖췄습니다." },
         { title: "완조립 셀프 설치", desc: "조립된 상태로 배송되어, 별도 시공비 없이 직접 설치할 수 있습니다." },
         { title: "고정 후 바로 사용", desc: "고정 설치와 마감재 부착까지 마치면 바로 사용할 수 있습니다." },
         { title: "구조 안전성 검증", desc: "하중과 고정력을 직접 검토하며 안전성을 확인합니다." },
@@ -400,9 +393,9 @@
       previewSVG: partitionPreviewSVG,
       options: [SIZE_OPTION, FINISH_TYPE_OPTION, FRAME_COLOR_OPTION, MUNTIN_OPTION, GLASS_TYPE_OPTION, GLASS_PATTERN_OPTION, ADDON_OPTION],
       installSteps: [
-        { title: "패키지 확인", desc: "완조립된 프레임·패널과 길이조절발·마감판 등 부속품이 함께 배송됩니다." },
-        { title: "고정 설치", desc: "가이드에 따라 지정 위치에 밀착시키고 텐션바를 압착해 고정합니다." },
-        { title: "마감재 부착", desc: "마감판을 부착해 틈을 정리하면 바로 사용할 수 있습니다." },
+        { title: "패키지 확인", desc: "완조립된 프레임·패널, 고정용 텐션바, 길이조절발·마감판, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
+        { title: "고정 설치", desc: "가이드에 따라 지정 위치에 프레임을 세워 밀착시킨 뒤, 내부 텐션바를 압착해 구멍 없이 고정합니다." },
+        { title: "마감재 부착", desc: "동봉된 마감판을 틈에 부착해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
       ],
       installLimits: [
         "콘크리트·대리석 등 압착 고정이 어려운 초경질 벽체·바닥",
@@ -437,7 +430,7 @@
   };
 
   // 랜딩 타일에 쓰는 순서 고정
-  window.MUTAGONG_PRODUCT_ORDER = ["standard-door", "standard-partition", "diy-door", "partition", "accessories"];
+  window.MUTAGONG_PRODUCT_ORDER = ["standard-door", "diy-door", "partition", "accessories"];
 
   // 제품 유형별 비교 참고 정보 — 정확한 사이즈·비용은 현장·구성마다 달라 상담 시 확인을 원칙으로 하고,
   // 여기서는 상담 전 비교에 필요한 일반적인 특징만 안내(수치 스펙은 임의로 추가하지 말 것).
@@ -466,7 +459,7 @@
     },
     {
       brand: "혜다움",
-      brandSub: "중문 · 파티션",
+      brandSub: "중문",
       anchor: "hedaum",
       tint: "#241f19",
       items: [
@@ -475,7 +468,6 @@
         { id: "standard-door", type: "스윙폴딩", label: "스윙폴딩" },
         { id: "standard-door", type: "여닫이", label: "여닫이" },
         { id: "standard-door", type: "자동문", label: "자동문" },
-        { id: "standard-partition", type: null, label: "파티션" },
       ],
     },
   ];

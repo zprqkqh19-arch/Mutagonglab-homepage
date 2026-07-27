@@ -185,7 +185,13 @@
   // 제품 대분류(products.html) — 혜다움 / 무타공랩 두 브랜드 패밀리 그리드 (애플스토어 벤치마킹: 큰 비주얼 + "자세히 보기 / 구매·상담" 텍스트 링크 두 줄)
   var groupsMount = document.getElementById("brandGroups");
   if (groupsMount && window.MUTAGONG_BRAND_GROUPS && window.MUTAGONG_PRODUCTS) {
-    groupsMount.innerHTML = window.MUTAGONG_BRAND_GROUPS.map(function (group, gi) {
+    var groupBrandFilter = groupsMount.getAttribute("data-brand-filter");
+    var groups = groupBrandFilter
+      ? window.MUTAGONG_BRAND_GROUPS.filter(function (g) {
+          return g.brand === groupBrandFilter;
+        })
+      : window.MUTAGONG_BRAND_GROUPS;
+    groupsMount.innerHTML = groups.map(function (group, gi) {
       var cards = group.items
         .map(function (item) {
           var p = window.MUTAGONG_PRODUCTS[item.id];

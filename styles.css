@@ -147,9 +147,9 @@
   }
 
   /* ============ Logo (Pretendard 워드마크, BI/명함 기준) ============ */
-  .logo{ display:inline-flex; align-items:baseline; gap:.5rem; text-decoration:none; }
-  .logo-kr{ font-weight:700; letter-spacing:.08em; font-size:1.4rem; color:var(--logo-color); }
-  .logo-en{ font-weight:600; letter-spacing:.14em; font-size:.8rem; text-transform:uppercase; color:var(--ink-soft); }
+  .logo{ display:inline-flex; align-items:baseline; gap:.55rem; text-decoration:none; }
+  .logo-kr{ font-weight:700; letter-spacing:.06em; font-size:1.7rem; color:var(--logo-color); }
+  .logo-en{ font-weight:600; letter-spacing:.13em; font-size:.92rem; text-transform:uppercase; color:var(--ink-soft); }
   footer .logo-kr, footer .logo-en{ color:var(--ivory); }
   footer .logo-en{ color:rgba(246,243,238,0.6); }
 
@@ -388,6 +388,8 @@
   .process-step h3{ font-size:var(--step-0); font-weight:700; }
   .process-step p{ font-size:var(--step--1); color:var(--ink-soft); }
   .process-note{ font-size:var(--step--1); color:var(--ink-soft); margin-top:1.2rem; max-width:70ch; }
+  #installStepsList{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:700px){ #installStepsList{ grid-template-columns:1fr; } }
 
   /* ============ Contact ============ */
   .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
@@ -440,7 +442,7 @@
   .theme-toggle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; }
   /* ============ 로고 아이콘 (2026-07-09 명함 시안 기준: 지붕+포커스프레임+원) ============ */
   .logo-icon{
-    width:32px; height:32px; flex:0 0 auto;
+    width:40px; height:40px; flex:0 0 auto;
     stroke:var(--logo-color); fill:none; stroke-width:5.5; stroke-linecap:round; stroke-linejoin:round;
   }
   .logo{ display:inline-flex; align-items:center; gap:.55rem; text-decoration:none; }
@@ -775,11 +777,16 @@
   /* 간살 디자인 — data-muntin */
   .cfg-preview .muntin-overlay{ display:none; }
   .cfg-preview .muntin-line{ stroke:var(--cfg-frame, var(--accent)); stroke-width:1.4; opacity:.75; }
+  .cfg-preview .muntin-arch{ display:none; }
   .cfg-preview[data-muntin="horizontal"] .muntin-overlay{ display:inline; }
   .cfg-preview[data-muntin="horizontal"] .muntin-v{ display:none; }
   .cfg-preview[data-muntin="vertical"] .muntin-overlay{ display:inline; }
   .cfg-preview[data-muntin="vertical"] .muntin-h{ display:none; }
   .cfg-preview[data-muntin="grid"] .muntin-overlay{ display:inline; }
+  .cfg-preview[data-muntin="arch"] .muntin-overlay{ display:inline; }
+  .cfg-preview[data-muntin="arch"] .muntin-h{ display:none; }
+  .cfg-preview[data-muntin="arch"] .muntin-v{ display:none; }
+  .cfg-preview[data-muntin="arch"] .muntin-arch{ display:inline; }
   .cfg-preview .foot, .cfg-preview .handle{ fill:var(--cfg-frame, var(--accent)); stroke:none; }
 
   /* ============ nav 항목 증가 대응 ============ */
@@ -836,9 +843,20 @@
   @media (max-width:900px){ .material-grid{ grid-template-columns:repeat(3,1fr); } }
   @media (max-width:560px){ .material-grid{ grid-template-columns:repeat(2,1fr); } }
   .material-card{ display:flex; flex-direction:column; gap:.6rem; }
-  .material-swatch{ aspect-ratio:1; border-radius:16px; border:1px solid var(--paper-line); }
+  .material-swatch-btn{ all:unset; cursor:pointer; display:block; border-radius:16px; }
+  .material-swatch{
+    aspect-ratio:1; border-radius:16px; border:1px solid var(--paper-line);
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+  }
+  .material-swatch-btn:hover .material-swatch,
+  .material-swatch-btn:focus-visible .material-swatch{ transform:translateY(-6px) scale(1.05); box-shadow:var(--shadow); }
+  .material-swatch-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
   .material-card h4{ font-size:var(--step--1); font-weight:700; }
   .material-card p{ font-size:.72rem; color:var(--ink-soft); }
+  .color-modal-swatch{
+    aspect-ratio:16/7; border-radius:18px; border:1px solid var(--paper-line); margin-bottom:1.4rem;
+  }
+  .color-modal-hex{ font-variant-numeric:tabular-nums; letter-spacing:.04em; }
 
   /* ============ FAQ (네이티브 details/summary) ============ */
   .faq-list{ display:flex; flex-direction:column; gap:.8rem; }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>전체 제품 | 혜다움</title>
-<meta name="description" content="혜다움의 시공형 중문·파티션 제품 라인업. 색상·유리·간살까지 직접 골라 전문 시공팀 설치로 완성합니다." />
+<meta name="description" content="혜다움의 시공형 중문 제품 라인업. 3연동·원슬라이딩·스윙폴딩·여닫이·자동문 구조를 직접 골라 전문 시공팀 설치로 완성합니다." />
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,8 +18,11 @@
       <div class="nav-item">
         <a href="products.html">제품</a>
         <div class="nav-dropdown">
-          <a href="product.html?id=standard-door">일반 시공형 중문</a>
-          <a href="product.html?id=standard-partition">시공형 파티션</a>
+          <a href="product.html?id=standard-door&type=3연동#customize">3연동</a>
+          <a href="product.html?id=standard-door&type=원슬라이딩#customize">원슬라이딩</a>
+          <a href="product.html?id=standard-door&type=스윙폴딩#customize">스윙폴딩</a>
+          <a href="product.html?id=standard-door&type=여닫이#customize">여닫이</a>
+          <a href="product.html?id=standard-door&type=자동문#customize">자동문</a>
         </div>
       </div>
       <a href="service.html">서비스</a>
@@ -29,7 +32,7 @@
       <span class="bs-label">무타공랩 홈페이지</span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
     </a>
-    <a href="product.html?id=standard-door#customize" class="nav-cta">지금 구성하기</a>
+    <a href="product.html?id=standard-door#customize" class="nav-cta">내 중문 만들기</a>
     <button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>
   </div>
   <div class="mobile-panel" id="mobilePanel">
@@ -58,31 +61,14 @@
     <div class="scene-content">
       <div class="wrap">
         <span class="eyebrow">혜다움 · 전체 제품</span>
-        <h1 style="font-size:var(--step-4); margin-top:.6rem; max-width:20ch;">색상·유리·간살까지<br>직접 고르는 시공형 중문</h1>
-        <p class="lede" style="font-size:var(--step-1); margin-top:1rem; max-width:56ch;">제품을 클릭하면 상세 설명과 커스터마이징 화면으로 바로 이동합니다.</p>
+        <h1 style="font-size:var(--step-4); margin-top:.6rem; max-width:20ch;">구조를 고르면, 바로 구성이 시작됩니다</h1>
+        <p class="lede" style="font-size:var(--step-1); margin-top:1rem; max-width:56ch;">공간에 맞는 구조를 클릭하면 커스터마이징 화면으로 바로 이동합니다. 파티션은 커스터마이징 마지막 단계에서 추가할 수 있습니다.</p>
       </div>
     </div>
   </section>
 
-  <!-- ============ 제품 타일 ============ -->
-  <section class="band">
-    <div class="wrap">
-      <div class="tile-grid reveal" data-reveal id="productTiles" data-brand-filter="혜다움"></div>
-    </div>
-  </section>
-
-  <!-- ============ B2B 배너 (최하위 비중) ============ -->
-  <section>
-    <div class="wrap">
-      <div class="b2b-banner reveal" data-reveal>
-        <div>
-          <h3>제품디자인·인테리어 협업 문의</h3>
-          <p>기업·상업공간 대상 제품디자인 의뢰, 인테리어 디자인 협업, 공간 솔루션 제안은 별도로 받고 있습니다.</p>
-        </div>
-        <a href="b2b.html" class="btn btn-ghost">B2B 협업 보기</a>
-      </div>
-    </div>
-  </section>
+  <!-- ============ 구조 유형별 라인업 ============ -->
+  <div id="brandGroups" data-brand-filter="혜다움"></div>
 </main>
 
 <footer>
@@ -92,14 +78,13 @@
         <a href="index.html" class="logo">
           <span class="logo-text"><span class="logo-kr">혜다움</span><span class="logo-en">HEDAUM</span></span>
         </a>
-        <p class="footer-tagline">옵션을 고르면, 우리 집 중문이 완성됩니다.</p>
+        <p class="footer-tagline">색과 결까지, 우리 집에 맞게.</p>
       </div>
       <div class="footer-links">
         <div>
           <h4>제품</h4>
           <ul>
-            <li><a href="product.html?id=standard-door">일반 시공형 중문</a></li>
-            <li><a href="product.html?id=standard-partition">시공형 파티션</a></li>
+            <li><a href="product.html?id=standard-door">시공형 중문</a></li>
           </ul>
         </div>
         <div>
@@ -121,7 +106,6 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>혜다움은 무타공랩이 운영하는 시공형 중문·파티션 브랜드입니다.</span>
       <span>사업자등록번호 896-15-02645 · 대구광역시 남구 명덕로 104 계명대학교 비사관 6층 무타공랩</span>
     </div>
   </div>
