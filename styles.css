@@ -609,6 +609,16 @@
     align-items:start;
   }
   @media (max-width:900px){ .configurator{ grid-template-columns:1fr; } }
+  .scroll-cue-icon{
+    display:inline-flex; vertical-align:middle; margin-left:.4em;
+    width:1.1em; height:1.1em; color:var(--accent);
+    animation:scroll-cue-bounce 1.6s ease-in-out infinite;
+  }
+  .scroll-cue-icon svg{ width:100%; height:100%; }
+  @keyframes scroll-cue-bounce{
+    0%,100%{ transform:translateY(0); opacity:.7; }
+    50%{ transform:translateY(.3em); opacity:1; }
+  }
   .type-finder-btn{
     position:absolute; top:clamp(1.1rem,2vw,1.6rem); right:clamp(1.1rem,2vw,1.6rem); z-index:5;
     display:inline-flex; align-items:center; gap:.4em; font-size:.72rem; font-weight:600;
@@ -763,10 +773,13 @@
   /* ============ 상세페이지 — 제목 아래 간략 특징·적용사례 칩 ============ */
   .pdp-brief{ margin-top:1.1rem; }
   .pdp-brief-label{ display:block; font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:.5rem; }
-  .pdp-brief-list{ display:flex; flex-wrap:wrap; gap:.5rem; list-style:none; padding:0; margin:0; }
+  .pdp-brief-list{
+    display:flex; flex-wrap:nowrap; gap:.5rem; list-style:none; padding:0 0 .3rem; margin:0;
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+  }
   .pdp-brief-list li{
     background:var(--paper-deep); border:1px solid var(--card-border); border-radius:999px;
-    padding:.4rem .9rem; font-size:.82rem; color:var(--ink);
+    padding:.4rem .9rem; font-size:.82rem; color:var(--ink); white-space:nowrap; flex:0 0 auto;
   }
 
   /* ============ 상세보기 트리거 링크 ============ */
