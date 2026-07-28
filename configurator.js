@@ -6,6 +6,46 @@
 (function () {
   "use strict";
 
+  // ============ 공용 "예시 이미지 보기" 미니팝업 — 페이지마다 정적 모달 마크업 없이 필요할 때 만들어 씀 ============
+  var exampleModalEl = null;
+  function ensureExampleModal() {
+    if (exampleModalEl) return exampleModalEl;
+    var overlay = document.createElement("div");
+    overlay.className = "pdp-modal-overlay";
+    overlay.hidden = true;
+    overlay.innerHTML =
+      '<div class="pdp-modal" role="dialog" aria-modal="true">' +
+      '<button type="button" class="pdp-modal-close" aria-label="닫기"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>' +
+      '<span class="eyebrow">예시 이미지</span>' +
+      '<h3 class="example-modal-title">-</h3>' +
+      '<div class="example-modal-visual"></div>' +
+      '<p class="pdp-modal-note example-modal-caption"></p>' +
+      "</div>";
+    document.body.appendChild(overlay);
+    var closeBtn = overlay.querySelector(".pdp-modal-close");
+    var close = function () {
+      overlay.hidden = true;
+      document.body.style.overflow = "";
+    };
+    closeBtn.addEventListener("click", close);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !overlay.hidden) close();
+    });
+    exampleModalEl = overlay;
+    return overlay;
+  }
+  window.MUTAGONG_openExampleModal = function (title, visualHtml, caption) {
+    var overlay = ensureExampleModal();
+    overlay.querySelector(".example-modal-title").textContent = title;
+    overlay.querySelector(".example-modal-visual").innerHTML = visualHtml || "";
+    overlay.querySelector(".example-modal-caption").textContent = caption || "";
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+  };
+
   function initConfigurator(product, mount, overrides) {
     var state = {};
     product.options.forEach(function (opt) {
@@ -16,6 +56,9 @@
         if (key in state) state[key] = overrides[key];
       });
     }
+    // 가로/세로 통간살 커스텀 배치 — 슬롯 인덱스(0~4) 배열. 슬롯이 이산적이라 간살끼리 겹치거나 가로지르지 않음.
+    state.muntinCustom = { horizontal: [], vertical: [] };
+    var MUNTIN_SLOT_COUNT = 5;
 
     var previewStage = mount.querySelector("[data-preview-stage]");
     previewStage.innerHTML = product.previewSVG();
@@ -49,12 +92,16 @@
       if (hex) svg.style.setProperty("--cfg-frame", hex);
       // 간살 디자인
       if (state.muntin) svg.setAttribute("data-muntin", state.muntin);
+      updateCustomMuntinLines();
       // 유리 종류 · 유리 디자인
       if (state.glassType) svg.setAttribute("data-glasstype", state.glassType);
       if (state.glassPattern) svg.setAttribute("data-glass", state.glassPattern);
-      // 손잡이
+      // 손잡이 (원형/일자형)
       var handleGroup = svg.querySelector(".handle-group");
-      if (handleGroup) handleGroup.style.display = state.handle && state.handle !== "none" ? "inline" : "none";
+      if (handleGroup) {
+        handleGroup.style.display = state.handle && state.handle !== "none" ? "inline" : "none";
+        if (state.handle) svg.setAttribute("data-handle", state.handle);
+      }
       // 부속품(길이조절발/마감판)
       var footGroup = svg.querySelector(".foot-group");
       if (footGroup && "footFinish" in state) {
@@ -92,6 +139,180 @@
       }
     }
 
+    // 가로/세로 통간살 커스텀 배치를 실제 프리뷰 SVG에 그리기 — 기본 3~2줄 프리셋 대신
+    // state.muntinCustom[방향]에 담긴 슬롯 위치에만 <line>을 새로 그려 넣는다.
+    function updateCustomMuntinLines() {
+      var overlay = svg.querySelector(".muntin-overlay");
+      if (!overlay) return;
+      overlay.querySelectorAll(".muntin-custom").forEach(function (el) {
+        el.remove();
+      });
+      // 프리셋 3~2줄은 위치 계산용 기준선으로만 쓰고, 커스텀 간살이 있으면 화면엔 숨긴다(둘이 겹쳐 보이지 않도록).
+      overlay.querySelectorAll(".muntin-h").forEach(function (el) {
+        el.style.display = "";
+      });
+      overlay.querySelectorAll(".muntin-v").forEach(function (el) {
+        el.style.display = "";
+      });
+
+      var orientation = state.muntin;
+      if (orientation !== "horizontal" && orientation !== "vertical") return;
+      var list = state.muntinCustom[orientation];
+      if (!list || !list.length) return;
+
+      var hRef = overlay.querySelector(".muntin-h");
+      var vRef = overlay.querySelector(".muntin-v");
+      var svgNS = "http://www.w3.org/2000/svg";
+
+      overlay.querySelectorAll(orientation === "horizontal" ? ".muntin-h" : ".muntin-v").forEach(function (el) {
+        el.style.display = "none";
+      });
+
+      if (orientation === "horizontal" && hRef && vRef) {
+        var x1 = hRef.getAttribute("x1");
+        var x2 = hRef.getAttribute("x2");
+        var top = parseFloat(vRef.getAttribute("y1"));
+        var bottom = parseFloat(vRef.getAttribute("y2"));
+        list.forEach(function (slot) {
+          var y = top + ((bottom - top) / (MUNTIN_SLOT_COUNT + 1)) * (slot + 1);
+          var line = document.createElementNS(svgNS, "line");
+          line.setAttribute("class", "muntin-line muntin-custom");
+          line.setAttribute("x1", x1);
+          line.setAttribute("x2", x2);
+          line.setAttribute("y1", y);
+          line.setAttribute("y2", y);
+          overlay.appendChild(line);
+        });
+      } else if (orientation === "vertical" && hRef && vRef) {
+        var y1 = vRef.getAttribute("y1");
+        var y2 = vRef.getAttribute("y2");
+        var left = parseFloat(hRef.getAttribute("x1"));
+        var right = parseFloat(hRef.getAttribute("x2"));
+        list.forEach(function (slot) {
+          var x = left + ((right - left) / (MUNTIN_SLOT_COUNT + 1)) * (slot + 1);
+          var vline = document.createElementNS(svgNS, "line");
+          vline.setAttribute("class", "muntin-line muntin-custom");
+          vline.setAttribute("y1", y1);
+          vline.setAttribute("y2", y2);
+          vline.setAttribute("x1", x);
+          vline.setAttribute("x2", x);
+          overlay.appendChild(vline);
+        });
+      }
+    }
+
+    // 가로/세로 통간살 아이콘에 커서를 올리면 뜨는 확장 패널 — 좌클릭으로 슬롯에 간살 추가,
+    // 우클릭으로 삭제. 슬롯이 정해진 5칸이라 간살끼리 겹치거나 서로 가로지르지 않는다.
+    function buildMuntinPopover(orientation, triggerBtn, head, opt) {
+      var pop = document.createElement("div");
+      pop.className = "muntin-popover";
+
+      var svgNS = "http://www.w3.org/2000/svg";
+      var popSvg = document.createElementNS(svgNS, "svg");
+      popSvg.setAttribute("viewBox", "0 0 100 130");
+      popSvg.setAttribute("class", "muntin-popover-frame");
+
+      var frame = document.createElementNS(svgNS, "rect");
+      frame.setAttribute("x", "14");
+      frame.setAttribute("y", "10");
+      frame.setAttribute("width", "72");
+      frame.setAttribute("height", "110");
+      frame.setAttribute("class", "slot-frame");
+      popSvg.appendChild(frame);
+
+      var slotEls = [];
+      for (var i = 0; i < MUNTIN_SLOT_COUNT; i++) {
+        (function (slotIndex) {
+          var hit, bar;
+          if (orientation === "horizontal") {
+            var y = 10 + (110 / (MUNTIN_SLOT_COUNT + 1)) * (slotIndex + 1);
+            hit = document.createElementNS(svgNS, "rect");
+            hit.setAttribute("x", "14");
+            hit.setAttribute("y", y - 6);
+            hit.setAttribute("width", "72");
+            hit.setAttribute("height", "12");
+            bar = document.createElementNS(svgNS, "line");
+            bar.setAttribute("x1", "14");
+            bar.setAttribute("x2", "86");
+            bar.setAttribute("y1", y);
+            bar.setAttribute("y2", y);
+          } else {
+            var x = 14 + (72 / (MUNTIN_SLOT_COUNT + 1)) * (slotIndex + 1);
+            hit = document.createElementNS(svgNS, "rect");
+            hit.setAttribute("x", x - 6);
+            hit.setAttribute("y", "10");
+            hit.setAttribute("width", "12");
+            hit.setAttribute("height", "110");
+            bar = document.createElementNS(svgNS, "line");
+            bar.setAttribute("y1", "10");
+            bar.setAttribute("y2", "120");
+            bar.setAttribute("x1", x);
+            bar.setAttribute("x2", x);
+          }
+          hit.setAttribute("class", "slot-hit");
+          bar.setAttribute("class", "slot-bar");
+          bar.style.display = "none";
+
+          hit.addEventListener("click", function () {
+            var list = state.muntinCustom[orientation];
+            if (list.indexOf(slotIndex) === -1) {
+              list.push(slotIndex);
+              list.sort(function (a, b) {
+                return a - b;
+              });
+            }
+            if (state.muntin !== orientation) {
+              handleOptionChange(opt, orientation);
+              visualsSyncPressed();
+              updateCurrentLabel(head, opt, state[opt.id]);
+            } else {
+              render();
+            }
+            syncPopover();
+          });
+          hit.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            var list = state.muntinCustom[orientation];
+            var at = list.indexOf(slotIndex);
+            if (at !== -1) {
+              list.splice(at, 1);
+              render();
+              syncPopover();
+            }
+          });
+
+          popSvg.appendChild(bar);
+          popSvg.appendChild(hit);
+          slotEls.push({ index: slotIndex, bar: bar });
+        })(i);
+      }
+
+      function syncPopover() {
+        var list = state.muntinCustom[orientation];
+        slotEls.forEach(function (s) {
+          s.bar.style.display = list.indexOf(s.index) !== -1 ? "inline" : "none";
+        });
+      }
+
+      function visualsSyncPressed() {
+        triggerBtn
+          .closest(".opt-choices")
+          .querySelectorAll(".opt-visual")
+          .forEach(function (b) {
+            b.setAttribute("aria-pressed", "false");
+          });
+        triggerBtn.setAttribute("aria-pressed", "true");
+      }
+
+      pop.appendChild(popSvg);
+      var hint = document.createElement("p");
+      hint.className = "muntin-popover-hint";
+      hint.textContent = "좌클릭: 간살 추가 · 우클릭: 간살 삭제";
+      pop.appendChild(hint);
+      syncPopover();
+      return pop;
+    }
+
     function buildControls() {
       groupsEl.innerHTML = "";
       product.options.forEach(function (opt) {
@@ -111,6 +332,21 @@
             state[opt.id] = e.target.checked;
             render();
           });
+          if (opt.id === "partitionAddon") {
+            var exampleBtn = document.createElement("button");
+            exampleBtn.type = "button";
+            exampleBtn.className = "opt-addon-example-btn";
+            exampleBtn.textContent = "예시 이미지 보기";
+            exampleBtn.addEventListener("click", function () {
+              var previewHtml = window.MUTAGONG_PARTITION_PREVIEW_SVG ? window.MUTAGONG_PARTITION_PREVIEW_SVG() : "";
+              window.MUTAGONG_openExampleModal(
+                "파티션 예시",
+                previewHtml,
+                "실제 시공 사진 확보 전까지 개념도로 안내해 드립니다."
+              );
+            });
+            group.appendChild(exampleBtn);
+          }
           groupsEl.appendChild(group);
           return;
         }
@@ -201,6 +437,13 @@
             vLab.textContent = c.label;
             vWrap.appendChild(vBtn);
             vWrap.appendChild(vLab);
+
+            // 간살 디자인의 가로/세로 통간살은 커스텀 배치 가능 — 아이콘에 커서를 올리면
+            // 확장 패널이 뜨고, 그 안에서 좌클릭=간살 추가, 우클릭=간살 삭제.
+            if (opt.id === "muntin" && (c.value === "horizontal" || c.value === "vertical")) {
+              vWrap.appendChild(buildMuntinPopover(c.value, vBtn, head, opt));
+            }
+
             visuals.appendChild(vWrap);
           });
           group.appendChild(visuals);

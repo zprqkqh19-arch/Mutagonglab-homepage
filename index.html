@@ -55,9 +55,9 @@
     <div class="wrap hero-fullbleed-content">
       <span class="eyebrow">혜다움 · 시공형 중문</span>
       <h1>색과 결까지,<br>우리 집에 맞게.</h1>
-      <p class="lede">프레임 색상, 유리, 간살 하나하나 직접 고르면 나만의 중문이 완성됩니다.<br>바로 아래에서 시작해 보세요.</p>
+      <p class="lede">색상, 유리, 간살 하나하나 직접 고르면 나만의 중문이 완성됩니다.<br>바로 아래에서 시작해 보세요.</p>
       <div class="hero-fullbleed-links">
-        <a href="products.html" class="btn btn-ghost hero-secondary-link">제품 알아보기</a>
+        <a href="#customize" class="btn btn-ghost hero-secondary-link">나만의 중문 만들기</a>
       </div>
     </div>
     <p class="hero-fullbleed-caption">실제 시공 사진을 AI로 보정한 이미지입니다.</p>
@@ -71,21 +71,37 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-6M4 10V3M12 21v-9M12 7V3M20 21v-4M20 12V3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path><circle cx="4" cy="12" r="2" fill="currentColor" stroke="none"></circle><circle cx="12" cy="9" r="2" fill="currentColor" stroke="none"></circle><circle cx="20" cy="15" r="2" fill="currentColor" stroke="none"></circle></svg>
           <span>혜다움 커스터마이징</span>
         </span>
-        <h2>지금 바로,<br>내 중문을 만들어보세요</h2>
-        <p>구조·색상·유리·간살을 하나씩 고르면 예상 이미지가 바로 바뀝니다. 파티션이 필요하면 마지막 단계에서 함께 추가할 수 있습니다.</p>
+        <h2>지금 바로,<br>나만의 중문을 만들어보세요</h2>
+        <p>구조·색상·유리·간살을 하나씩 고르면 예상 이미지가 바로 바뀝니다.<br>파티션이 필요하면 마지막 단계에서 함께 추가할 수 있습니다.</p>
       </div>
 
       <div class="configurator reveal" data-reveal id="configuratorMount">
+        <button type="button" class="type-finder-btn" id="typeFinderBtn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+          구조에 맞는 제품 유형 찾기
+        </button>
         <div class="preview-pane">
           <div class="preview-stage" data-preview-stage></div>
           <div class="preview-dim" data-preview-dim></div>
           <div class="spec-summary" data-spec-summary></div>
         </div>
         <div class="opt-groups" data-opt-groups></div>
-        <p class="configurator-note">* 1차 버전은 개념도 기반 예상 이미지입니다. 실사진 기반 시뮬레이션으로 순차 확장할 예정입니다.</p>
       </div>
     </div>
   </section>
+
+  <!-- ============ 구조에 맞는 제품 유형 찾기 미니팝업 ============ -->
+  <div class="pdp-modal-overlay" id="typeFinderModal" hidden>
+    <div class="pdp-modal" role="dialog" aria-modal="true" aria-labelledby="typeFinderTitle">
+      <button type="button" class="pdp-modal-close" id="typeFinderClose" aria-label="닫기">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+      <span class="eyebrow">유형 찾기</span>
+      <h3 id="typeFinderTitle">구조에 맞는 제품 유형 찾기</h3>
+      <p class="pdp-modal-summary">공간과 상황에 따라 어울리는 구조가 다릅니다. 아래에서 우리 집에 맞는 구조를 확인해 보세요.</p>
+      <div class="type-finder-list" id="typeFinderList"></div>
+    </div>
+  </div>
 
   <!-- ============ 구매 / 상담 (커스터마이징 바로 다음) ============ -->
   <section class="band pdp-cta-section" id="buy">
@@ -110,13 +126,13 @@
       </div>
       <div class="pillar-grid" data-reveal-stagger>
 
-        <a href="products.html" class="pillar-card">
+        <a href="product.html?id=standard-door#customize" class="pillar-card">
           <div class="light-shadow"></div>
-          <span class="pillar-num">01 · CUSTOMIZE</span>
-          <svg class="pillar-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 34V22M8 22a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM20 34V16M20 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM32 34V26M32 26a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path></svg>
-          <h3>직접 골라 완성</h3>
-          <p>프레임 색상, 유리, 간살 디자인을 선택하면 예상 이미지가 바로 바뀝니다.</p>
-          <span class="pillar-link">다른 구조도 보기 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+          <span class="pillar-num">01 · FINISH</span>
+          <svg class="pillar-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 6C20 6 10 18 10 25a10 10 0 0 0 20 0C30 18 20 6 20 6Z"></path><path d="M15 26a5 5 0 0 0 5 5" stroke-dasharray="1.5 2.2"></path></svg>
+          <h3>스크래치·부식에 강한 마감</h3>
+          <p>'도장'이라고만 표기된 저가 제품은 스크래치와 부식에 약한 분체도장인 경우가 많습니다. 혜다움은 고가형 중문에 쓰이는 불소도장으로 마감해 색과 표면이 오래갑니다.</p>
+          <span class="pillar-link">마감 옵션 보기 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
         </a>
 
         <a href="service.html" class="pillar-card">

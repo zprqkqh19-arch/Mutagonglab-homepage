@@ -54,11 +54,16 @@
       '  <line class="muntin-line muntin-v" x1="56" y1="14" x2="56" y2="106"></line>' +
       '  <path class="muntin-line muntin-arch" d="M20,32 Q52,12 84,32" fill="none"></path>' +
       '</g>' +
-      '<g class="handle-group" data-handle="basic" style="display:none"><rect x="0" y="0" width="3" height="10" rx="1.5" class="handle"></rect></g>' +
+      '<g class="handle-group" style="display:none">' +
+      '  <g class="handle-shape-bar"><rect x="33.5" y="50" width="2.4" height="20" rx="1.2" class="handle"></rect></g>' +
+      '  <g class="handle-shape-circle"><circle cx="34.7" cy="60" r="3" class="handle"></circle></g>' +
+      '</g>' +
       '<g class="foot-group" data-addon="foot" style="display:none"><circle cx="30" cy="110" r="2" class="foot"></circle><circle cx="66" cy="110" r="2" class="foot"></circle></g>' +
       "</svg>"
     );
   }
+
+  window.MUTAGONG_PARTITION_PREVIEW_SVG = partitionPreviewSVG;
 
   function partitionPreviewSVG() {
     return (
@@ -97,13 +102,9 @@
   // 근거: 시공사장님_상세페이지_컨펌요청_2026-07-25.docx — 불소도장/필름 두 가지 마감 방식이 있다는 것까지만 확인됨.
   var FRAME_COLORS = [
     { value: "paint_white", label: "화이트", hex: "#F6F3EE", group: "도장" },
-    { value: "paint_ivory", label: "아이보리", hex: "#E9DFC9", group: "도장" },
     { value: "paint_gray", label: "그레이", hex: "#B9B2A8", group: "도장" },
     { value: "paint_black", label: "블랙", hex: "#2D2D2D", group: "도장" },
-    { value: "paint_gold", label: "골드", hex: "#B88A5A", group: "도장" },
     { value: "film_white", label: "화이트", hex: "#F3EFE6", group: "필름" },
-    { value: "film_oak", label: "오크", hex: "#C9A876", group: "필름" },
-    { value: "film_walnut", label: "월넛", hex: "#6F4E37", group: "필름" },
     { value: "film_gray", label: "그레이", hex: "#A9A29A", group: "필름" },
     { value: "film_black", label: "블랙", hex: "#2A2724", group: "필름" },
   ];
@@ -127,14 +128,9 @@
       icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="24" height="36" rx="1"></rect><path d="M12,4 v36 M20,4 v36"></path></svg>',
     },
     {
-      value: "grid",
-      label: "격자간살",
-      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="24" height="36" rx="1"></rect><path d="M4,16 h24 M4,28 h24 M12,4 v36 M20,4 v36"></path></svg>',
-    },
-    {
       value: "arch",
       label: "아치형",
-      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2"><path d="M4,40 V16 A12,12 0 0 1 28,16 V40"></path><path d="M4,24 h24 M4,32 h24"></path></svg>',
+      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2"><path d="M4,40 V16 A12,12 0 0 1 28,16 V40"></path></svg>',
     },
   ];
 
@@ -158,17 +154,17 @@
     {
       value: "moru",
       label: "모루",
-      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="4" width="24" height="36" rx="1"></rect><path d="M9,10 l4,4 M9,20 l4,4 M9,30 l4,4 M19,10 l4,4 M19,20 l4,4 M19,30 l4,4"></path></svg>',
+      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="4" width="24" height="36" rx="1"></rect><path d="M11,5 Q14,11 11,17 Q8,23 11,29 Q14,35 11,42" stroke-opacity=".8"></path><path d="M21,5 Q24,11 21,17 Q18,23 21,29 Q24,35 21,42" stroke-opacity=".8"></path></svg>',
     },
     {
       value: "mist",
       label: "미스트",
-      icon: '<svg viewBox="0 0 32 44"><rect x="4" y="4" width="24" height="36" rx="1" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.2" stroke-opacity=".5"></rect><path d="M8,14 h16 M8,22 h16 M8,30 h16" stroke="currentColor" stroke-width="1.2" stroke-opacity=".35" fill="none"></path></svg>',
+      icon: '<svg viewBox="0 0 32 44"><rect x="4" y="4" width="24" height="36" rx="1" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.2" stroke-opacity=".5"></rect><path d="M7,14 Q12,11.5 16,14 T27,14" stroke="currentColor" stroke-width="1.2" stroke-opacity=".45" fill="none"></path><path d="M6,22 Q11,24.5 16,22 T28,22" stroke="currentColor" stroke-width="1.2" stroke-opacity=".35" fill="none"></path><path d="M7,30 Q12,27.5 16,30 T27,30" stroke="currentColor" stroke-width="1.2" stroke-opacity=".25" fill="none"></path></svg>',
     },
     {
       value: "fabric",
       label: "패브릭",
-      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="1.1" stroke-opacity=".6"><rect x="4" y="4" width="24" height="36" rx="1" stroke-opacity="1"></rect><path d="M4,10 h24 M4,16 h24 M4,22 h24 M4,28 h24 M4,34 h24 M10,4 v36 M16,4 v36 M22,4 v36"></path></svg>',
+      icon: '<svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-opacity=".65"><rect x="4" y="4" width="24" height="36" rx="1" stroke-opacity="1"></rect><path d="M8,10 l2.5,1.5 M14,8 l2,2.5 M20,11 l2.5,1 M24,16 l1.5,2 M8,18 l2.5,1.5 M15,17 l2,2.5 M21,19 l2,2 M9,25 l2.5,1 M16,24 l2.5,2 M22,26 l1.5,2.5 M8,33 l2,1.5 M14,32 l2.5,2 M20,34 l2,1.5 M24,29 l1.5,2"></path></svg>',
     },
   ];
 
@@ -192,11 +188,19 @@
     default: "3연동",
   };
 
-  // W 1100~1400(100단위) × H 2000~2400(100단위)
+  // W 1100~1400(100단위) × H 2000~2300(100단위) 중 가로세로 비율(W/H)이 0.45~0.60을 벗어나는
+  // 조합(문이 과도하게 낮고 넓어지는 비정상 비례)은 제조 비효율로 제외.
+  // 비율 기준 근거: 규격화.xlsx 확정 3연동/원슬라이딩 M·L 실측 비율(0.45~0.56)에 신규 확장분 버퍼 포함(2026-07-28).
+  // H2400은 별도 제외: 무타공 중문은 설치 공간보다 작으면 보정 설치가 가능하지만 크면 설치 자체가 불가능해
+  // 방어적으로 최대 세로 사이즈를 낮춤(2026-07-28).
   var SIZE_CHOICES = (function () {
     var out = [];
+    var MIN_RATIO = 0.45;
+    var MAX_RATIO = 0.6;
     for (var w = 1100; w <= 1400; w += 100) {
-      for (var h = 2000; h <= 2400; h += 100) {
+      for (var h = 2000; h <= 2300; h += 100) {
+        var ratio = w / h;
+        if (ratio < MIN_RATIO || ratio > MAX_RATIO) continue;
         out.push({ value: w + "x" + h, label: "W" + w + " × H" + h });
       }
     }
@@ -208,7 +212,7 @@
     kind: "size",
     label: "사이즈",
     choices: SIZE_CHOICES,
-    default: "1400x2300",
+    default: "1200x2200",
   };
 
   var FINISH_TYPE_OPTION = {
@@ -261,7 +265,8 @@
     label: "손잡이",
     choices: [
       { value: "none", label: "기본형" },
-      { value: "basic", label: "바 손잡이" },
+      { value: "circle", label: "원형" },
+      { value: "bar", label: "일자형" },
     ],
     default: "none",
   };
@@ -281,6 +286,24 @@
     kind: "addon",
     label: "시공형 파티션 추가",
     description: "중문과 함께 시공하는 파티션을 추가합니다. 가벽 없는 개방형 구조에 픽스(파티션)와 중문을 동시에 시공합니다.",
+    default: false,
+  };
+
+  // 무타공 파티션 — 별도 상품 페이지 없이 무타공 DIY 중문 커스터마이징의 addon으로 통합
+  var DIY_PARTITION_ADDON_OPTION = {
+    id: "partitionAddon",
+    kind: "addon",
+    label: "무타공 파티션 추가",
+    description: "중문과 함께 셀프 설치하는 무타공 파티션을 추가합니다. 벽에 구멍을 내지 않고 공간을 구획합니다.",
+    default: false,
+  };
+
+  // 유상 출장 실측 — 셀프 실측이 어려운 경우 신청하는 서비스 addon
+  var MEASUREMENT_ADDON_OPTION = {
+    id: "measurementAddon",
+    kind: "addon",
+    label: "유상 출장 실측 신청",
+    description: "셀프 실측이 어려운 경우, 지역에 따라 3~10만원의 비용으로 출장 실측을 신청할 수 있습니다.",
     default: false,
   };
 
@@ -354,53 +377,19 @@
         GLASS_PATTERN_OPTION,
         HANDLE_OPTION,
         ADDON_OPTION,
+        DIY_PARTITION_ADDON_OPTION,
+        MEASUREMENT_ADDON_OPTION,
       ],
       installSteps: [
-        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(유리 포함), 고정용 텐션바, 길이조절발·마감판, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
-        { title: "고정 설치", desc: "가이드에 따라 문틀 자리에 프레임을 세워 밀착시킨 뒤, 내부 텐션바를 압착해 벽과 문틀에 구멍 없이 고정합니다." },
-        { title: "마감재 부착", desc: "동봉된 마감판을 프레임과 벽 사이 틈에 부착해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
+        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(유리 포함), 길이조절발·마감판, 설치 공구, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
+        { title: "고정 설치", desc: "가이드에 따라 문틀 자리에 프레임을 세워 위치시킨 뒤, 동봉된 공구를 이용해 길이조절발을 고정합니다." },
+        { title: "마감재 부착", desc: "동봉된 마감판을 프레임과 벽 사이 틈에 연결해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
       ],
       installLimits: [
-        "콘크리트·대리석 등 압착 고정이 어려운 초경질 벽체",
-        "선택 가능한 사이즈 범위를 초과하는 공간",
+        "석고보드·합판 등 압착 고정이 어려운 경질 벽체",
+        "선택 가능한 사이즈 범위를 초과하는 공간(이동이 잦으실 경우 다음 공간의 설치를 고려하여 사이즈를 작게 구성하시기를 추천드립니다.)",
         "문틀이 심하게 뒤틀리거나 손상된 경우",
         "바닥·벽면이 고르지 않아 밀착이 어려운 경우",
-      ],
-      purchaseNotice:
-        "본 상품은 고객님이 직접 실측하신 값에 맞춰 개별로 재단·제작되는 셀프 시공 제품으로, 주문 후에는 단순 변심에 의한 취소·반품이 불가합니다. 실측이 어려우시면 지역에 따라 3~10만원의 비용으로 출장 실측을 요청하실 수 있으며, 이 경우 실측 전 취소는 전액 환불, 실측 후·생산 시작 전 취소는 실측 비용을 제외하고 환불됩니다(생산 시작 후에는 취소 불가). 제품 하자가 확인되는 경우 구매일로부터 1년간 무상 A/S가 적용되며, A/S 접수 시 배송비는 고객님 부담입니다.",
-    },
-
-    partition: {
-      id: "partition",
-      name: "무타공 파티션",
-      brand: "무타공랩",
-      tagline: "공간을 완전히 막지 않고, 무타공 방식으로 구획합니다.",
-      saleStatus: "coming-soon",
-      category: "파티션",
-      summary: "무타공 방식으로 고정하는 파티션으로, 공간을 완전히 나누지 않으면서 구역을 구분합니다.",
-      features: [
-        { title: "타공 없이 구획", desc: "벽 손상 없이 공간을 나눌 수 있고, 전월세 공간에도 설치할 수 있습니다." },
-        { title: "가변형 구조", desc: "길이조절발·마감판으로 공간 크기 변화에 맞춰 조정할 수 있습니다." },
-        { title: "알루미늄 소재", desc: "저가형 플라스틱이 아닌, 시공형 제품과 동일한 알루미늄 프레임으로 내구성과 심미성을 갖췄습니다." },
-        { title: "완조립 셀프 설치", desc: "조립된 상태로 배송되어, 별도 시공비 없이 직접 설치할 수 있습니다." },
-        { title: "고정 후 바로 사용", desc: "고정 설치와 마감재 부착까지 마치면 바로 사용할 수 있습니다." },
-        { title: "구조 안전성 검증", desc: "하중과 고정력을 직접 검토하며 안전성을 확인합니다." },
-      ],
-      useCases: [
-        { tag: "거실·서재 구분", desc: "완전히 막지 않고 구역만 나누고 싶은 공간" },
-        { tag: "상업 공간", desc: "카페·오피스의 부분 구획" },
-      ],
-      previewSVG: partitionPreviewSVG,
-      options: [SIZE_OPTION, FINISH_TYPE_OPTION, FRAME_COLOR_OPTION, MUNTIN_OPTION, GLASS_TYPE_OPTION, GLASS_PATTERN_OPTION, ADDON_OPTION],
-      installSteps: [
-        { title: "패키지 확인", desc: "완조립된 프레임·패널, 고정용 텐션바, 길이조절발·마감판, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
-        { title: "고정 설치", desc: "가이드에 따라 지정 위치에 프레임을 세워 밀착시킨 뒤, 내부 텐션바를 압착해 구멍 없이 고정합니다." },
-        { title: "마감재 부착", desc: "동봉된 마감판을 틈에 부착해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
-      ],
-      installLimits: [
-        "콘크리트·대리석 등 압착 고정이 어려운 초경질 벽체·바닥",
-        "선택 가능한 사이즈 범위를 초과하는 공간",
-        "바닥·천장이 고르지 않아 밀착이 어려운 경우",
       ],
       purchaseNotice:
         "본 상품은 고객님이 직접 실측하신 값에 맞춰 개별로 재단·제작되는 셀프 시공 제품으로, 주문 후에는 단순 변심에 의한 취소·반품이 불가합니다. 실측이 어려우시면 지역에 따라 3~10만원의 비용으로 출장 실측을 요청하실 수 있으며, 이 경우 실측 전 취소는 전액 환불, 실측 후·생산 시작 전 취소는 실측 비용을 제외하고 환불됩니다(생산 시작 후에는 취소 불가). 제품 하자가 확인되는 경우 구매일로부터 1년간 무상 A/S가 적용되며, A/S 접수 시 배송비는 고객님 부담입니다.",
@@ -430,7 +419,7 @@
   };
 
   // 랜딩 타일에 쓰는 순서 고정
-  window.MUTAGONG_PRODUCT_ORDER = ["standard-door", "diy-door", "partition", "accessories"];
+  window.MUTAGONG_PRODUCT_ORDER = ["standard-door", "diy-door", "accessories"];
 
   // 제품 유형별 비교 참고 정보 — 정확한 사이즈·비용은 현장·구성마다 달라 상담 시 확인을 원칙으로 하고,
   // 여기서는 상담 전 비교에 필요한 일반적인 특징만 안내(수치 스펙은 임의로 추가하지 말 것).
@@ -454,7 +443,6 @@
         { id: "diy-door", type: "원슬라이딩", label: "원슬라이딩" },
         { id: "diy-door", type: "스윙폴딩", label: "스윙폴딩" },
         { id: "diy-door", type: "여닫이", label: "여닫이" },
-        { id: "partition", type: null, label: "파티션" },
       ],
     },
     {

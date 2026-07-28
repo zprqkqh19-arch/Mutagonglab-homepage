@@ -214,6 +214,100 @@
     window.addEventListener("resize", positionPlantOverlay);
   }
 
+  // ============ 개인정보 처리방침 미니팝업 — 동의 문구의 링크를 누르면 뜸(모든 페이지 공용) ============
+  var privacyLinks = document.querySelectorAll(".privacy-policy-link");
+  if (privacyLinks.length) {
+    var privacyOverlay = document.createElement("div");
+    privacyOverlay.className = "pdp-modal-overlay";
+    privacyOverlay.hidden = true;
+    privacyOverlay.innerHTML =
+      '<div class="pdp-modal privacy-modal" role="dialog" aria-modal="true">' +
+      '<button type="button" class="pdp-modal-close" aria-label="닫기"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>' +
+      '<span class="eyebrow">개인정보 처리방침</span>' +
+      "<h3>무타공랩 개인정보 처리방침</h3>" +
+      '<div class="privacy-modal-body">' +
+      "<p>무타공랩(이하 '회사')은 정보주체의 개인정보를 중요시하며, 「개인정보 보호법」 등 관련 법령을 준수합니다.</p>" +
+      "<h4>1. 수집하는 개인정보 항목</h4>" +
+      "<p>상담·문의 접수를 위해 아래 항목을 수집합니다.<br>· 필수: 이름, 문의 내용<br>· 선택: 연락처(전화번호), 첨부 사진</p>" +
+      "<h4>2. 수집 및 이용 목적</h4>" +
+      "<p>상담·구매·시공·A/S 문의에 대한 답변 및 안내, 문의 이력 확인 및 재문의 대응.</p>" +
+      "<h4>3. 보유 및 이용 기간</h4>" +
+      "<p>문의 처리 완료 후 1년간 보관하며, 이후 지체 없이 파기합니다. 관계 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관합니다.</p>" +
+      "<h4>4. 제3자 제공</h4>" +
+      "<p>정보주체의 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 법령에 근거가 있거나 수사기관이 적법한 절차에 따라 요구하는 경우는 예외로 합니다.</p>" +
+      "<h4>5. 처리 위탁</h4>" +
+      "<p>현재 개인정보 처리를 외부에 위탁하지 않습니다. 위탁이 필요해지면 사전에 고지하고 동의를 받겠습니다.</p>" +
+      "<h4>6. 파기 절차 및 방법</h4>" +
+      "<p>보유 기간이 지나거나 처리 목적이 달성된 개인정보는 지체 없이 파기합니다. 전자 파일은 복구 불가능한 방법으로 삭제하며, 출력물은 분쇄·소각합니다.</p>" +
+      "<h4>7. 정보주체의 권리</h4>" +
+      "<p>정보주체는 언제든지 자신의 개인정보에 대한 열람·정정·삭제·처리정지를 요구할 수 있습니다. 아래 문의처로 연락 주시면 지체 없이 조치합니다.</p>" +
+      "<h4>8. 개인정보 보호책임자 및 문의처</h4>" +
+      "<p>상호 무타공랩 · 대표 심혜미<br>사업자등록번호 896-15-02645<br>대구광역시 남구 명덕로 104 계명대학교 비사관 6층<br>문의: 카카오톡 채널 또는 상담 문의 폼</p>" +
+      '<p class="privacy-modal-effective">본 방침은 2026년 7월 28일부터 적용됩니다.</p>' +
+      "</div></div>";
+    document.body.appendChild(privacyOverlay);
+    var privacyClose = privacyOverlay.querySelector(".pdp-modal-close");
+    var closePrivacy = function () {
+      privacyOverlay.hidden = true;
+      document.body.style.overflow = "";
+    };
+    privacyClose.addEventListener("click", closePrivacy);
+    privacyOverlay.addEventListener("click", function (e) {
+      if (e.target === privacyOverlay) closePrivacy();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !privacyOverlay.hidden) closePrivacy();
+    });
+    privacyLinks.forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        privacyOverlay.hidden = false;
+        document.body.style.overflow = "hidden";
+      });
+    });
+  }
+
+  // ============ "구조에 맞는 제품 유형 찾기" 미니팝업 — MUTAGONG_DOOR_TYPE_INFO 데이터를 그대로 재사용 ============
+  var typeFinderBtn = document.getElementById("typeFinderBtn");
+  var typeFinderModal = document.getElementById("typeFinderModal");
+  if (typeFinderBtn && typeFinderModal && window.MUTAGONG_DOOR_TYPE_INFO) {
+    var typeFinderClose = document.getElementById("typeFinderClose");
+    var typeFinderList = document.getElementById("typeFinderList");
+    typeFinderList.innerHTML = Object.keys(window.MUTAGONG_DOOR_TYPE_INFO)
+      .map(function (name) {
+        var info = window.MUTAGONG_DOOR_TYPE_INFO[name];
+        return (
+          '<div class="type-finder-item"><h4>' +
+          name +
+          "</h4><p><strong>추천 현장</strong> " +
+          info.recommend +
+          "</p><p><strong>특징</strong> " +
+          info.feature +
+          "</p></div>"
+        );
+      })
+      .join("");
+
+    var openTypeFinder = function () {
+      typeFinderModal.hidden = false;
+      document.body.style.overflow = "hidden";
+      typeFinderClose.focus();
+    };
+    var closeTypeFinder = function () {
+      typeFinderModal.hidden = true;
+      document.body.style.overflow = "";
+      typeFinderBtn.focus();
+    };
+    typeFinderBtn.addEventListener("click", openTypeFinder);
+    typeFinderClose.addEventListener("click", closeTypeFinder);
+    typeFinderModal.addEventListener("click", function (e) {
+      if (e.target === typeFinderModal) closeTypeFinder();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !typeFinderModal.hidden) closeTypeFinder();
+    });
+  }
+
   var form = document.getElementById("inquiryForm");
   if (form) {
     var status = document.getElementById("formStatus");
