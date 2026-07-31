@@ -259,6 +259,17 @@
     default: "clear",
   };
 
+  // 무타공(DIY) 전용 — 채움재는 안전창(폴리카보네이트) 단일이라 '종류' 분류 없음.
+  // 소비자 표기 확정(2026-07-31): "안전창 디자인" + 물음표 툴팁 한 문장. '유리' 표기 금지.
+  var SAFETY_PANEL_OPTION = {
+    id: "glassPattern",
+    kind: "visual",
+    label: "안전창 디자인",
+    help: "유리 대신, 방탄창에도 쓰이는 폴리카보네이트 소재를 사용해 유리보다 가볍고 충격에 깨지지 않는 안전한 투명창입니다.",
+    choices: GLASS_PATTERNS,
+    default: "clear",
+  };
+
   var HANDLE_OPTION = {
     id: "handle",
     kind: "handle",
@@ -352,7 +363,7 @@
       saleStatus: "coming-soon",
       category: "중문",
       summary:
-        "무타공(無打孔) 방식으로 셀프 실측·셀프 시공이 가능한 무타공랩 자체 제품입니다. 3연동·원슬라이딩·스윙폴딩·여닫이 4가지 구조로 제작합니다.",
+        "무타공(無打孔) 방식으로 셀프 실측·셀프 시공이 가능한 무타공랩 자체 제품입니다. 문짝에는 유리 대신 깨지지 않는 안전창(폴리카보네이트)을 사용하며, 3연동·원슬라이딩·스윙폴딩·여닫이 4가지 구조로 제작합니다.",
       features: [
         { title: "타공 없이 고정", desc: "벽과 문틀에 구멍을 내지 않아 원상복구가 쉽고, 전월세 공간에도 설치할 수 있습니다." },
         { title: "가변형 구조", desc: "길이조절발·마감판으로 공간 크기 변화에 맞춰 조정할 수 있습니다." },
@@ -373,15 +384,14 @@
         FINISH_TYPE_OPTION,
         FRAME_COLOR_OPTION,
         MUNTIN_OPTION,
-        GLASS_TYPE_OPTION,
-        GLASS_PATTERN_OPTION,
+        SAFETY_PANEL_OPTION,
         HANDLE_OPTION,
         ADDON_OPTION,
         DIY_PARTITION_ADDON_OPTION,
         MEASUREMENT_ADDON_OPTION,
       ],
       installSteps: [
-        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(유리 포함), 길이조절발·마감판, 설치 공구, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
+        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(안전창 포함), 길이조절발·마감판, 설치 공구, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
         { title: "고정 설치", desc: "가이드에 따라 문틀 자리에 프레임을 세워 위치시킨 뒤, 동봉된 공구를 이용해 길이조절발을 고정합니다." },
         { title: "마감재 부착", desc: "동봉된 마감판을 프레임과 벽 사이 틈에 연결해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
       ],

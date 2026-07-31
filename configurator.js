@@ -353,6 +353,24 @@
 
         var head = document.createElement("h3");
         head.innerHTML = opt.label + '<span class="opt-current"></span>';
+        if (opt.help) {
+          var helpBtn = document.createElement("button");
+          helpBtn.type = "button";
+          helpBtn.className = "opt-help";
+          helpBtn.setAttribute("aria-label", opt.label + " 설명 보기");
+          helpBtn.textContent = "?";
+          var helpTip = document.createElement("span");
+          helpTip.className = "opt-help-tip";
+          helpTip.hidden = true;
+          helpTip.textContent = opt.help;
+          helpBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            helpTip.hidden = !helpTip.hidden;
+          });
+          document.addEventListener("click", function () { helpTip.hidden = true; });
+          head.insertBefore(helpBtn, head.querySelector(".opt-current"));
+          head.appendChild(helpTip);
+        }
         group.appendChild(head);
 
         if (opt.kind === "size") {
