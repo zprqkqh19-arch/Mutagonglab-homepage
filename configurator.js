@@ -398,7 +398,8 @@
               '<p class="fit-title">실측값으로 사이즈 추천받기</p>' +
               '<div class="fit-row">' +
               '<label>실측 폭(mm) <input type="number" class="fit-w" min="900" max="1600" placeholder="예: 1230"></label>' +
-              '<label>천장고 최솟값(mm) <input type="number" class="fit-c" min="1800" max="2600" placeholder="예: 2245"></label>' +
+              '<label>천장고 최소값(mm) <input type="number" class="fit-c" min="1800" max="2600" placeholder="예: 2245"></label>' +
+              '<label>설치 폭·문틀 깊이(mm) <input type="number" class="fit-d" min="50" max="400" placeholder="예: 120"></label>' +
               '<button type="button" class="fit-btn">추천</button></div>' +
               '<p class="fit-result" hidden></p>';
             var fitBtn = fit.querySelector(".fit-btn");
@@ -406,9 +407,17 @@
             fitBtn.addEventListener("click", function () {
               var P = parseInt(fit.querySelector(".fit-w").value, 10);
               var C = parseInt(fit.querySelector(".fit-c").value, 10);
+              var D = parseInt(fit.querySelector(".fit-d").value, 10);
               fitRes.hidden = false;
               fitRes.className = "fit-result";
-              if (!P || !C) { fitRes.textContent = "실측 폭과 천장고를 모두 입력해 주세요."; return; }
+              if (!P || !C || !D) { fitRes.textContent = "실측 폭, 천장고, 설치 폭(문틀 깊이)을 모두 입력해 주세요."; return; }
+              // 설치 폭(깊이) 검증 — 현행 규격 깊이 100(3연동·원슬라이딩·여닫이)
+              if (D < 100) {
+                fitRes.classList.add("fit-bad");
+                fitRes.textContent = "설치 폭 " + D + "mm는 현재 판매 규격(필요 폭 100mm)보다 좁아 설치가 어렵습니다." +
+                  (D >= 80 ? " 폭 80mm 대응 스윙폴딩 모델을 개발 중이니 출시 알림 상담을 남겨주세요." : "");
+                return;
+              }
               // 적합 범위 검증 (규격 v0.18 6항)
               if (C < 1990 || C > 2400) {
                 fitRes.classList.add("fit-bad");
