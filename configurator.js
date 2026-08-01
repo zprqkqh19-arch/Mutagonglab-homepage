@@ -102,7 +102,7 @@
         handleGroup.style.display = state.handle && state.handle !== "none" ? "inline" : "none";
         if (state.handle) svg.setAttribute("data-handle", state.handle);
       }
-      // 부속품(길이조절발/마감판)
+      // 부속품(조절볼트/마감판)
       var footGroup = svg.querySelector(".foot-group");
       if (footGroup && "footFinish" in state) {
         footGroup.style.display = state.footFinish ? "inline" : "none";
@@ -461,7 +461,8 @@
               render();
               fitRes.classList.add("fit-ok");
               fitRes.textContent = "추천 사이즈: W" + W + " × H" + pick + " (코드 " + (W / 100) + (pick / 100) + ")" +
-                (F > 0 ? " — 길이조절발 보정 약 " + F + "mm 필요(길이조절발·마감판 옵션을 추가해 주세요)" : " — 길이조절발 없이 설치 가능한 범위입니다");
+                // TODO(대표 확인 필요): 3차 시제품(조절볼트 방식) 기준 보정치 F/범위 재검토 필요 — 현재 수치는 구 길이조절발 규격(v0.18) 그대로임
+                (F > 0 ? " — 조절볼트 보정 약 " + F + "mm 필요(조절볼트·마감판 옵션을 추가해 주세요)" : " — 조절볼트 없이 설치 가능한 범위입니다");
             });
             group.appendChild(fit);
           }
