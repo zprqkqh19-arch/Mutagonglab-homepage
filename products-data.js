@@ -352,6 +352,14 @@
         { tag: "상업 공간", desc: "사무실·상가 등 구획이 필요한 공간" },
       ],
       previewSVG: doorPreviewSVG,
+      // SKU 실사진(배경 제거된 제품 이미지) — 준비되는 대로 skuImages에 추가하면 개념도(SVG) 대신 표시됨.
+      // 키 형식: skuImageKeys에 나열한 옵션 id들의 현재 값을 "_"로 이어붙인 문자열.
+      // 예) doorType="3연동", frameColor="paint_white", muntin="none", glassPattern="clear", handle="none"
+      //     → 키 "3연동_paint_white_none_clear_none"
+      skuImageKeys: ["doorType", "frameColor", "muntin", "glassPattern", "handle"],
+      skuImages: {
+        // "3연동_paint_white_none_clear_none": "assets/sku/standard-door-3연동-화이트-민자-투명-기본형.png",
+      },
       options: [
         DOOR_TYPE_OPTION_WITH_AUTO,
         SIZE_OPTION,
@@ -390,6 +398,12 @@
         { tag: "임시·가변 공간", desc: "구조를 자주 바꾸는 공간" },
       ],
       previewSVG: doorPreviewSVG,
+      // SKU 실사진(배경 제거된 제품 이미지) — 준비되는 대로 skuImages에 추가하면 개념도(SVG) 대신 표시됨.
+      // 키 형식: skuImageKeys에 나열한 옵션 id들의 현재 값을 "_"로 이어붙인 문자열.
+      skuImageKeys: ["doorType", "frameColor", "muntin", "glassPattern", "handle"],
+      skuImages: {
+        // "3연동_paint_white_none_clear_none": "assets/sku/diy-door-3연동-화이트-민자-투명-기본형.png",
+      },
       options: [
         DOOR_TYPE_OPTION,
         DIY_SIZE_OPTION,

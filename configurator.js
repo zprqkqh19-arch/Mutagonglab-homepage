@@ -64,6 +64,39 @@
     previewStage.innerHTML = product.previewSVG();
     var svg = previewStage.querySelector(".cfg-preview");
 
+    // SKU 실사진 미리보기 — product.skuImages에 현재 옵션 조합과 일치하는 사진이 있으면
+    // 개념도(SVG) 대신 그 사진을 보여준다. 아직 사진이 없는 조합은 그대로 SVG로 표시(정상 동작).
+    var skuPhoto = document.createElement("img");
+    skuPhoto.className = "sku-photo";
+    skuPhoto.alt = "";
+    skuPhoto.hidden = true;
+    previewStage.appendChild(skuPhoto);
+
+    function skuImageKey() {
+      if (!product.skuImageKeys || !product.skuImageKeys.length) return null;
+      return product.skuImageKeys
+        .map(function (id) {
+          return state[id];
+        })
+        .join("_");
+    }
+
+    function updateSkuPhoto() {
+      var key = skuImageKey();
+      var src = key && product.skuImages ? product.skuImages[key] : null;
+      if (src) {
+        if (skuPhoto.getAttribute("data-src") !== src) {
+          skuPhoto.src = src;
+          skuPhoto.setAttribute("data-src", src);
+        }
+        skuPhoto.hidden = false;
+        svg.style.display = "none";
+      } else {
+        skuPhoto.hidden = true;
+        svg.style.display = "";
+      }
+    }
+
     var groupsEl = mount.querySelector("[data-opt-groups]");
     var summaryEl = mount.querySelector("[data-spec-summary]");
     var dimEl = mount.querySelector("[data-preview-dim]");
@@ -80,6 +113,7 @@
     }
 
     function render() {
+      updateSkuPhoto();
       // 형태 전환
       var shapeVal = state.doorType;
       if (shapeVal) {

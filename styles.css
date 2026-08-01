@@ -654,6 +654,8 @@
     border:1px solid var(--paper-line); background:var(--paper-deep);
   }
   .preview-stage svg{ position:relative; z-index:1; width:100%; height:100%; padding:12%; box-sizing:border-box; }
+  /* SKU 실사진(배경 제거된 제품 이미지) — 준비되는 대로 product.skuImages에 추가하면 개념도 대신 표시됨 */
+  .preview-stage .sku-photo{ display:block; width:100%; height:100%; object-fit:contain; padding:12%; box-sizing:border-box; }
   .preview-dim{ display:flex; flex-direction:column; gap:.7rem; font-size:var(--step--1); color:var(--ink-soft); }
   .preview-dim strong{ color:var(--ink); font-variant-numeric:tabular-nums; }
   .dim-basic{ display:flex; justify-content:space-between; align-items:baseline; }
