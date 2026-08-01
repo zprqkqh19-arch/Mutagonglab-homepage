@@ -454,7 +454,9 @@
       // 키 형식: skuImageKeys에 나열한 옵션 id들의 현재 값을 "_"로 이어붙인 문자열.
       skuImageKeys: ["doorType", "frameColor", "muntin", "glassPattern", "handle"],
       skuImages: {
-        // "3연동_paint_white_none_clear_none": "assets/sku/diy-door-3연동-화이트-민자-투명-기본형.png",
+        "3연동_paint_white_none_clear_none": "assets/sku/diy-door-3yeondong-white-none-clear-none.png",
+        "3연동_paint_white_none_clear_circle": "assets/sku/diy-door-3yeondong-white-none-clear-circle.png",
+        "3연동_paint_white_none_clear_bar": "assets/sku/diy-door-3yeondong-white-none-clear-bar.png",
       },
       options: [
         DOOR_TYPE_OPTION,
