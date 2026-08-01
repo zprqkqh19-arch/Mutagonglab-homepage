@@ -112,8 +112,24 @@
       if (dimEl) {
         if (state.size) {
           var parts = state.size.split("x");
-          dimEl.innerHTML =
+          var dimHtml =
             '<span>가로 <strong>' + parts[0] + "mm</strong></span><span>세로 <strong>" + parts[1] + "mm</strong></span>";
+          // 무타공(DIY) 전용 병기 — 규격 v0.18 (시공형은 시공팀 실측이라 미표기)
+          if (product.id === "diy-door") {
+            var w = parseInt(parts[0], 10), h = parseInt(parts[1], 10);
+            var iw = w - 60, ih = h - 130;
+            var code = "" + w / 100 + h / 100;
+            dimHtml +=
+              '<span class="dim-extra">적합 천장고 <strong>' + (h - 10) + "~" + (h + 50) +
+              "mm</strong> (길이조절발 사용 시 ~" + (h + 100) + "mm)</span>" +
+              '<span class="dim-extra">내경 <strong>' + iw + "×" + ih + 'mm</strong> · 코드 ' + code + "</span>";
+            var passW = null;
+            if (state.doorType === "3연동") passW = Math.round((iw * 2) / 3);
+            else if (state.doorType === "원슬라이딩") passW = Math.round(iw / 2);
+            else if (state.doorType === "여닫이") passW = iw - 30;
+            if (passW) dimHtml += '<span class="dim-extra">최대 개방 통행폭 약 <strong>' + passW + "mm</strong></span>";
+          }
+          dimEl.innerHTML = dimHtml;
         } else {
           dimEl.innerHTML = "";
         }
@@ -391,6 +407,12 @@
           });
           wrap.appendChild(select);
           group.appendChild(wrap);
+          if (opt.note) {
+            var noteEl = document.createElement("p");
+            noteEl.className = "opt-note";
+            noteEl.textContent = opt.note;
+            group.appendChild(noteEl);
+          }
         } else if (opt.kind === "frameColor") {
           var hasDependency =
             opt.dependsOn &&

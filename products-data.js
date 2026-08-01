@@ -215,6 +215,16 @@
     default: "1200x2200",
   };
 
+  // 무타공(DIY) 전용 — 규격 v0.18: 사이즈 선택 시 적합 천장고·내경·코드 병기(누락 금지, 2026-07-31 대표 지시)
+  var DIY_SIZE_OPTION = {
+    id: "size",
+    kind: "size",
+    label: "사이즈",
+    choices: SIZE_CHOICES,
+    default: "1200x2200",
+    note: "천장 높이를 좌·중·우 3곳에서 재고, 가장 낮은 값이 '적합 천장고' 범위에 드는 사이즈를 선택하세요. 3곳 편차가 15mm를 넘으면 유상 출장 실측을 이용해 주세요.",
+  };
+
   var FINISH_TYPE_OPTION = {
     id: "finish",
     kind: "finish",
@@ -287,7 +297,7 @@
     id: "footFinish",
     kind: "addon",
     label: "길이조절발 · 마감판 추가",
-    description: "공간 크기에 맞춰 사이즈를 조정할 때 사용하는 부속품입니다.",
+    description: "공간 크기에 맞춰 사이즈를 조정할 때 사용하는 부속품입니다. (길이조절발 보정 범위 최대 50mm)",
     default: false,
   };
 
@@ -380,7 +390,7 @@
       previewSVG: doorPreviewSVG,
       options: [
         DOOR_TYPE_OPTION,
-        SIZE_OPTION,
+        DIY_SIZE_OPTION,
         FINISH_TYPE_OPTION,
         FRAME_COLOR_OPTION,
         MUNTIN_OPTION,
@@ -415,7 +425,7 @@
       summary:
         "무타공랩 제품은 표준 규격에 부속품을 더해 사이즈를 조정합니다. 길이조절발과 마감판을 추가로 구매해 설치 공간에 맞출 수 있습니다.",
       features: [
-        { title: "길이조절발", desc: "바닥·천장 여유 공간에 맞춰 길이를 조정합니다." },
+        { title: "길이조절발", desc: "바닥·천장 여유 공간에 맞춰 길이를 조정합니다. (보정 범위 최대 50mm)" },
         { title: "마감판", desc: "문틀과 벽 사이 틈을 정리합니다." },
         { title: "단독 구매 가능", desc: "보유 중인 제품의 사이즈를 나중에 조정할 때도 추가 구매할 수 있습니다." },
       ],
