@@ -628,7 +628,11 @@
   }
   .type-finder-btn:hover{ border-color:var(--accent); color:var(--accent); }
   .type-finder-btn svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
-  @media (max-width:640px){ .type-finder-btn{ position:static; margin-bottom:1rem; } }
+  @media (min-width:901px){
+    /* 두 칼럼 레이아웃에서만 버튼이 절대 위치라 옵션 목록 첫 줄("제품 유형" 등)과 겹치므로 위쪽 여백 확보 */
+    .type-finder-btn ~ .opt-groups{ padding-top:clamp(2.8rem,5vw,3.6rem); }
+  }
+  @media (max-width:900px){ .type-finder-btn{ position:static; margin-bottom:1rem; } }
   .type-finder-list{ display:flex; flex-direction:column; gap:.9rem; margin-top:1.4rem; }
   .type-finder-item{ padding:1rem 1.1rem; border:1px solid var(--paper-line); border-radius:14px; }
   .type-finder-item h4{ font-size:var(--step-0); font-weight:700; margin-bottom:.4rem; }
