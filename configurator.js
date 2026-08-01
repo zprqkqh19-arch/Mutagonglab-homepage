@@ -344,13 +344,13 @@
           var parts = state.size.split("x");
           var dimHtml =
             '<div class="dim-basic"><span>가로 <strong>' + parts[0] + "mm</strong></span><span>세로 <strong>" + parts[1] + "mm</strong></span></div>";
-          // 무타공(DIY) 전용 병기 — 규격 v0.18 (시공형은 시공팀 실측이라 미표기)
+          // 무타공(DIY) 전용 병기 — 규격 v0.20 (시공형은 시공팀 실측이라 미표기)
           if (product.id === "diy-door") {
             var w = parseInt(parts[0], 10), h = parseInt(parts[1], 10);
             var iw = w - 60, ih = h - 130;
             var code = "" + w / 100 + h / 100;
             var detailHtml =
-              '<span class="dim-extra">적합 천장고 <strong>' + (h - 10) + "~" + (h + 50) + "mm</strong></span>" +
+              '<span class="dim-extra">적합 천장고 <strong>' + h + "~" + Math.min(h + 120, 2400) + 'mm</strong> <small>(헤더 기둥 옵션 포함)</small></span>' +
               '<span class="dim-extra">내경 <strong>' + iw + "×" + ih + 'mm</strong> · 코드 ' + code + "</span>";
             var passW = null;
             if (state.doorType === "3연동") passW = Math.round((iw * 2) / 3);
@@ -631,7 +631,8 @@
         group.appendChild(head);
 
         if (opt.kind === "size") {
-          // 실측 기반 사이즈 추천 + 판매 가능 필터 (무타공 DIY 전용, 규격 v0.18)
+          // 실측 기반 사이즈 추천 + 판매 가능 필터 (무타공 DIY 전용, 규격 v0.20:
+          // 조절볼트 트래블 +30 × 헤더 기둥 옵션 A40/B70/C100/D130 → SKU별 천장고 [H, H+120] 연속 커버)
           if (product.id === "diy-door") {
             var fit = document.createElement("div");
             fit.className = "fit-check";
@@ -659,10 +660,10 @@
                   (D >= 80 ? " 폭 80mm 대응 스윙폴딩 모델을 개발 중이니 출시 알림 상담을 남겨주세요." : "");
                 return;
               }
-              // 적합 범위 검증 (규격 v0.18 6항)
-              if (C < 1990 || C > 2400) {
+              // 적합 범위 검증 (규격 v0.20 — 판매 하한 2000 대표 확정)
+              if (C < 2000 || C > 2400) {
                 fitRes.classList.add("fit-bad");
-                fitRes.textContent = "천장고 " + C + "mm는 설치 가능 범위(1990~2400mm)를 벗어나 무타공 설치가 어렵습니다. 시공형 상담을 추천드립니다.";
+                fitRes.textContent = "천장고 " + C + "mm는 설치 가능 범위(2000~2400mm)를 벗어나 무타공 설치가 어렵습니다. 시공형 상담을 추천드립니다.";
                 return;
               }
               if (P < 1100 || P > 1399) {
@@ -672,9 +673,9 @@
               }
               var W = Math.min(1300, Math.floor(P / 100) * 100);
               var validH = { 1100: [2300, 2200, 2100, 2000], 1200: [2300, 2200, 2100, 2000], 1300: [2300, 2200] };
-              var pick = null, F = 0;
+              var pick = null, d = 0;
               validH[W].some(function (H) {
-                if (H - 10 <= C && C <= H + 100) { pick = H; F = Math.max(0, C - (H + 50)); return true; }
+                if (H <= C && C <= H + 120) { pick = H; d = C - H; return true; }
                 return false;
               });
               if (!pick) {
@@ -688,10 +689,15 @@
               if (sel) sel.value = val;
               updateCurrentLabel(head, opt, val);
               render();
+              // 헤더 기둥 옵션(A40/B70/C100/D130) + 조절볼트 연장량 판정 — 경계는 낮은 옵션 우선
+              var step = d <= 30 ? 0 : Math.ceil((d - 30) / 30);
+              var postName = "ABCD".charAt(step), postLen = 40 + 30 * step;
+              var bolt = d - 30 * step;
               fitRes.classList.add("fit-ok");
               fitRes.textContent = "추천 사이즈: W" + W + " × H" + pick + " (코드 " + (W / 100) + (pick / 100) + ")" +
-                // TODO(대표 확인 필요): 3차 시제품(조절볼트 방식) 기준 보정치 F/범위 재검토 필요 — 현재 수치는 구 길이조절발 규격(v0.18) 그대로임
-                (F > 0 ? " — 기본 포함된 조절볼트로 약 " + F + "mm 보정이 필요합니다" : " — 조절볼트 보정 없이 설치 가능한 범위입니다");
+                " — 헤더 기둥 옵션 " + postName + "(" + postLen + "mm)" +
+                (bolt > 0 ? " + 조절볼트 약 " + bolt + "mm 연장" : "(조절볼트 연장 없음)") +
+                "으로 천장고 " + C + "mm에 맞춥니다. 기둥 옵션은 주문 시 자동 지정됩니다.";
             });
             group.appendChild(fit);
           }
