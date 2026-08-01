@@ -739,7 +739,9 @@
   .example-modal-caption{ text-align:center; }
   .pdp-modal.example-modal{ max-width:940px; }
   .partition-example-grid{
-    display:grid; grid-template-columns:minmax(0,16fr) minmax(0,9fr); gap:1rem; align-items:start;
+    /* 두 사진의 세로 높이가 같아 보이도록, 칼럼 너비를 각 사진의 실제 가로세로 비율에 반비례하게 배분
+       (알파룸 1448×1086 landscape : 현관 885×1448 portrait ≈ 2.18 : 1) */
+    display:grid; grid-template-columns:minmax(0,2.18fr) minmax(0,1fr); gap:1rem; align-items:start;
   }
   .partition-example-card{
     margin:0; overflow:hidden; border:1px solid var(--paper-line); border-radius:16px; background:var(--paper);
