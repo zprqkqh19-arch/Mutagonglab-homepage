@@ -739,14 +739,15 @@
   .example-modal-caption{ text-align:center; }
   .pdp-modal.example-modal{ max-width:940px; }
   .partition-example-grid{
-    /* 두 사진의 세로 높이가 같아 보이도록, 칼럼 너비를 각 사진의 실제 가로세로 비율에 반비례하게 배분
-       (알파룸 1448×1086 landscape : 현관 885×1448 portrait ≈ 2.18 : 1) */
-    display:grid; grid-template-columns:minmax(0,2.18fr) minmax(0,1fr); gap:1rem; align-items:start;
+    display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start;
   }
   .partition-example-card{
     margin:0; overflow:hidden; border:1px solid var(--paper-line); border-radius:16px; background:var(--paper);
   }
-  .partition-example-card img{ display:block; width:100%; height:auto; object-fit:cover; }
+  /* 칼럼 폭 비율로 높이를 맞추면 두 칼럼이 나란히 있을 때만 통하고 모바일 1칼럼 레이아웃에서는
+     깨지므로, 두 사진 모두 같은 aspect-ratio + cover로 강제해 레이아웃과 무관하게 높이가 같도록 함 */
+  /* <img>의 width/height 속성(원본 픽셀값)이 남아있으면 aspect-ratio가 무시되므로 height:auto로 무효화 */
+  .partition-example-card img{ display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; }
   .partition-example-card figcaption{ padding:.9rem 1rem 1rem; }
   .partition-example-card strong{ display:block; font-size:var(--step--1); color:var(--ink); }
   .partition-example-card span{ display:block; margin-top:.25rem; font-size:.78rem; line-height:1.55; color:var(--ink-soft); }
