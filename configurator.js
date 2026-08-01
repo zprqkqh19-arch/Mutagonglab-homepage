@@ -108,18 +108,19 @@
         footGroup.style.display = state.footFinish ? "inline" : "none";
       }
 
-      // 치수 표시
+      // 치수 표시 — 가로/세로는 상단에 간단히, 그 아래 자세한 규격은 "선택한 옵션" 요약과
+      // 구분되도록 별도 라벨을 단 박스로 분리해서 보여준다(둘이 한 줄에 섞여 혼란을 줬던 문제 수정).
       if (dimEl) {
         if (state.size) {
           var parts = state.size.split("x");
           var dimHtml =
-            '<span>가로 <strong>' + parts[0] + "mm</strong></span><span>세로 <strong>" + parts[1] + "mm</strong></span>";
+            '<div class="dim-basic"><span>가로 <strong>' + parts[0] + "mm</strong></span><span>세로 <strong>" + parts[1] + "mm</strong></span></div>";
           // 무타공(DIY) 전용 병기 — 규격 v0.18 (시공형은 시공팀 실측이라 미표기)
           if (product.id === "diy-door") {
             var w = parseInt(parts[0], 10), h = parseInt(parts[1], 10);
             var iw = w - 60, ih = h - 130;
             var code = "" + w / 100 + h / 100;
-            dimHtml +=
+            var detailHtml =
               '<span class="dim-extra">적합 천장고 <strong>' + (h - 10) + "~" + (h + 50) +
               "mm</strong> (길이조절발 사용 시 ~" + (h + 100) + "mm)</span>" +
               '<span class="dim-extra">내경 <strong>' + iw + "×" + ih + 'mm</strong> · 코드 ' + code + "</span>";
@@ -127,7 +128,8 @@
             if (state.doorType === "3연동") passW = Math.round((iw * 2) / 3);
             else if (state.doorType === "원슬라이딩") passW = Math.round(iw / 2);
             else if (state.doorType === "여닫이") passW = iw - 30;
-            if (passW) dimHtml += '<span class="dim-extra">최대 개방 통행폭 약 <strong>' + passW + "mm</strong></span>";
+            if (passW) detailHtml += '<span class="dim-extra">최대 개방 통행폭 약 <strong>' + passW + "mm</strong></span>";
+            dimHtml += '<div class="dim-detail"><span class="dim-detail-label">자세한 규격 안내</span>' + detailHtml + "</div>";
           }
           dimEl.innerHTML = dimHtml;
         } else {
@@ -368,7 +370,8 @@
         }
 
         var head = document.createElement("h3");
-        head.innerHTML = opt.label + '<span class="opt-current"></span>';
+        // 제품 유형은 첫 번째 옵션 그룹이라 "구조에 맞는 제품 유형 찾기" 버튼과 같은 줄에 겹쳐 보이므로 현재값 표시를 생략
+        head.innerHTML = opt.label + (opt.kind === "doorType" ? "" : '<span class="opt-current"></span>');
         if (opt.help) {
           var helpBtn = document.createElement("button");
           helpBtn.type = "button";
