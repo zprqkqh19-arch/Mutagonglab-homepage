@@ -215,6 +215,16 @@
     default: "1200x2200",
   };
 
+  // 무타공(DIY) 전용 — 규격 v0.18: 사이즈 선택 시 적합 천장고·내경·코드 병기(누락 금지, 2026-07-31 대표 지시)
+  var DIY_SIZE_OPTION = {
+    id: "size",
+    kind: "size",
+    label: "사이즈",
+    choices: SIZE_CHOICES,
+    default: "1200x2200",
+    note: "천장 높이를 좌·중·우 3곳에서 재고, 가장 낮은 값이 '적합 천장고' 범위에 드는 사이즈를 선택하세요. 3곳 편차가 15mm를 넘으면 유상 출장 실측을 이용해 주세요.",
+  };
+
   var FINISH_TYPE_OPTION = {
     id: "finish",
     kind: "finish",
@@ -259,6 +269,17 @@
     default: "clear",
   };
 
+  // 무타공(DIY) 전용 — 채움재는 안전창(폴리카보네이트) 단일이라 '종류' 분류 없음.
+  // 소비자 표기 확정(2026-07-31): "안전창 디자인" + 물음표 툴팁 한 문장. '유리' 표기 금지.
+  var SAFETY_PANEL_OPTION = {
+    id: "glassPattern",
+    kind: "visual",
+    label: "안전창 디자인",
+    help: "유리 대신, 방탄창에도 쓰이는 폴리카보네이트 소재를 사용해 유리보다 가볍고 충격에 깨지지 않는 안전한 투명창입니다.",
+    choices: GLASS_PATTERNS,
+    default: "clear",
+  };
+
   var HANDLE_OPTION = {
     id: "handle",
     kind: "handle",
@@ -276,7 +297,7 @@
     id: "footFinish",
     kind: "addon",
     label: "길이조절발 · 마감판 추가",
-    description: "공간 크기에 맞춰 사이즈를 조정할 때 사용하는 부속품입니다.",
+    description: "공간 크기에 맞춰 사이즈를 조정할 때 사용하는 부속품입니다. (길이조절발 보정 범위 최대 50mm)",
     default: false,
   };
 
@@ -352,7 +373,7 @@
       saleStatus: "coming-soon",
       category: "중문",
       summary:
-        "무타공(無打孔) 방식으로 셀프 실측·셀프 시공이 가능한 무타공랩 자체 제품입니다. 3연동·원슬라이딩·스윙폴딩·여닫이 4가지 구조로 제작합니다.",
+        "무타공(無打孔) 방식으로 셀프 실측·셀프 시공이 가능한 무타공랩 자체 제품입니다. 문짝에는 유리 대신 깨지지 않는 안전창(폴리카보네이트)을 사용하며, 3연동·원슬라이딩·스윙폴딩·여닫이 4가지 구조로 제작합니다.",
       features: [
         { title: "타공 없이 고정", desc: "벽과 문틀에 구멍을 내지 않아 원상복구가 쉽고, 전월세 공간에도 설치할 수 있습니다." },
         { title: "가변형 구조", desc: "길이조절발·마감판으로 공간 크기 변화에 맞춰 조정할 수 있습니다." },
@@ -369,19 +390,18 @@
       previewSVG: doorPreviewSVG,
       options: [
         DOOR_TYPE_OPTION,
-        SIZE_OPTION,
+        DIY_SIZE_OPTION,
         FINISH_TYPE_OPTION,
         FRAME_COLOR_OPTION,
         MUNTIN_OPTION,
-        GLASS_TYPE_OPTION,
-        GLASS_PATTERN_OPTION,
+        SAFETY_PANEL_OPTION,
         HANDLE_OPTION,
         ADDON_OPTION,
         DIY_PARTITION_ADDON_OPTION,
         MEASUREMENT_ADDON_OPTION,
       ],
       installSteps: [
-        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(유리 포함), 길이조절발·마감판, 설치 공구, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
+        { title: "패키지 확인", desc: "완조립된 프레임·도어 패널(안전창 포함), 길이조절발·마감판, 설치 공구, 설치 가이드가 한 박스로 함께 배송됩니다. 개봉 즉시 가이드의 부속품 목록과 대조해 확인해 주세요." },
         { title: "고정 설치", desc: "가이드에 따라 문틀 자리에 프레임을 세워 위치시킨 뒤, 동봉된 공구를 이용해 길이조절발을 고정합니다." },
         { title: "마감재 부착", desc: "동봉된 마감판을 프레임과 벽 사이 틈에 연결해 정리하면 시공이 완료되어 바로 사용할 수 있습니다." },
       ],
@@ -405,7 +425,7 @@
       summary:
         "무타공랩 제품은 표준 규격에 부속품을 더해 사이즈를 조정합니다. 길이조절발과 마감판을 추가로 구매해 설치 공간에 맞출 수 있습니다.",
       features: [
-        { title: "길이조절발", desc: "바닥·천장 여유 공간에 맞춰 길이를 조정합니다." },
+        { title: "길이조절발", desc: "바닥·천장 여유 공간에 맞춰 길이를 조정합니다. (보정 범위 최대 50mm)" },
         { title: "마감판", desc: "문틀과 벽 사이 틈을 정리합니다." },
         { title: "단독 구매 가능", desc: "보유 중인 제품의 사이즈를 나중에 조정할 때도 추가 구매할 수 있습니다." },
       ],
