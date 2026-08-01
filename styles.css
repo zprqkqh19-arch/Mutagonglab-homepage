@@ -757,6 +757,28 @@
     .partition-example-grid{ grid-template-columns:1fr; }
   }
 
+  /* ============ "우리 집에 놓아보기" 2D 오버레이 도구 ============ */
+  .ar-preview-btn{
+    display:block; width:100%; margin-top:.8rem; padding:.7rem 1rem; border-radius:12px;
+    border:1px solid var(--accent); background:none; color:var(--accent); font-size:.82rem; font-weight:700;
+    cursor:pointer; transition:background-color .2s ease, color .2s ease;
+  }
+  .ar-preview-btn:hover:not(:disabled){ background:var(--accent); color:#fff; }
+  .ar-preview-btn:disabled{ opacity:.4; cursor:not-allowed; border-color:var(--paper-line); color:var(--ink-soft); }
+  .pdp-modal.ar-modal{ max-width:640px; }
+  .ar-canvas-wrap{
+    position:relative; margin-top:1.2rem; aspect-ratio:4/3; border-radius:14px; overflow:hidden;
+    border:1px solid var(--paper-line); background:#e5e0d8;
+  }
+  .ar-canvas{ display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
+  .ar-empty-note{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:.85rem; color:var(--ink-soft); pointer-events:none; text-align:center; padding:1rem;
+  }
+  .ar-controls{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1rem; }
+  .ar-controls .btn{ flex:1 1 auto; text-align:center; white-space:nowrap; }
+  .ar-upload-btn{ cursor:pointer; }
+
   .privacy-modal-body{ margin-top:1.2rem; }
   .privacy-modal-body h4{ font-size:var(--step--1); font-weight:700; margin-top:1.2rem; }
   .privacy-modal-body h4:first-child{ margin-top:0; }

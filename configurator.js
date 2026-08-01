@@ -46,6 +46,187 @@
     document.body.style.overflow = "hidden";
   };
 
+  // ============ "우리 집에 놓아보기" — 배경 없는 제품 컷아웃을 공간 사진 위에 얹어보는 2D 오버레이 도구 ============
+  // 진짜 AR(3D/실측 스케일)이 아니라, 사용자가 눈대중으로 드래그·크기조절해 대략 가늠해보는 용도.
+  var arModalEl = null;
+  var arCtx = null;
+  var arBg = null; // 사용자가 고른 공간 사진 (Image)
+  var arCutout = null; // 배경 제거된 제품 컷아웃 (Image)
+  var arPos = null; // { x, y, w, h } — 캔버스 좌표계 기준 컷아웃 위치·크기
+  var arDrag = null; // { mode: "move"|"resize", startX, startY, orig: {...arPos} }
+  var HANDLE_R = 12;
+
+  function ensureArModal() {
+    if (arModalEl) return arModalEl;
+    var overlay = document.createElement("div");
+    overlay.className = "pdp-modal-overlay ar-modal-overlay";
+    overlay.hidden = true;
+    overlay.innerHTML =
+      '<div class="pdp-modal ar-modal" role="dialog" aria-modal="true">' +
+      '<button type="button" class="pdp-modal-close" aria-label="닫기"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>' +
+      '<span class="eyebrow">우리 집에 놓아보기</span>' +
+      '<h3>공간 사진 위에 올려보세요</h3>' +
+      '<p class="pdp-modal-summary">공간 사진을 선택한 뒤, 제품을 드래그해서 위치를, 오른쪽 아래 손잡이로 크기를 맞춰보세요. 실제 치수를 자동으로 맞춰주지는 않습니다.</p>' +
+      '<div class="ar-canvas-wrap">' +
+      '<canvas class="ar-canvas"></canvas>' +
+      '<p class="ar-empty-note">공간 사진을 선택해 주세요</p>' +
+      "</div>" +
+      '<div class="ar-controls">' +
+      '<label class="btn btn-ghost ar-upload-btn">공간 사진 선택<input type="file" accept="image/*" capture="environment" class="ar-file-input" hidden></label>' +
+      '<button type="button" class="btn btn-ghost ar-reset-btn">위치 초기화</button>' +
+      '<button type="button" class="btn btn-primary ar-download-btn">이미지 저장</button>' +
+      "</div>" +
+      "</div>";
+    document.body.appendChild(overlay);
+
+    var canvas = overlay.querySelector(".ar-canvas");
+    var emptyNote = overlay.querySelector(".ar-empty-note");
+    arCtx = canvas.getContext("2d");
+
+    var close = function () {
+      overlay.hidden = true;
+      document.body.style.overflow = "";
+    };
+    overlay.querySelector(".pdp-modal-close").addEventListener("click", close);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !overlay.hidden) close();
+    });
+
+    function sizeCanvas() {
+      var wrap = overlay.querySelector(".ar-canvas-wrap");
+      canvas.width = wrap.clientWidth;
+      canvas.height = wrap.clientHeight;
+    }
+
+    function defaultCutoutPos() {
+      var cw = canvas.width,
+        ch = canvas.height;
+      var ratio = arCutout ? arCutout.naturalWidth / arCutout.naturalHeight : 0.7;
+      var h = ch * 0.6;
+      var w = h * ratio;
+      return { x: (cw - w) / 2, y: (ch - h) / 2, w: w, h: h };
+    }
+
+    function drawAr() {
+      var cw = canvas.width,
+        ch = canvas.height;
+      arCtx.clearRect(0, 0, cw, ch);
+      arCtx.fillStyle = "#e5e0d8";
+      arCtx.fillRect(0, 0, cw, ch);
+      if (arBg) {
+        var s = Math.min(cw / arBg.naturalWidth, ch / arBg.naturalHeight);
+        var bw = arBg.naturalWidth * s,
+          bh = arBg.naturalHeight * s;
+        arCtx.drawImage(arBg, (cw - bw) / 2, (ch - bh) / 2, bw, bh);
+      }
+      if (arCutout && arPos) {
+        arCtx.drawImage(arCutout, arPos.x, arPos.y, arPos.w, arPos.h);
+        // 크기조절 손잡이
+        var hx = arPos.x + arPos.w,
+          hy = arPos.y + arPos.h;
+        arCtx.beginPath();
+        arCtx.arc(hx, hy, HANDLE_R, 0, Math.PI * 2);
+        arCtx.fillStyle = "#c98a4b";
+        arCtx.fill();
+        arCtx.strokeStyle = "#fff";
+        arCtx.lineWidth = 2;
+        arCtx.stroke();
+      }
+      emptyNote.hidden = !!arBg;
+    }
+
+    function pointerPos(e) {
+      var r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+
+    canvas.addEventListener("pointerdown", function (e) {
+      if (!arCutout || !arPos) return;
+      var p = pointerPos(e);
+      var hx = arPos.x + arPos.w,
+        hy = arPos.y + arPos.h;
+      var mode = null;
+      if (Math.hypot(p.x - hx, p.y - hy) <= HANDLE_R + 8) mode = "resize";
+      else if (p.x >= arPos.x && p.x <= arPos.x + arPos.w && p.y >= arPos.y && p.y <= arPos.y + arPos.h) mode = "move";
+      if (!mode) return;
+      arDrag = { mode: mode, startX: p.x, startY: p.y, orig: { x: arPos.x, y: arPos.y, w: arPos.w, h: arPos.h } };
+      canvas.setPointerCapture(e.pointerId);
+    });
+    canvas.addEventListener("pointermove", function (e) {
+      if (!arDrag) return;
+      var p = pointerPos(e);
+      var dx = p.x - arDrag.startX,
+        dy = p.y - arDrag.startY;
+      if (arDrag.mode === "move") {
+        arPos.x = arDrag.orig.x + dx;
+        arPos.y = arDrag.orig.y + dy;
+      } else {
+        var ratio = arDrag.orig.w / arDrag.orig.h;
+        var newW = Math.max(30, arDrag.orig.w + dx);
+        arPos.w = newW;
+        arPos.h = newW / ratio;
+      }
+      drawAr();
+    });
+    ["pointerup", "pointercancel"].forEach(function (evt) {
+      canvas.addEventListener(evt, function () {
+        arDrag = null;
+      });
+    });
+
+    overlay.querySelector(".ar-file-input").addEventListener("change", function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var img = new Image();
+      img.onload = function () {
+        arBg = img;
+        drawAr();
+      };
+      img.src = URL.createObjectURL(file);
+    });
+    overlay.querySelector(".ar-reset-btn").addEventListener("click", function () {
+      if (!arCutout) return;
+      arPos = defaultCutoutPos();
+      drawAr();
+    });
+    overlay.querySelector(".ar-download-btn").addEventListener("click", function () {
+      var link = document.createElement("a");
+      link.download = "mutagonglab-preview.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+
+    window.addEventListener("resize", function () {
+      if (overlay.hidden) return;
+      sizeCanvas();
+      drawAr();
+    });
+
+    overlay._sizeCanvas = sizeCanvas;
+    overlay._drawAr = drawAr;
+    overlay._defaultCutoutPos = defaultCutoutPos;
+    arModalEl = overlay;
+    return overlay;
+  }
+
+  window.MUTAGONG_openArPreview = function (cutoutSrc) {
+    var overlay = ensureArModal();
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    arBg = null;
+    var img = new Image();
+    img.onload = function () {
+      arCutout = img;
+      overlay._sizeCanvas();
+      arPos = overlay._defaultCutoutPos();
+      overlay._drawAr();
+    };
+    img.src = cutoutSrc;
+  };
+
   function initConfigurator(product, mount, overrides) {
     var state = {};
     product.options.forEach(function (opt) {
@@ -72,6 +253,18 @@
     skuPhoto.hidden = true;
     previewStage.appendChild(skuPhoto);
 
+    // "우리 집에 놓아보기" 버튼 — 실사진이 있는 조합일 때만 활성화(개념도 SVG로는 실감이 안 나서 비활성)
+    var arBtn = document.createElement("button");
+    arBtn.type = "button";
+    arBtn.className = "ar-preview-btn";
+    arBtn.textContent = "우리 집에 놓아보기";
+    arBtn.disabled = true;
+    previewStage.insertAdjacentElement("afterend", arBtn);
+    arBtn.addEventListener("click", function () {
+      var src = skuPhoto.getAttribute("data-src");
+      if (!arBtn.disabled && src) window.MUTAGONG_openArPreview(src);
+    });
+
     function skuImageKey() {
       if (!product.skuImageKeys || !product.skuImageKeys.length) return null;
       return product.skuImageKeys
@@ -91,9 +284,11 @@
         }
         skuPhoto.hidden = false;
         svg.style.display = "none";
+        arBtn.disabled = false;
       } else {
         skuPhoto.hidden = true;
         svg.style.display = "";
+        arBtn.disabled = true;
       }
     }
 
