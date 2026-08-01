@@ -14,7 +14,7 @@
     overlay.className = "pdp-modal-overlay";
     overlay.hidden = true;
     overlay.innerHTML =
-      '<div class="pdp-modal" role="dialog" aria-modal="true">' +
+      '<div class="pdp-modal example-modal" role="dialog" aria-modal="true">' +
       '<button type="button" class="pdp-modal-close" aria-label="닫기"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>' +
       '<span class="eyebrow">예시 이미지</span>' +
       '<h3 class="example-modal-title">-</h3>' +
@@ -121,8 +121,7 @@
             var iw = w - 60, ih = h - 130;
             var code = "" + w / 100 + h / 100;
             var detailHtml =
-              '<span class="dim-extra">적합 천장고 <strong>' + (h - 10) + "~" + (h + 50) +
-              "mm</strong> (길이조절발 사용 시 ~" + (h + 100) + "mm)</span>" +
+              '<span class="dim-extra">적합 천장고 <strong>' + (h - 10) + "~" + (h + 50) + "mm</strong></span>" +
               '<span class="dim-extra">내경 <strong>' + iw + "×" + ih + 'mm</strong> · 코드 ' + code + "</span>";
             var passW = null;
             if (state.doorType === "3연동") passW = Math.round((iw * 2) / 3);
@@ -356,11 +355,21 @@
             exampleBtn.className = "opt-addon-example-btn";
             exampleBtn.textContent = "예시 이미지 보기";
             exampleBtn.addEventListener("click", function () {
-              var previewHtml = window.MUTAGONG_PARTITION_PREVIEW_SVG ? window.MUTAGONG_PARTITION_PREVIEW_SVG() : "";
+              var previewHtml =
+                '<div class="partition-example-grid">' +
+                '<figure class="partition-example-card">' +
+                '<img src="assets/partition-example-alpha-room-white.jpg" alt="화이트 중문과 유리 파티션으로 알파룸을 구분한 설치 사례" width="1448" height="1086">' +
+                '<figcaption><strong>알파룸 구분용 파티션</strong><span>화이트 중문과 유리 파티션으로 생활공간과 알파룸을 분리한 사례입니다.</span></figcaption>' +
+                '</figure>' +
+                '<figure class="partition-example-card">' +
+                '<img src="assets/partition-example-entry-black.jpg" alt="블랙 중문과 모루유리 파티션으로 현관을 구분한 설치 사례" width="1086" height="1448">' +
+                '<figcaption><strong>현관 파티션</strong><span>블랙 프레임과 모루유리로 현관 영역을 구분한 사례입니다.</span></figcaption>' +
+                '</figure>' +
+                '</div>';
               window.MUTAGONG_openExampleModal(
-                "파티션 예시",
+                "무타공 파티션 설치 예시",
                 previewHtml,
-                "실제 시공 사진 확보 전까지 개념도로 안내해 드립니다."
+                "제품 사양과 현장 조건에 따라 구성과 마감은 달라질 수 있습니다."
               );
             });
             group.appendChild(exampleBtn);

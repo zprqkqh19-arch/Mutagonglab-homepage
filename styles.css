@@ -733,11 +733,24 @@
     color:var(--accent); background:none; border:none; padding:0; cursor:pointer; text-decoration:underline;
   }
   .example-modal-visual{
-    aspect-ratio:4/5; max-width:260px; margin:1.2rem auto 0; padding:10%;
-    border:1px solid var(--paper-line); border-radius:16px; background:var(--paper);
+    max-width:none; margin:1.2rem auto 0;
   }
   .example-modal-visual svg{ width:100%; height:100%; }
   .example-modal-caption{ text-align:center; }
+  .pdp-modal.example-modal{ max-width:940px; }
+  .partition-example-grid{
+    display:grid; grid-template-columns:minmax(0,16fr) minmax(0,9fr); gap:1rem; align-items:start;
+  }
+  .partition-example-card{
+    margin:0; overflow:hidden; border:1px solid var(--paper-line); border-radius:16px; background:var(--paper);
+  }
+  .partition-example-card img{ display:block; width:100%; height:auto; object-fit:cover; }
+  .partition-example-card figcaption{ padding:.9rem 1rem 1rem; }
+  .partition-example-card strong{ display:block; font-size:var(--step--1); color:var(--ink); }
+  .partition-example-card span{ display:block; margin-top:.25rem; font-size:.78rem; line-height:1.55; color:var(--ink-soft); }
+  @media (max-width:640px){
+    .partition-example-grid{ grid-template-columns:1fr; }
+  }
 
   .privacy-modal-body{ margin-top:1.2rem; }
   .privacy-modal-body h4{ font-size:var(--step--1); font-weight:700; margin-top:1.2rem; }
