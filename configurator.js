@@ -390,6 +390,60 @@
         group.appendChild(head);
 
         if (opt.kind === "size") {
+          // 실측 기반 사이즈 추천 + 판매 가능 필터 (무타공 DIY 전용, 규격 v0.18)
+          if (product.id === "diy-door") {
+            var fit = document.createElement("div");
+            fit.className = "fit-check";
+            fit.innerHTML =
+              '<p class="fit-title">실측값으로 사이즈 추천받기</p>' +
+              '<div class="fit-row">' +
+              '<label>실측 폭(mm) <input type="number" class="fit-w" min="900" max="1600" placeholder="예: 1230"></label>' +
+              '<label>천장고 최솟값(mm) <input type="number" class="fit-c" min="1800" max="2600" placeholder="예: 2245"></label>' +
+              '<button type="button" class="fit-btn">추천</button></div>' +
+              '<p class="fit-result" hidden></p>';
+            var fitBtn = fit.querySelector(".fit-btn");
+            var fitRes = fit.querySelector(".fit-result");
+            fitBtn.addEventListener("click", function () {
+              var P = parseInt(fit.querySelector(".fit-w").value, 10);
+              var C = parseInt(fit.querySelector(".fit-c").value, 10);
+              fitRes.hidden = false;
+              fitRes.className = "fit-result";
+              if (!P || !C) { fitRes.textContent = "실측 폭과 천장고를 모두 입력해 주세요."; return; }
+              // 적합 범위 검증 (규격 v0.18 6항)
+              if (C < 1990 || C > 2400) {
+                fitRes.classList.add("fit-bad");
+                fitRes.textContent = "천장고 " + C + "mm는 설치 가능 범위(1990~2400mm)를 벗어나 무타공 설치가 어렵습니다. 시공형 상담을 추천드립니다.";
+                return;
+              }
+              if (P < 1100 || P > 1399) {
+                fitRes.classList.add("fit-bad");
+                fitRes.textContent = "실측 폭 " + P + "mm는 설치 가능 범위(1100~1399mm)를 벗어나 무타공 설치가 어렵습니다. 시공형 상담을 추천드립니다.";
+                return;
+              }
+              var W = Math.min(1300, Math.floor(P / 100) * 100);
+              var validH = { 1100: [2300, 2200, 2100, 2000], 1200: [2300, 2200, 2100, 2000], 1300: [2300, 2200] };
+              var pick = null, F = 0;
+              validH[W].some(function (H) {
+                if (H - 10 <= C && C <= H + 100) { pick = H; F = Math.max(0, C - (H + 50)); return true; }
+                return false;
+              });
+              if (!pick) {
+                fitRes.classList.add("fit-bad");
+                fitRes.textContent = "실측 폭 " + P + "mm(폭 1300대)와 천장고 " + C + "mm 조합은 현재 규격으로 대응이 어렵습니다. 시공형 상담을 추천드립니다.";
+                return;
+              }
+              var val = W + "x" + pick;
+              state.size = val;
+              var sel = group.querySelector("select");
+              if (sel) sel.value = val;
+              updateCurrentLabel(head, opt, val);
+              render();
+              fitRes.classList.add("fit-ok");
+              fitRes.textContent = "추천 사이즈: W" + W + " × H" + pick + " (코드 " + (W / 100) + (pick / 100) + ")" +
+                (F > 0 ? " — 길이조절발 보정 약 " + F + "mm 필요(길이조절발·마감판 옵션을 추가해 주세요)" : " — 길이조절발 없이 설치 가능한 범위입니다");
+            });
+            group.appendChild(fit);
+          }
           var wrap = document.createElement("div");
           wrap.className = "opt-size";
           var select = document.createElement("select");

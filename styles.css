@@ -1072,3 +1072,16 @@ h3{position:relative}
 /* 사이즈 병기(적합 천장고·내경·통행폭) + 실측 노트 — 규격 v0.18 */
 .dim-extra{display:block;font-size:.78rem;opacity:.75;margin-top:.15rem}
 .opt-note{margin:.5rem 0 0;font-size:.75rem;line-height:1.55;opacity:.65}
+
+
+/* 실측 기반 사이즈 추천/필터 위젯 */
+.fit-check{margin:.2rem 0 .8rem;padding:.7rem .8rem;border:1px dashed rgba(120,110,90,.45);border-radius:.6rem}
+.fit-title{margin:0 0 .45rem;font-size:.8rem;font-weight:600;opacity:.8}
+.fit-row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:flex-end}
+.fit-row label{display:flex;flex-direction:column;gap:.25rem;font-size:.72rem;opacity:.75}
+.fit-row input{width:8.5rem;padding:.4rem .5rem;border:1px solid rgba(120,110,90,.4);border-radius:.4rem;background:transparent;color:inherit;font-size:.85rem}
+.fit-btn{padding:.45rem .9rem;border:none;border-radius:.4rem;background:#2c2822;color:#f5f1e9;font-size:.8rem;cursor:pointer}
+.fit-btn:hover{opacity:.85}
+.fit-result{margin:.55rem 0 0;font-size:.78rem;line-height:1.5}
+.fit-result.fit-ok{color:#2e7d46}
+.fit-result.fit-bad{color:#b3452e}
