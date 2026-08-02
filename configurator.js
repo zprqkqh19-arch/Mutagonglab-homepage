@@ -228,6 +228,10 @@
   };
 
   function initConfigurator(product, mount, overrides) {
+    // 레이어 합성 커스터마이저(무타공랩 DIY 12-22)는 별도 렌더러로 처리
+    if (product.layeredCustomizer) {
+      return renderLayeredCustomizer(product, mount, overrides);
+    }
     var state = {};
     product.options.forEach(function (opt) {
       state[opt.id] = opt.default;
@@ -862,6 +866,157 @@
     }
 
     buildControls();
+    render();
+  }
+
+  // ============ 레이어 합성 커스터마이저 (무타공랩 DIY 12-22) ============
+  // 디자인 핸드오프 프로토타입(Customizer.dc.html)을 사이트 바닐라 JS 관용구로 재구현.
+  // 프리뷰 = 반응형 단일 SVG(배경→중문 B→간살 오버레이→프레임 A) + 클릭 가능한 간살 눈금.
+  function renderLayeredCustomizer(product, mount, overrides) {
+    var cfg = product.layeredCustomizer;
+    var F = cfg.frame;
+    var stage = mount.querySelector("[data-preview-stage]");
+    var groupsEl = mount.querySelector("[data-opt-groups]");
+    if (!stage || !groupsEl) return;
+
+    // 이 모드에서 쓰지 않는 제네릭 UI 정리
+    var typeFinder = mount.querySelector(".type-finder-btn");
+    if (typeFinder) typeFinder.style.display = "none";
+    var dimEl = mount.querySelector("[data-preview-dim]");
+    if (dimEl) dimEl.style.display = "none";
+    var summaryEl = mount.querySelector("[data-spec-summary]");
+    if (summaryEl) summaryEl.style.display = "none";
+    mount.classList.add("lc-mode");
+    stage.classList.add("lc-stage");
+
+    var d0 = cfg.defaults;
+    var state = { t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, cols: [], rows: [], arch: false, ext: false, bg: false };
+    if (overrides && overrides.doorType) {
+      var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
+      if (pm) state.t = pm.value;
+    }
+
+    function alpha(n) { var r = ""; do { r = String.fromCharCode(65 + (n % 26)) + r; n = Math.floor(n / 26) - 1; } while (n >= 0); return r; }
+    function colAlpha(mm) { return alpha((mm - 50) / 50); }
+    function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
+    function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
+    function totalH() { return state.ext ? F.totalExt : F.total; }
+    function innerTop() { return state.ext ? F.innerTopExt : F.innerTop; }
+    function bSrc() { var p = typePrefix(); return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.size + "_" + state.d + "_" + state.g + "_no_" + state.h + ".svg"; }
+    function aSrc() { return cfg.assetBase + "/A/A_" + cfg.size + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
+
+    function skuCode() {
+      var code = state.t + " / " + cfg.size + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
+      if (state.cols.length || state.rows.length || state.arch) {
+        var pre = state.arch === "line" ? "간살아치·" : state.arch === "fill" ? "채움아치·" : "";
+        var cv = state.cols.map(colAlpha).join("");
+        var rv = state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join("");
+        code += " / 간살[" + pre + cv + rv + "]";
+      }
+      return code;
+    }
+
+    // ---- 프리뷰 SVG ----
+    function buildStageHtml() {
+      var tH = totalH(), iTop = innerTop(), bc = doorHex();
+      var vb = "-70 -70 " + (F.viewW + 150) + " " + (tH + 130);
+      var s = '<svg class="lc-svg" viewBox="' + vb + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="중문 커스터마이징 미리보기">';
+      if (state.bg && cfg.background) {
+        s += '<defs><clipPath id="lcClip"><rect x="' + F.innerX + '" y="' + iTop + '" width="' + F.innerW + '" height="' + F.innerH + '"/></clipPath></defs>';
+        s += '<image href="' + cfg.background + '" x="' + F.innerX + '" y="' + iTop + '" width="' + F.innerW + '" height="' + F.innerH + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#lcClip)"/>';
+      }
+      s += '<image href="' + bSrc() + '" x="' + F.innerX + '" y="' + iTop + '" width="' + F.innerW + '" height="' + F.innerH + '"/>';
+      s += '<g transform="translate(' + F.innerX + " " + iTop + ')" pointer-events="none">';
+      state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="1980" fill="' + bc + '"/>'; });
+      state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="1080" height="20" fill="' + bc + '"/>'; });
+      if (state.arch === "line") s += '<path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700" stroke="' + bc + '" stroke-width="20" fill="none"/>';
+      if (state.arch === "fill") s += '<path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700 L 1110 30 L 30 30 Z" fill="' + bc + '"/>';
+      s += "</g>";
+      s += '<image href="' + aSrc() + '" x="0" y="0" width="' + F.viewW + '" height="' + tH + '" pointer-events="none"/>';
+      s += '<text class="lc-dim" x="' + (F.viewW / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W 1200</text>';
+      s += '<text class="lc-dim" x="' + (F.viewW + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (F.viewW + 48) + " " + (tH / 2) + ')">H ' + tH + "</text>";
+      var mm;
+      for (mm = 50; mm <= F.innerW - 40; mm += 50) {
+        var onC = state.cols.indexOf(mm) >= 0, cx = F.innerX + mm;
+        s += '<g class="lc-tick' + (onC ? " on" : "") + '" data-axis="col" data-mm="' + mm + '"><rect x="' + (cx - 16) + '" y="-40" width="32" height="30" rx="5"/><text x="' + cx + '" y="-18" text-anchor="middle">' + colAlpha(mm) + "</text></g>";
+      }
+      for (mm = 50; mm <= F.innerH - 50; mm += 50) {
+        var onR = state.rows.indexOf(mm) >= 0, cy = iTop + mm;
+        s += '<g class="lc-tick' + (onR ? " on" : "") + '" data-axis="row" data-mm="' + mm + '"><rect x="-58" y="' + (cy - 13) + '" width="40" height="26" rx="5"/><text x="-38" y="' + (cy + 6) + '" text-anchor="middle">' + colAlpha(mm).toLowerCase() + "</text></g>";
+      }
+      s += "</svg>";
+      return s;
+    }
+
+    // ---- 옵션 패널 ----
+    function optBtn(key, opt) {
+      if (opt.disabled) return '<button type="button" class="lc-opt disabled" disabled>' + opt.label + "</button>";
+      var on = state[key] === opt.value;
+      var sw = (key === "d" && opt.hex) ? '<span class="lc-sw" style="background:' + opt.hex + '"></span>' : "";
+      return '<button type="button" class="lc-opt' + (on ? " on" : "") + '" data-act="set" data-key="' + key + '" data-val="' + opt.value + '">' + sw + opt.label + "</button>";
+    }
+    function row(label, inner) { return '<div class="lc-row"><div class="lc-row-label">' + label + '</div><div class="lc-row-opts">' + inner + "</div></div>"; }
+
+    function buildOptionsHtml() {
+      var h = "";
+      h += '<div class="lc-head"><span class="lc-title">커스터마이징 — ' + cfg.size + '</span>' +
+        '<button type="button" class="lc-ext' + (state.ext ? " on" : "") + '" data-act="ext">+30mm 연장</button></div>';
+      h += row("제품 유형", cfg.types.map(function (o) { return optBtn("t", o); }).join(""));
+      h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
+      h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
+      // 안전창 + 배경 토글
+      var glassHtml = cfg.glass.map(function (o) { return optBtn("g", o); }).join("");
+      var bgDis = !cfg.background;
+      glassHtml += '<button type="button" class="lc-opt lc-bg' + (state.bg ? " on" : "") + (bgDis ? " disabled" : "") + '"' +
+        (bgDis ? ' disabled title="배경 이미지 준비 중"' : ' data-act="bg"') + ">" + (state.bg ? "배경 빼기" : "배경 넣기") + "</button>";
+      h += row("안전창", glassHtml);
+      // 간살
+      var colsPicked = state.cols.length ? state.cols.map(colAlpha).join(", ") : "—";
+      var rowsPicked = state.rows.length ? state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join(", ") : "—";
+      var garHtml =
+        '<button type="button" class="lc-opt' + (state.arch === "line" ? " on" : "") + '" data-act="arch" data-val="line">간살아치형</button>' +
+        '<button type="button" class="lc-opt' + (state.arch === "fill" ? " on" : "") + '" data-act="arch" data-val="fill">채움아치형</button>' +
+        '<button type="button" class="lc-opt ghost" data-act="clear">간살 전체 지우기</button>';
+      h += '<div class="lc-row"><div class="lc-row-label">간살</div>' +
+        '<div class="lc-hint">눈금 알파벳을 클릭해 배치합니다. (상단 대문자 = 세로살, 좌측 소문자 = 가로살)</div>' +
+        '<div class="lc-picked">세로살: ' + colsPicked + " · 가로살: " + rowsPicked + "</div>" +
+        '<div class="lc-row-opts">' + garHtml + "</div></div>";
+      h += row("손잡이", cfg.handles.map(function (o) { return optBtn("h", o); }).join(""));
+      h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
+      h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
+        "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
+        "<div>· 중문 색상·안전창 디자인·간살 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지 않을 수 있습니다.</div>" +
+        "<div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div></div>";
+      return h;
+    }
+
+    function render() {
+      stage.innerHTML = buildStageHtml();
+      groupsEl.innerHTML = buildOptionsHtml();
+    }
+
+    // 이벤트 위임 (부모는 유지되므로 innerHTML 갱신과 무관하게 동작)
+    stage.addEventListener("click", function (e) {
+      var g = e.target.closest ? e.target.closest(".lc-tick") : null;
+      if (!g) return;
+      var axis = g.getAttribute("data-axis"), mm = parseInt(g.getAttribute("data-mm"), 10);
+      var arr = axis === "col" ? state.cols : state.rows;
+      var i = arr.indexOf(mm);
+      if (i >= 0) arr.splice(i, 1); else { arr.push(mm); arr.sort(function (a, b) { return a - b; }); }
+      render();
+    });
+    groupsEl.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-act]") : null;
+      if (!b) return;
+      var act = b.getAttribute("data-act");
+      if (act === "set") { state[b.getAttribute("data-key")] = b.getAttribute("data-val"); }
+      else if (act === "bg") { state.bg = !state.bg; }
+      else if (act === "ext") { state.ext = !state.ext; }
+      else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
+      else if (act === "clear") { state.cols = []; state.rows = []; state.arch = false; }
+      render();
+    });
+
     render();
   }
 

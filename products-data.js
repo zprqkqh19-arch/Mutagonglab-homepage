@@ -330,6 +330,48 @@
     default: false,
   };
 
+  // ============ 레이어 합성 커스터마이저 스펙 (무타공랩 DIY, 12-22) ============
+  // 디자인 핸드오프(design_handoff_customizer) 기반. A(프레임)+B(중문) SVG를 좌표계에 맞춰
+  // 레이어로 합성하고, 간살은 실시간 오버레이로 그린다. 좌표·팔레트·자산 규칙은 핸드오프 README 기준.
+  // 자산: assets/sku/12-22/{A,B,B1}. 현재 12-22 한 사이즈만 제공(나머지 9종은 자산 생성 후 확장).
+  var LAYERED_CUSTOMIZER_12_22 = {
+    size: "12-22",
+    assetBase: "assets/sku/12-22",
+    // 좌표계(mm, 정면): 프레임 A 전체 W1200×H2200(연장 시 H2230), 내경 x30/y130(연장 160) W1140×H2070
+    frame: { viewW: 1200, total: 2200, totalExt: 2230, innerX: 30, innerTop: 130, innerTopExt: 160, innerW: 1140, innerH: 2070 },
+    types: [
+      { value: "3연동", label: "3연동", prefix: "B" },
+      { value: "원슬라이딩", label: "원슬라이딩", prefix: "B1" },
+      { value: "스윙폴딩", label: "스윙폴딩", disabled: true },
+      { value: "여닫이", label: "여닫이", disabled: true },
+    ],
+    frameColors: [{ value: "sv", label: "실버" }],
+    doorColors: [
+      { value: "wh", label: "화이트", hex: "#eeece7" },
+      { value: "gr", label: "그레이", hex: "#707074" },
+      { value: "bk", label: "블랙", hex: "#2b2b2e" },
+    ],
+    glass: [
+      { value: "cl", label: "투명" },
+      { value: "br", label: "브론즈" },
+      { value: "mi", label: "미스트" },
+      { value: "mo", label: "모루" },
+      { value: "sa", label: "샤틴" },
+      { value: "fa", label: "패브릭" },
+    ],
+    handles: [
+      { value: "st", label: "기본" },
+      { value: "rd", label: "반원형" },
+      { value: "ba", label: "긴 바형" },
+      { value: "sb", label: "짧은 바형" },
+      { value: "line", label: "일자형", disabled: true },
+    ],
+    // 배경 넣기(유리 비침 비교)용 이미지 — 자산 확보 시 경로 지정(예: "assets/sku/12-22/room-bg.png").
+    // null이면 '배경 넣기' 토글은 비활성으로 표시된다.
+    background: null,
+    defaults: { t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
+  };
+
   window.MUTAGONG_PRODUCTS = {
     "standard-door": {
       id: "standard-door",
@@ -377,6 +419,7 @@
 
     "diy-door": {
       id: "diy-door",
+      layeredCustomizer: LAYERED_CUSTOMIZER_12_22,
       name: "무타공 DIY 중문",
       brand: "무타공랩",
       tagline: "벽과 문틀에 구멍을 내지 않는 무타공랩의 자체 R&D 제품입니다.",
