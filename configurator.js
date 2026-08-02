@@ -874,7 +874,6 @@
   // 프리뷰 = 반응형 단일 SVG(배경→중문 B→간살 오버레이→프레임 A) + 클릭 가능한 간살 눈금.
   function renderLayeredCustomizer(product, mount, overrides) {
     var cfg = product.layeredCustomizer;
-    var F = cfg.frame;
     var stage = mount.querySelector("[data-preview-stage]");
     var groupsEl = mount.querySelector("[data-opt-groups]");
     if (!stage || !groupsEl) return;
@@ -890,23 +889,42 @@
     stage.classList.add("lc-stage");
 
     var d0 = cfg.defaults;
-    var state = { t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, cols: [], rows: [], arch: false, ext: false, bg: false };
+    var state = { sz: d0.sz, t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, cols: [], rows: [], arch: false, ext: false, bg: false };
     if (overrides && overrides.doorType) {
       var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
       if (pm) state.t = pm.value;
+    }
+
+    // 배경 이미지: 경로에 파일이 실제로 로드되면 '배경 넣기'가 자동 활성화됨(없으면 비활성 유지)
+    var bgOk = false;
+    if (cfg.background) {
+      var probe = new Image();
+      probe.onload = function () { bgOk = true; render(); };
+      probe.onerror = function () { bgOk = false; };
+      probe.src = cfg.background;
     }
 
     function alpha(n) { var r = ""; do { r = String.fromCharCode(65 + (n % 26)) + r; n = Math.floor(n / 26) - 1; } while (n >= 0); return r; }
     function colAlpha(mm) { return alpha((mm - 50) / 50); }
     function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
     function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
-    function totalH() { return state.ext ? F.totalExt : F.total; }
-    function innerTop() { return state.ext ? F.innerTopExt : F.innerTop; }
-    function bSrc() { var p = typePrefix(); return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.size + "_" + state.d + "_" + state.g + "_no_" + state.h + ".svg"; }
-    function aSrc() { return cfg.assetBase + "/A/A_" + cfg.size + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
+    function selSize() { return cfg.sizes.filter(function (s) { return s.code === state.sz; })[0] || cfg.sizes[0]; }
+    // 좌표계(mm): 내경 = (W - 2·프로파일) × (H - innerTop). 연장 시 총높이 +extDelta, 상단 볼트 노출 확대.
+    function geom() {
+      var s = selSize(), p = cfg.profile;
+      return {
+        w: s.w, h: s.h,
+        total: s.h + (state.ext ? cfg.extDelta : 0),
+        innerTop: state.ext ? cfg.innerTopExt : cfg.innerTop,
+        innerX: p, innerW: s.w - 2 * p, innerH: s.h - cfg.innerTop,
+      };
+    }
+    // SVG 자산은 12-22 세트 하나(디자인 동일)를 모든 사이즈에 스케일해 재사용
+    function bSrc() { var p = typePrefix(); return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.assetSize + "_" + state.d + "_" + state.g + "_no_" + state.h + ".svg"; }
+    function aSrc() { return cfg.assetBase + "/A/A_" + cfg.assetSize + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
 
     function skuCode() {
-      var code = state.t + " / " + cfg.size + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
+      var code = state.t + " / " + state.sz + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
       if (state.cols.length || state.rows.length || state.arch) {
         var pre = state.arch === "line" ? "간살아치·" : state.arch === "fill" ? "채움아치·" : "";
         var cv = state.cols.map(colAlpha).join("");
@@ -918,29 +936,35 @@
 
     // ---- 프리뷰 SVG ----
     function buildStageHtml() {
-      var tH = totalH(), iTop = innerTop(), bc = doorHex();
-      var vb = "-70 -70 " + (F.viewW + 150) + " " + (tH + 130);
+      var G = geom(), bc = doorHex();
+      var w = G.w, tH = G.total, iTop = G.innerTop, iX = G.innerX, iW = G.innerW, iH = G.innerH;
+      var rY = iH / 2070; // 아치 곡선 세로 스케일(12-22 기준)
+      var vb = "-70 -70 " + (w + 150) + " " + (tH + 130);
       var s = '<svg class="lc-svg" viewBox="' + vb + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="중문 커스터마이징 미리보기">';
-      if (state.bg && cfg.background) {
-        s += '<defs><clipPath id="lcClip"><rect x="' + F.innerX + '" y="' + iTop + '" width="' + F.innerW + '" height="' + F.innerH + '"/></clipPath></defs>';
-        s += '<image href="' + cfg.background + '" x="' + F.innerX + '" y="' + iTop + '" width="' + F.innerW + '" height="' + F.innerH + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#lcClip)"/>';
+      if (state.bg && bgOk && cfg.background) {
+        s += '<defs><clipPath id="lcClip"><rect x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/></clipPath></defs>';
+        s += '<image href="' + cfg.background + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#lcClip)"/>';
       }
-      s += '<image href="' + bSrc() + '" x="' + F.innerX + '" y="' + iTop + '" width="' + F.innerW + '" height="' + F.innerH + '"/>';
-      s += '<g transform="translate(' + F.innerX + " " + iTop + ')" pointer-events="none">';
-      state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="1980" fill="' + bc + '"/>'; });
-      state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="1080" height="20" fill="' + bc + '"/>'; });
-      if (state.arch === "line") s += '<path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700" stroke="' + bc + '" stroke-width="20" fill="none"/>';
-      if (state.arch === "fill") s += '<path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700 L 1110 30 L 30 30 Z" fill="' + bc + '"/>';
+      s += '<image href="' + bSrc() + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/>';
+      s += '<g transform="translate(' + iX + " " + iTop + ')" pointer-events="none">';
+      state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="' + (iH - 90) + '" fill="' + bc + '"/>'; });
+      state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="' + (iW - 60) + '" height="20" fill="' + bc + '"/>'; });
+      if (state.arch) {
+        var lx = 30, mx = iW / 2, rx = iW - 30, topY = 120 * rY, botY = 700 * rY;
+        var dPath = "M " + lx + " " + botY + " Q " + lx + " " + topY + " " + mx + " " + topY + " Q " + rx + " " + topY + " " + rx + " " + botY;
+        if (state.arch === "line") s += '<path d="' + dPath + '" stroke="' + bc + '" stroke-width="20" fill="none"/>';
+        if (state.arch === "fill") s += '<path d="' + dPath + " L " + rx + " 30 L 30 30 Z\" fill=\"" + bc + '"/>';
+      }
       s += "</g>";
-      s += '<image href="' + aSrc() + '" x="0" y="0" width="' + F.viewW + '" height="' + tH + '" pointer-events="none"/>';
-      s += '<text class="lc-dim" x="' + (F.viewW / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W 1200</text>';
-      s += '<text class="lc-dim" x="' + (F.viewW + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (F.viewW + 48) + " " + (tH / 2) + ')">H ' + tH + "</text>";
+      s += '<image href="' + aSrc() + '" x="0" y="0" width="' + w + '" height="' + tH + '" pointer-events="none"/>';
+      s += '<text class="lc-dim" x="' + (w / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W ' + w + "</text>";
+      s += '<text class="lc-dim" x="' + (w + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (w + 48) + " " + (tH / 2) + ')">H ' + tH + "</text>";
       var mm;
-      for (mm = 50; mm <= F.innerW - 40; mm += 50) {
-        var onC = state.cols.indexOf(mm) >= 0, cx = F.innerX + mm;
+      for (mm = 50; mm <= iW - 40; mm += 50) {
+        var onC = state.cols.indexOf(mm) >= 0, cx = iX + mm;
         s += '<g class="lc-tick' + (onC ? " on" : "") + '" data-axis="col" data-mm="' + mm + '"><rect x="' + (cx - 16) + '" y="-40" width="32" height="30" rx="5"/><text x="' + cx + '" y="-18" text-anchor="middle">' + colAlpha(mm) + "</text></g>";
       }
-      for (mm = 50; mm <= F.innerH - 50; mm += 50) {
+      for (mm = 50; mm <= iH - 50; mm += 50) {
         var onR = state.rows.indexOf(mm) >= 0, cy = iTop + mm;
         s += '<g class="lc-tick' + (onR ? " on" : "") + '" data-axis="row" data-mm="' + mm + '"><rect x="-58" y="' + (cy - 13) + '" width="40" height="26" rx="5"/><text x="-38" y="' + (cy + 6) + '" text-anchor="middle">' + colAlpha(mm).toLowerCase() + "</text></g>";
       }
@@ -959,14 +983,20 @@
 
     function buildOptionsHtml() {
       var h = "";
-      h += '<div class="lc-head"><span class="lc-title">커스터마이징 — ' + cfg.size + '</span>' +
+      h += '<div class="lc-head"><span class="lc-title">커스터마이징</span>' +
         '<button type="button" class="lc-ext' + (state.ext ? " on" : "") + '" data-act="ext">+30mm 연장</button></div>';
+      // 사이즈 — 이것만 고르면 나머지 디자인 옵션은 12-22와 동일하게 적용된다
+      var szHtml = cfg.sizes.map(function (sz) {
+        var on = state.sz === sz.code;
+        return '<button type="button" class="lc-opt' + (on ? " on" : "") + '" data-act="setsz" data-val="' + sz.code + '">' + sz.w + "×" + sz.h + "</button>";
+      }).join("");
+      h += row("사이즈 <em>(W×H mm)</em>", szHtml);
       h += row("제품 유형", cfg.types.map(function (o) { return optBtn("t", o); }).join(""));
       h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
       h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
       // 안전창 + 배경 토글
       var glassHtml = cfg.glass.map(function (o) { return optBtn("g", o); }).join("");
-      var bgDis = !cfg.background;
+      var bgDis = !bgOk;
       glassHtml += '<button type="button" class="lc-opt lc-bg' + (state.bg ? " on" : "") + (bgDis ? " disabled" : "") + '"' +
         (bgDis ? ' disabled title="배경 이미지 준비 중"' : ' data-act="bg"') + ">" + (state.bg ? "배경 빼기" : "배경 넣기") + "</button>";
       h += row("안전창", glassHtml);
@@ -1010,6 +1040,12 @@
       if (!b) return;
       var act = b.getAttribute("data-act");
       if (act === "set") { state[b.getAttribute("data-key")] = b.getAttribute("data-val"); }
+      else if (act === "setsz") {
+        state.sz = b.getAttribute("data-val");
+        var G = geom();
+        state.cols = state.cols.filter(function (mm) { return mm <= G.innerW - 40; });
+        state.rows = state.rows.filter(function (mm) { return mm <= G.innerH - 50; });
+      }
       else if (act === "bg") { state.bg = !state.bg; }
       else if (act === "ext") { state.ext = !state.ext; }
       else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
