@@ -909,14 +909,16 @@
     function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
     function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
     function selSize() { return cfg.sizes.filter(function (s) { return s.code === state.sz; })[0] || cfg.sizes[0]; }
-    // 좌표계(mm): 내경 = (W - 2·프로파일) × (H - innerTop). 연장 시 총높이 +extDelta, 상단 볼트 노출 확대.
+    function baseSize() { return cfg.sizes.filter(function (s) { return s.code === cfg.assetSize; })[0] || cfg.sizes[0]; }
+    // 프리뷰는 기준 자산(12-22) 좌표계로 고정 렌더한다. 사이즈 선택은 이미지 크기를 바꾸지 않고
+    // SKU 코드·치수 표기(주문 스펙)에만 반영된다. 디자인 옵션(색/유리/간살/손잡이)만 이미지에 적용.
     function geom() {
-      var s = selSize(), p = cfg.profile;
+      var b = baseSize(), p = cfg.profile;
       return {
-        w: s.w, h: s.h,
-        total: s.h + (state.ext ? cfg.extDelta : 0),
+        w: b.w, h: b.h,
+        total: b.h + (state.ext ? cfg.extDelta : 0),
         innerTop: state.ext ? cfg.innerTopExt : cfg.innerTop,
-        innerX: p, innerW: s.w - 2 * p, innerH: s.h - cfg.innerTop,
+        innerX: p, innerW: b.w - 2 * p, innerH: b.h - cfg.innerTop,
       };
     }
     // SVG 자산은 12-22 세트 하나(디자인 동일)를 모든 사이즈에 스케일해 재사용
@@ -939,6 +941,8 @@
       var G = geom(), bc = doorHex();
       var w = G.w, tH = G.total, iTop = G.innerTop, iX = G.innerX, iW = G.innerW, iH = G.innerH;
       var rY = iH / 2070; // 아치 곡선 세로 스케일(12-22 기준)
+      // 치수 표기는 선택 사이즈(주문 스펙)를 보여준다 — 이미지 자체는 고정 렌더
+      var sel = selSize(), labW = sel.w, labH = sel.h + (state.ext ? cfg.extDelta : 0);
       var vb = "-70 -70 " + (w + 150) + " " + (tH + 130);
       var s = '<svg class="lc-svg" viewBox="' + vb + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="중문 커스터마이징 미리보기">';
       if (state.bg && bgOk && cfg.background) {
@@ -957,8 +961,8 @@
       }
       s += "</g>";
       s += '<image href="' + aSrc() + '" x="0" y="0" width="' + w + '" height="' + tH + '" pointer-events="none"/>';
-      s += '<text class="lc-dim" x="' + (w / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W ' + w + "</text>";
-      s += '<text class="lc-dim" x="' + (w + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (w + 48) + " " + (tH / 2) + ')">H ' + tH + "</text>";
+      s += '<text class="lc-dim" x="' + (w / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W ' + labW + "</text>";
+      s += '<text class="lc-dim" x="' + (w + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (w + 48) + " " + (tH / 2) + ')">H ' + labH + "</text>";
       var mm;
       for (mm = 50; mm <= iW - 40; mm += 50) {
         var onC = state.cols.indexOf(mm) >= 0, cx = iX + mm;
@@ -1040,12 +1044,7 @@
       if (!b) return;
       var act = b.getAttribute("data-act");
       if (act === "set") { state[b.getAttribute("data-key")] = b.getAttribute("data-val"); }
-      else if (act === "setsz") {
-        state.sz = b.getAttribute("data-val");
-        var G = geom();
-        state.cols = state.cols.filter(function (mm) { return mm <= G.innerW - 40; });
-        state.rows = state.rows.filter(function (mm) { return mm <= G.innerH - 50; });
-      }
+      else if (act === "setsz") { state.sz = b.getAttribute("data-val"); }
       else if (act === "bg") { state.bg = !state.bg; }
       else if (act === "ext") { state.ext = !state.ext; }
       else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
