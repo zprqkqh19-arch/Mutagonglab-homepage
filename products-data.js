@@ -377,7 +377,7 @@
     ],
     // 배경 넣기(유리 비침 비교)용 이미지. 이 경로에 파일이 존재하면 '배경 넣기' 토글이 자동 활성화되고,
     // 없으면(로드 실패) 토글은 비활성으로 표시된다. 거실 사진을 아래 경로에 넣기만 하면 켜진다.
-    background: "assets/sku/room-bg.jpg",
+    background: "assets/sku/room-bg.webp",
     defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
   };
 
