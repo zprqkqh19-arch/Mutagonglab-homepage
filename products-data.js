@@ -330,6 +330,57 @@
     default: false,
   };
 
+  // ============ 레이어 합성 커스터마이저 스펙 (무타공랩 DIY, 12-22) ============
+  // 디자인 핸드오프(design_handoff_customizer) 기반. A(프레임)+B(중문) SVG를 좌표계에 맞춰
+  // 레이어로 합성하고, 간살은 실시간 오버레이로 그린다. 좌표·팔레트·자산 규칙은 핸드오프 README 기준.
+  // 자산: assets/sku/12-22/{A,B,B1}. 현재 12-22 한 사이즈만 제공(나머지 9종은 자산 생성 후 확장).
+  var LAYERED_CUSTOMIZER_12_22 = {
+    // SVG 자산 세트는 12-22 하나(디자인 동일) — 모든 사이즈에 스케일해 재사용
+    assetSize: "12-22",
+    assetBase: "assets/sku/12-22",
+    // 좌표계(mm, 정면): 프로파일 정면 폭 30 → 내경 = (W-60) × (H-130). 연장 시 상단 볼트 노출 +30(innerTop 130→160)
+    profile: 30, innerTop: 130, innerTopExt: 160, extDelta: 30,
+    // 판매 10종(규격화 W/H 0.45~0.60). code = (W/100)-(H/100). 사이즈만 고르면 나머지 디자인은 12-22와 동일 적용.
+    sizes: [
+      { code: "11-20", w: 1100, h: 2000 }, { code: "11-21", w: 1100, h: 2100 },
+      { code: "11-22", w: 1100, h: 2200 }, { code: "11-23", w: 1100, h: 2300 },
+      { code: "12-20", w: 1200, h: 2000 }, { code: "12-21", w: 1200, h: 2100 },
+      { code: "12-22", w: 1200, h: 2200 }, { code: "12-23", w: 1200, h: 2300 },
+      { code: "13-22", w: 1300, h: 2200 }, { code: "13-23", w: 1300, h: 2300 },
+    ],
+    types: [
+      { value: "3연동", label: "3연동", prefix: "B" },
+      { value: "원슬라이딩", label: "원슬라이딩", prefix: "B1" },
+      { value: "스윙폴딩", label: "스윙폴딩", disabled: true },
+      { value: "여닫이", label: "여닫이", disabled: true },
+    ],
+    frameColors: [{ value: "sv", label: "실버" }],
+    doorColors: [
+      { value: "wh", label: "화이트", hex: "#eeece7" },
+      { value: "gr", label: "그레이", hex: "#707074" },
+      { value: "bk", label: "블랙", hex: "#2b2b2e" },
+    ],
+    glass: [
+      { value: "cl", label: "투명" },
+      { value: "br", label: "브론즈" },
+      { value: "mi", label: "미스트" },
+      { value: "mo", label: "모루" },
+      { value: "sa", label: "샤틴" },
+      { value: "fa", label: "패브릭" },
+    ],
+    handles: [
+      { value: "st", label: "기본" },
+      { value: "rd", label: "반원형" },
+      { value: "ba", label: "긴 바형" },
+      { value: "sb", label: "짧은 바형" },
+      { value: "line", label: "일자형", disabled: true },
+    ],
+    // 배경 넣기(유리 비침 비교)용 이미지. 이 경로에 파일이 존재하면 '배경 넣기' 토글이 자동 활성화되고,
+    // 없으면(로드 실패) 토글은 비활성으로 표시된다. 거실 사진을 아래 경로에 넣기만 하면 켜진다.
+    background: "assets/sku/room-bg.webp",
+    defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
+  };
+
   window.MUTAGONG_PRODUCTS = {
     "standard-door": {
       id: "standard-door",
@@ -377,6 +428,7 @@
 
     "diy-door": {
       id: "diy-door",
+      layeredCustomizer: LAYERED_CUSTOMIZER_12_22,
       name: "무타공 DIY 중문",
       brand: "무타공랩",
       tagline: "벽과 문틀에 구멍을 내지 않는 무타공랩의 자체 R&D 제품입니다.",

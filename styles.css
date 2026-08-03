@@ -1133,3 +1133,50 @@ h3{position:relative}
 .fit-result{margin:.55rem 0 0;font-size:.78rem;line-height:1.5}
 .fit-result.fit-ok{color:#2e7d46}
 .fit-result.fit-bad{color:#b3452e}
+
+
+/* ============ 레이어 합성 커스터마이저 (무타공랩 DIY 12-22) ============ */
+/* 프리뷰: 반응형 단일 SVG(배경→중문 B→간살 오버레이→프레임 A) + 클릭 간살 눈금 */
+.preview-stage.lc-stage{ aspect-ratio:auto; overflow:visible; background:var(--paper-deep);
+  padding:10px 14px; display:flex; justify-content:center; }
+.preview-stage.lc-stage svg{ padding:0; width:100%; height:auto; max-height:80vh; display:block; }
+.lc-dim{ fill:var(--accent); font-weight:700; font-size:40px; font-family:inherit; }
+.lc-tick{ cursor:pointer; }
+.lc-tick rect{ fill:var(--paper); stroke:var(--paper-line); stroke-width:2; transition:fill .15s, stroke .15s; }
+.lc-tick text{ fill:var(--ink-soft); font-size:30px; font-weight:700; pointer-events:none; font-family:inherit; }
+.lc-tick:hover rect{ stroke:var(--accent); }
+.lc-tick.on rect{ fill:var(--ink); stroke:var(--ink); }
+.lc-tick.on text{ fill:var(--paper); }
+
+.lc-head{ display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
+.lc-title{ font-size:var(--step-0); font-weight:700; color:var(--ink); }
+.lc-ext{ font:inherit; font-size:.72rem; font-weight:700; padding:.35rem .7rem; border-radius:8px;
+  border:1px solid var(--paper-line); background:var(--paper); color:var(--ink-soft); cursor:pointer; transition:.2s; }
+.lc-ext:hover{ border-color:var(--accent); }
+.lc-ext.on{ border-color:var(--accent); background:var(--accent); color:#fff; }
+
+.lc-mode .opt-groups{ gap:1.2rem; }
+.lc-row{ display:flex; flex-direction:column; gap:.5rem; }
+.lc-row-label{ font-size:.72rem; font-weight:700; letter-spacing:.06em; color:var(--ink-soft); text-transform:uppercase; }
+.lc-row-label em{ color:var(--accent); font-style:normal; }
+.lc-row-opts{ display:flex; flex-wrap:wrap; gap:.5rem; }
+
+.lc-opt{ font:inherit; font-size:var(--step--1); font-weight:600; padding:.5rem .85rem; border-radius:8px;
+  border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); cursor:pointer;
+  display:inline-flex; align-items:center; gap:.45rem; transition:border-color .2s, background .2s, color .2s; }
+.lc-opt:hover:not(.disabled){ border-color:var(--accent); }
+.lc-opt.on{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.lc-opt.disabled{ opacity:.4; cursor:not-allowed; }
+.lc-opt.ghost{ color:var(--ink-soft); }
+.lc-sw{ width:14px; height:14px; border-radius:50%; border:1px solid rgba(0,0,0,.18); display:inline-block; }
+.lc-bg{ border-style:dashed; border-color:var(--accent); color:var(--accent); }
+.lc-bg.on{ background:var(--accent); color:#fff; border-style:solid; }
+.lc-bg.disabled{ border-color:var(--paper-line); color:var(--ink-soft); border-style:dashed; }
+
+.lc-hint{ font-size:.72rem; line-height:1.5; color:var(--ink-soft); }
+.lc-picked{ font-size:.8rem; color:var(--ink); font-variant-numeric:tabular-nums; }
+.lc-sku{ font-size:.72rem; color:var(--ink-soft); word-break:break-all; }
+.lc-notes{ display:flex; flex-direction:column; gap:.3rem; border-top:1px solid var(--paper-line); padding-top:.9rem;
+  font-size:.72rem; line-height:1.55; color:var(--ink-soft); }
+.lc-notes-h{ font-weight:700; color:var(--ink); }
+.lc-notes div:not(.lc-notes-h){ padding-left:.9rem; text-indent:-.9rem; }

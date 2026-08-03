@@ -228,6 +228,10 @@
   };
 
   function initConfigurator(product, mount, overrides) {
+    // 레이어 합성 커스터마이저(무타공랩 DIY 12-22)는 별도 렌더러로 처리
+    if (product.layeredCustomizer) {
+      return renderLayeredCustomizer(product, mount, overrides);
+    }
     var state = {};
     product.options.forEach(function (opt) {
       state[opt.id] = opt.default;
@@ -862,6 +866,192 @@
     }
 
     buildControls();
+    render();
+  }
+
+  // ============ 레이어 합성 커스터마이저 (무타공랩 DIY 12-22) ============
+  // 디자인 핸드오프 프로토타입(Customizer.dc.html)을 사이트 바닐라 JS 관용구로 재구현.
+  // 프리뷰 = 반응형 단일 SVG(배경→중문 B→간살 오버레이→프레임 A) + 클릭 가능한 간살 눈금.
+  function renderLayeredCustomizer(product, mount, overrides) {
+    var cfg = product.layeredCustomizer;
+    var stage = mount.querySelector("[data-preview-stage]");
+    var groupsEl = mount.querySelector("[data-opt-groups]");
+    if (!stage || !groupsEl) return;
+
+    // 이 모드에서 쓰지 않는 제네릭 UI 정리
+    var typeFinder = mount.querySelector(".type-finder-btn");
+    if (typeFinder) typeFinder.style.display = "none";
+    var dimEl = mount.querySelector("[data-preview-dim]");
+    if (dimEl) dimEl.style.display = "none";
+    var summaryEl = mount.querySelector("[data-spec-summary]");
+    if (summaryEl) summaryEl.style.display = "none";
+    mount.classList.add("lc-mode");
+    stage.classList.add("lc-stage");
+
+    var d0 = cfg.defaults;
+    var state = { sz: d0.sz, t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, cols: [], rows: [], arch: false, ext: false, bg: false };
+    if (overrides && overrides.doorType) {
+      var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
+      if (pm) state.t = pm.value;
+    }
+
+    // 배경 이미지: 경로에 파일이 실제로 로드되면 '배경 넣기'가 자동 활성화됨(없으면 비활성 유지)
+    var bgOk = false;
+    if (cfg.background) {
+      var probe = new Image();
+      probe.onload = function () { bgOk = true; render(); };
+      probe.onerror = function () { bgOk = false; };
+      probe.src = cfg.background;
+    }
+
+    function alpha(n) { var r = ""; do { r = String.fromCharCode(65 + (n % 26)) + r; n = Math.floor(n / 26) - 1; } while (n >= 0); return r; }
+    function colAlpha(mm) { return alpha((mm - 50) / 50); }
+    function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
+    function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
+    function selSize() { return cfg.sizes.filter(function (s) { return s.code === state.sz; })[0] || cfg.sizes[0]; }
+    function baseSize() { return cfg.sizes.filter(function (s) { return s.code === cfg.assetSize; })[0] || cfg.sizes[0]; }
+    // 프리뷰는 기준 자산(12-22) 좌표계로 고정 렌더한다. 사이즈 선택은 이미지 크기를 바꾸지 않고
+    // SKU 코드·치수 표기(주문 스펙)에만 반영된다. 디자인 옵션(색/유리/간살/손잡이)만 이미지에 적용.
+    function geom() {
+      var b = baseSize(), p = cfg.profile;
+      return {
+        w: b.w, h: b.h,
+        total: b.h + (state.ext ? cfg.extDelta : 0),
+        innerTop: state.ext ? cfg.innerTopExt : cfg.innerTop,
+        innerX: p, innerW: b.w - 2 * p, innerH: b.h - cfg.innerTop,
+      };
+    }
+    // SVG 자산은 12-22 세트 하나(디자인 동일)를 모든 사이즈에 스케일해 재사용
+    function bSrc() { var p = typePrefix(); return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.assetSize + "_" + state.d + "_" + state.g + "_no_" + state.h + ".svg"; }
+    function aSrc() { return cfg.assetBase + "/A/A_" + cfg.assetSize + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
+
+    function skuCode() {
+      var code = state.t + " / " + state.sz + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
+      if (state.cols.length || state.rows.length || state.arch) {
+        var pre = state.arch === "line" ? "간살아치·" : state.arch === "fill" ? "채움아치·" : "";
+        var cv = state.cols.map(colAlpha).join("");
+        var rv = state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join("");
+        code += " / 간살[" + pre + cv + rv + "]";
+      }
+      return code;
+    }
+
+    // ---- 프리뷰 SVG ----
+    function buildStageHtml() {
+      var G = geom(), bc = doorHex();
+      var w = G.w, tH = G.total, iTop = G.innerTop, iX = G.innerX, iW = G.innerW, iH = G.innerH;
+      var rY = iH / 2070; // 아치 곡선 세로 스케일(12-22 기준)
+      // 치수 표기는 선택 사이즈(주문 스펙)를 보여준다 — 이미지 자체는 고정 렌더
+      var sel = selSize(), labW = sel.w, labH = sel.h + (state.ext ? cfg.extDelta : 0);
+      var vb = "-70 -70 " + (w + 150) + " " + (tH + 130);
+      var s = '<svg class="lc-svg" viewBox="' + vb + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="중문 커스터마이징 미리보기">';
+      if (state.bg && bgOk && cfg.background) {
+        s += '<defs><clipPath id="lcClip"><rect x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/></clipPath></defs>';
+        s += '<image href="' + cfg.background + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#lcClip)"/>';
+      }
+      s += '<image href="' + bSrc() + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/>';
+      s += '<g transform="translate(' + iX + " " + iTop + ')" pointer-events="none">';
+      state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="' + (iH - 90) + '" fill="' + bc + '"/>'; });
+      state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="' + (iW - 60) + '" height="20" fill="' + bc + '"/>'; });
+      if (state.arch) {
+        var lx = 30, mx = iW / 2, rx = iW - 30, topY = 120 * rY, botY = 700 * rY;
+        var dPath = "M " + lx + " " + botY + " Q " + lx + " " + topY + " " + mx + " " + topY + " Q " + rx + " " + topY + " " + rx + " " + botY;
+        if (state.arch === "line") s += '<path d="' + dPath + '" stroke="' + bc + '" stroke-width="20" fill="none"/>';
+        if (state.arch === "fill") s += '<path d="' + dPath + " L " + rx + " 30 L 30 30 Z\" fill=\"" + bc + '"/>';
+      }
+      s += "</g>";
+      s += '<image href="' + aSrc() + '" x="0" y="0" width="' + w + '" height="' + tH + '" pointer-events="none"/>';
+      s += '<text class="lc-dim" x="' + (w / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W ' + labW + "</text>";
+      s += '<text class="lc-dim" x="' + (w + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (w + 48) + " " + (tH / 2) + ')">H ' + labH + "</text>";
+      var mm;
+      for (mm = 50; mm <= iW - 40; mm += 50) {
+        var onC = state.cols.indexOf(mm) >= 0, cx = iX + mm;
+        s += '<g class="lc-tick' + (onC ? " on" : "") + '" data-axis="col" data-mm="' + mm + '"><rect x="' + (cx - 16) + '" y="-40" width="32" height="30" rx="5"/><text x="' + cx + '" y="-18" text-anchor="middle">' + colAlpha(mm) + "</text></g>";
+      }
+      for (mm = 50; mm <= iH - 50; mm += 50) {
+        var onR = state.rows.indexOf(mm) >= 0, cy = iTop + mm;
+        s += '<g class="lc-tick' + (onR ? " on" : "") + '" data-axis="row" data-mm="' + mm + '"><rect x="-58" y="' + (cy - 13) + '" width="40" height="26" rx="5"/><text x="-38" y="' + (cy + 6) + '" text-anchor="middle">' + colAlpha(mm).toLowerCase() + "</text></g>";
+      }
+      s += "</svg>";
+      return s;
+    }
+
+    // ---- 옵션 패널 ----
+    function optBtn(key, opt) {
+      if (opt.disabled) return '<button type="button" class="lc-opt disabled" disabled>' + opt.label + "</button>";
+      var on = state[key] === opt.value;
+      var sw = (key === "d" && opt.hex) ? '<span class="lc-sw" style="background:' + opt.hex + '"></span>' : "";
+      return '<button type="button" class="lc-opt' + (on ? " on" : "") + '" data-act="set" data-key="' + key + '" data-val="' + opt.value + '">' + sw + opt.label + "</button>";
+    }
+    function row(label, inner) { return '<div class="lc-row"><div class="lc-row-label">' + label + '</div><div class="lc-row-opts">' + inner + "</div></div>"; }
+
+    function buildOptionsHtml() {
+      var h = "";
+      h += '<div class="lc-head"><span class="lc-title">커스터마이징</span>' +
+        '<button type="button" class="lc-ext' + (state.ext ? " on" : "") + '" data-act="ext">+30mm 연장</button></div>';
+      // 사이즈 — 이것만 고르면 나머지 디자인 옵션은 12-22와 동일하게 적용된다
+      var szHtml = cfg.sizes.map(function (sz) {
+        var on = state.sz === sz.code;
+        return '<button type="button" class="lc-opt' + (on ? " on" : "") + '" data-act="setsz" data-val="' + sz.code + '">' + sz.w + "×" + sz.h + "</button>";
+      }).join("");
+      h += row("사이즈 <em>(W×H mm)</em>", szHtml);
+      h += row("제품 유형", cfg.types.map(function (o) { return optBtn("t", o); }).join(""));
+      h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
+      h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
+      // 안전창 + 배경 토글
+      var glassHtml = cfg.glass.map(function (o) { return optBtn("g", o); }).join("");
+      var bgDis = !bgOk;
+      glassHtml += '<button type="button" class="lc-opt lc-bg' + (state.bg ? " on" : "") + (bgDis ? " disabled" : "") + '"' +
+        (bgDis ? ' disabled title="배경 이미지 준비 중"' : ' data-act="bg"') + ">" + (state.bg ? "배경 빼기" : "배경 넣기") + "</button>";
+      h += row("안전창", glassHtml);
+      // 간살
+      var colsPicked = state.cols.length ? state.cols.map(colAlpha).join(", ") : "—";
+      var rowsPicked = state.rows.length ? state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join(", ") : "—";
+      var garHtml =
+        '<button type="button" class="lc-opt' + (state.arch === "line" ? " on" : "") + '" data-act="arch" data-val="line">간살아치형</button>' +
+        '<button type="button" class="lc-opt' + (state.arch === "fill" ? " on" : "") + '" data-act="arch" data-val="fill">채움아치형</button>' +
+        '<button type="button" class="lc-opt ghost" data-act="clear">간살 전체 지우기</button>';
+      h += '<div class="lc-row"><div class="lc-row-label">간살</div>' +
+        '<div class="lc-hint">눈금 알파벳을 클릭해 배치합니다. (상단 대문자 = 세로살, 좌측 소문자 = 가로살)</div>' +
+        '<div class="lc-picked">세로살: ' + colsPicked + " · 가로살: " + rowsPicked + "</div>" +
+        '<div class="lc-row-opts">' + garHtml + "</div></div>";
+      h += row("손잡이", cfg.handles.map(function (o) { return optBtn("h", o); }).join(""));
+      h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
+      h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
+        "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
+        "<div>· 중문 색상·안전창 디자인·간살 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지 않을 수 있습니다.</div>" +
+        "<div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div></div>";
+      return h;
+    }
+
+    function render() {
+      stage.innerHTML = buildStageHtml();
+      groupsEl.innerHTML = buildOptionsHtml();
+    }
+
+    // 이벤트 위임 (부모는 유지되므로 innerHTML 갱신과 무관하게 동작)
+    stage.addEventListener("click", function (e) {
+      var g = e.target.closest ? e.target.closest(".lc-tick") : null;
+      if (!g) return;
+      var axis = g.getAttribute("data-axis"), mm = parseInt(g.getAttribute("data-mm"), 10);
+      var arr = axis === "col" ? state.cols : state.rows;
+      var i = arr.indexOf(mm);
+      if (i >= 0) arr.splice(i, 1); else { arr.push(mm); arr.sort(function (a, b) { return a - b; }); }
+      render();
+    });
+    groupsEl.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-act]") : null;
+      if (!b) return;
+      var act = b.getAttribute("data-act");
+      if (act === "set") { state[b.getAttribute("data-key")] = b.getAttribute("data-val"); }
+      else if (act === "setsz") { state.sz = b.getAttribute("data-val"); }
+      else if (act === "bg") { state.bg = !state.bg; }
+      else if (act === "ext") { state.ext = !state.ext; }
+      else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
+      else if (act === "clear") { state.cols = []; state.rows = []; state.arch = false; }
+      render();
+    });
+
     render();
   }
 
