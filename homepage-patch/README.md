@@ -1,16 +1,23 @@
-# mutagonglab.html 적용 방법 (업로드 3개 파일)
+# 적용 안내
 
-GitHub 웹 업로드 100개 제한에 맞춰 SKU 이미지 956장을 customizer-skus.js 한 파일로 패킹했습니다.
+## 업로드할 파일 (총 4개)
+1. mutagonglab.html — 커스터마이저 이식 완성본 (덮어쓰기)
+2. customizer-skus.js — SKU 이미지 팩 (루트)
+3. customizer-embed.js — 다른 페이지용 자가 주입 스크립트 (루트)
+4. customizer/assets/bg.png — 배경 (customizer/assets/ 경로 유지)
 
-## 업로드할 파일 (총 3개)
-1. mutagonglab.html  — 커스터마이저 이식 완성본 (기존 파일 덮어쓰기)
-2. customizer-skus.js — SKU 이미지 팩 (저장소 루트, mutagonglab.html 옆)
-3. customizer/assets/bg.png — 거실 배경 (customizer/assets/ 폴더 경로 유지)
+GitHub → Add file → Upload files → 4개 드래그 → Commit changes
 
-## 순서
-1) 저장소 → Add file → Upload files → 위 3개(customizer 폴더는 assets만) 드래그
-   ※ bg.png는 압축 푼 customizer 폴더째 드래그하면 경로가 자동 유지됨
-2) Commit changes → Actions 탭 초록 체크 확인 (1~3분)
-3) 페이지 접속 후 Ctrl+Shift+R
+## DIY 제품(product.html) '무타공 DIY 중문'에 적용
+product.html에서 중문 상세 섹션 원하는 위치에 아래 3줄 추가:
 
-skus 폴더(956개 SVG)는 업로드할 필요 없습니다 — customizer-skus.js에 모두 포함되어 있고, js가 없을 때만 customizer/skus/ 폴더를 참조합니다.
+  <div id="mtg-customizer-mount"></div>
+  <script src="customizer-skus.js"></script>
+  <script src="customizer-embed.js"></script>
+
+- 같은 커스터마이저가 그대로 주입됩니다 (옵션·이미지·구매 버튼 동일)
+- 이미 커스터마이저가 있는 페이지에서는 중복 주입되지 않음
+
+## 이번 수정
+- 옵션 패널이 이미지 뒤에 숨는 문제: 페이지 그리드 간섭 차단(grid-column:1/-1, z-index)
+  + 패널을 이미지 우측에 고정 배치

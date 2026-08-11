@@ -83,13 +83,14 @@
 <div id="mtg-customizer">
 <script src="customizer-skus.js"></script>
 <style>
-#mtg-customizer *{box-sizing:border-box;margin:0;padding:0;}
+#mtg-customizer{display:block;width:100%;grid-column:1 / -1;position:relative;z-index:5;isolation:isolate;}
+#mtg-customizer *{box-sizing:border-box;margin:0;padding:0;float:none;}
 #mtg-customizer a{color:#2a2a2c;} a:hover{color:#000;}
-  #mtg-customizer .wrap{display:flex;gap:32px;padding:32px;align-items:flex-start;justify-content:center;flex-wrap:wrap;}
-  #mtg-customizer .stage{position:relative;background:#fff;border:1px solid #e3e1dd;padding:28px 24px 24px 34px;position:sticky;top:16px;align-self:flex-start;}
+  #mtg-customizer .wrap{display:flex;flex-direction:row;flex-wrap:wrap;gap:32px;padding:32px 16px;align-items:flex-start;justify-content:center;width:100%;}
+  #mtg-customizer .stage{position:sticky;top:16px;background:#fff;border:1px solid #e3e1dd;padding:28px 24px 24px 34px;align-self:flex-start;flex:0 0 auto;z-index:1;}
   #mtg-customizer .canvas{position:relative;width:382px;height:712px;}
   #mtg-customizer .canvas img{position:absolute;pointer-events:none;}
-  #mtg-customizer .panel{display:flex;flex-direction:column;gap:20px;width:320px;}
+  #mtg-customizer .panel{display:flex;flex-direction:column;gap:20px;flex:0 1 320px;min-width:280px;position:relative;z-index:2;background:transparent;}
   #mtg-customizer .grp{display:flex;flex-direction:column;gap:8px;}
   #mtg-customizer .lbl{font-size:12px;color:#8a877f;letter-spacing:.06em;}
   #mtg-customizer .row{display:flex;gap:8px;flex-wrap:wrap;}
