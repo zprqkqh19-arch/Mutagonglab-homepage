@@ -1,0 +1,174 @@
+(function(){
+  var mount=document.getElementById('mtg-customizer-mount');
+  if(!mount||document.getElementById('mtg-customizer'))return;
+  mount.innerHTML="<!-- ▼▼ 무타공랩 커스터마이저 시작 — mutagonglab.html의 '무타공랩 커스터마이징' 섹션 내부에 붙여넣기 ▼▼ -->\n<div id=\"mtg-customizer\" style=\"display:block;width:100%;opacity:1;transform:none;visibility:visible;\">\n\n<style>\n#mtg-customizer{display:block;width:100%;grid-column:1 / -1;position:relative;z-index:5;isolation:isolate;}\n#mtg-customizer *{box-sizing:border-box;margin:0;padding:0;float:none;}\n#mtg-customizer a{color:#2a2a2c;} a:hover{color:#000;}\n  #mtg-customizer .wrap{display:flex;flex-direction:row;flex-wrap:wrap;gap:32px;padding:32px 16px;align-items:flex-start;justify-content:center;width:100%;}\n  #mtg-customizer .stage{position:sticky;top:16px;background:#fff;border:1px solid #e3e1dd;padding:28px 24px 24px 34px;align-self:flex-start;flex:0 0 auto;z-index:1;}\n  #mtg-customizer .canvas{position:relative;width:382px;height:712px;}\n  #mtg-customizer .canvas img{position:absolute;pointer-events:none;}\n  #mtg-customizer .panel{display:flex;flex-direction:column;gap:20px;flex:0 1 320px;min-width:280px;position:relative;z-index:2;background:transparent;}\n  #mtg-customizer .grp{display:flex;flex-direction:column;gap:8px;}\n  #mtg-customizer .lbl{font-size:12px;color:#8a877f;letter-spacing:.06em;}\n  #mtg-customizer .row{display:flex;gap:8px;flex-wrap:wrap;}\n#mtg-customizer button{padding:7px 12px;font-size:13px;cursor:pointer;border-radius:4px;border:1px solid #d5d2cc;background:#fff;color:#444;}\n#mtg-customizer button.on{border:2px solid #222;background:#222;color:#fff;}\n#mtg-customizer button:disabled{opacity:.4;cursor:not-allowed;}\n#mtg-customizer button.acc{border:1px dashed #b0483a;color:#b0483a;}\n#mtg-customizer button.acc.on{border:2px solid #b0483a;background:#b0483a;color:#fff;}\n  #mtg-customizer .tick{position:absolute;z-index:5;padding:0;font-weight:700;text-align:center;border:1px solid #d5d2cc;background:#fff;color:#555;border-radius:2px;}\n  #mtg-customizer .tick.on{background:#222;color:#fff;}\n  #mtg-customizer .tick.top{width:16px;height:16px;font-size:9px;line-height:16px;top:-20px;}\n  #mtg-customizer .tick.left{width:22px;height:14px;font-size:8px;line-height:14px;left:-26px;}\n  #mtg-customizer .dim{position:absolute;font-size:11px;color:#b0483a;font-weight:700;}\n  #mtg-customizer .notice{display:flex;flex-direction:column;gap:5px;border-top:1px solid #e3e1dd;padding-top:12px;font-size:11.5px;color:#8a877f;line-height:1.5;}\n  #mtg-customizer .notice div{padding-left:16px;text-indent:-16px;}\n  #mtg-customizer .sku{font-size:12px;color:#8a877f;}\n  #mtg-customizer .hint{font-size:11.5px;color:#8a877f;line-height:1.5;}\n  #mtg-customizer .picked{font-size:13px;color:#444;}\n  #mtg-customizer .title{font-weight:700;font-size:16px;color:#222;}\n  #mtg-customizer .thead{display:flex;align-items:center;gap:10px;}\n  #mtg-customizer .ext{padding:4px 10px;font-size:11px;}\n  #mtg-customizer .ext.on{border:2px solid #b0483a;background:#b0483a;color:#fff;}\n\n</style>\n<div class=\"wrap\">\n  <div class=\"stage\"><div class=\"canvas\" id=\"canvas\">\n    <div id=\"bg\" style=\"position:absolute;overflow:hidden;display:none;background-size:cover;background-position:center;\"></div>\n    <div id=\"bWrap\" style=\"position:absolute;\">\n      <img id=\"bImg\" alt=\"중문\" style=\"left:0;top:0;width:100%;height:100%;\">\n      <svg id=\"ov\" style=\"position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;\" viewBox=\"0 0 1140 2070\"></svg>\n      <div id=\"slideWrap\" style=\"position:absolute;left:0;top:0;width:100%;height:100%;display:none;overflow:visible;\">\n        <div id=\"sp1\" style=\"position:absolute;left:0;top:0;width:35.96%;height:100%;background-size:278.1% 100%;background-position:0% 0;transition:transform .6s;\"></div>\n        <div id=\"sp2\" style=\"position:absolute;left:32.02%;top:0;width:35.96%;height:100%;background-size:278.1% 100%;background-position:50% 0;transition:transform .6s;\"></div>\n        <div id=\"sp3\" style=\"position:absolute;left:64.04%;top:0;width:35.96%;height:100%;background-size:278.1% 100%;background-position:100% 0;\"></div>\n      </div>\n      <div id=\"foldWrap\" style=\"position:absolute;left:0;top:0;width:100%;height:100%;display:none;perspective:1800px;\">\n        <div id=\"segR\" style=\"position:absolute;right:0;top:0;width:36.4%;height:100%;transform-origin:100% 50%;transform-style:preserve-3d;background-size:274.7% 100%;background-position:100% 0;transition:transform .6s;\">\n          <div id=\"segL\" style=\"position:absolute;right:100%;top:0;width:174.7%;height:100%;transform-origin:100% 50%;background-size:157.2% 100%;background-position:0 0;transition:transform .6s;\"></div>\n        </div>\n      </div>\n    </div>\n      <div id=\"swingWrap\" style=\"position:absolute;left:0;top:0;width:100%;height:100%;display:none;perspective:1800px;\">\n        <div id=\"swA\" style=\"position:absolute;left:0;top:0;height:100%;transform-origin:0% 50%;background-position:0 0;transition:transform .6s;\"></div>\n        <div id=\"swB\" style=\"position:absolute;right:0;top:0;height:100%;transform-origin:100% 50%;background-position:100% 0;transition:transform .6s;\"></div>\n      </div>\n    <img id=\"aImg\" alt=\"프레임\" style=\"left:0;top:0;width:100%;\">\n    <div class=\"dim\" id=\"dimW\" style=\"left:0;width:100%;text-align:center;\"></div>\n    <div class=\"dim\" id=\"dimH\" style=\"right:-24px;top:50%;transform:rotate(90deg);white-space:nowrap;\"></div>\n  </div></div>\n  <div class=\"panel\">\n    <div class=\"thead\"><div class=\"title\">커스터마이징 — 12-22</div><button class=\"ext\" id=\"extBtn\">+30mm 연장</button></div>\n    <div class=\"grp\"><div class=\"lbl\">제품 유형</div><div class=\"row\" id=\"gType\"></div></div>\n    <div class=\"grp\" id=\"grpSub\" style=\"display:none;\"><div class=\"lbl\">여닫이 세부 옵션</div><div class=\"row\" id=\"gSub\"></div></div>\n    <div class=\"grp\"><div class=\"lbl\">프레임 색상 *</div><div class=\"row\" id=\"gFrame\"></div></div>\n    <div class=\"grp\"><div class=\"lbl\">중문 색상</div><div class=\"row\" id=\"gDoor\"></div></div>\n    <div class=\"grp\"><div class=\"lbl\">안전창</div><div class=\"row\" id=\"gGlass\"></div></div>\n    <div class=\"grp\">\n      <div class=\"lbl\">간살</div>\n      <div class=\"hint\">눈금 알파벳을 클릭해 배치합니다.</div>\n      <div class=\"picked\" id=\"picked\">세로살: — · 가로살: —</div>\n      <div class=\"row\">\n        <button id=\"archL\" style=\"font-size:12px;padding:6px 12px;\">간살아치형</button>\n        <button id=\"archF\" style=\"font-size:12px;padding:6px 12px;\">채움아치형</button>\n        <button id=\"clear\" class=\"acc\" style=\"font-size:12px;padding:6px 12px;\">간살 전체 지우기</button>\n      </div>\n    </div>\n    <div class=\"grp\"><div class=\"lbl\">손잡이</div><div class=\"row\" id=\"gHandle\"></div></div>\n    <div class=\"sku\" id=\"sku\"></div>\n    <div class=\"grp\" style=\"border-top:1px solid #e3e1dd;padding-top:14px;\">\n      <div class=\"lbl\">선택하신 옵션</div>\n      <div id=\"summary\" style=\"display:flex;flex-direction:column;gap:4px;font-size:13px;color:#333;line-height:1.5;\"></div>\n      <button id=\"buyBtn\" style=\"margin-top:8px;padding:13px 0;width:100%;font-size:15px;font-weight:700;background:#b0483a;color:#fff;border:none;border-radius:6px;\">구매하기</button>\n    </div>\n    <div class=\"notice\">\n      <div style=\"font-weight:700;color:#666;padding-left:0;text-indent:0;\">안내 사항</div>\n      <div>* 프레임은 마감 후 가려지는 부분입니다.</div>\n      <div>· 중문 색상, 안전창 디자인, 간살의 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지는 않습니다.</div>\n      <div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div>\n    </div>\n  </div>\n</div>\n\n\n</div>\n<!-- ▲▲ 무타공랩 커스터마이저 끝 ▲▲ -->";
+  var run=function(){
+
+(function(){
+  var S = {t:'3연동',d:'wh',g:'cl',h:'st',sub:'od',cols:[],rows:[],arch:false,ext:false,bg:true,open:false};
+  var SC = 382/1200, DPAL = {wh:'#eeece7',gr:'#707074',bk:'#2b2b2e'};
+  var $ = function(id){return document.getElementById(id);};
+  function alpha(n){var r='';do{r=String.fromCharCode(65+n%26)+r;n=Math.floor(n/26)-1;}while(n>=0);return r;}
+  function mkGroup(el, key, opts, dis){
+    el.innerHTML='';
+    opts.forEach(function(o){
+      var b=document.createElement('button');
+      b.textContent=o[1];
+      if(dis&&dis.indexOf(o[0])>=0){b.disabled=true;}
+      else b.onclick=function(){S[key]=o[0];render();};
+      b.dataset.v=o[0];el.appendChild(b);
+    });
+  }
+  mkGroup($('gType'),'t',[['3연동','3연동'],['원슬라이딩','원슬라이딩'],['스윙폴딩','스윙폴딩'],['여닫이','여닫이']],[]);
+  var openBtn=document.createElement('button');openBtn.className='acc';openBtn.onclick=function(){S.open=!S.open;render();};$('gType').appendChild(openBtn);
+  mkGroup($('gSub'),'sub',[['od','원도어'],['sy','정대칭 양개형'],['as','비대칭 양개형']]);
+  mkGroup($('gFrame'),'a',[['sv','실버']]); S.a='sv';
+  mkGroup($('gDoor'),'d',[['wh','화이트'],['gr','그레이'],['bk','블랙']]);
+  mkGroup($('gGlass'),'g',[['cl','투명'],['br','브론즈'],['mi','미스트'],['mo','모루'],['sa','샤틴'],['fa','패브릭']]);
+  var bgBtn=document.createElement('button');bgBtn.className='acc';bgBtn.onclick=function(){S.bg=!S.bg;render();};$('gGlass').appendChild(bgBtn);
+  var HANDLE_ALLOW={'3연동':['st','lj','sj'],'원슬라이딩':['st','lj','sj'],'스윙폴딩':['ba','sb'],'여닫이':['rd','ba','sb']};
+  mkGroup($('gHandle'),'h',[['st','기본'],['rd','반원형'],['ba','긴 바형'],['sb','짧은 바형'],['lj','긴 일자형'],['sj','짧은 일자형']]);
+  $('archL').onclick=function(){S.arch=S.arch==='line'?false:'line';render();};
+  $('archF').onclick=function(){S.arch=S.arch==='fill'?false:'fill';render();};
+  $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
+  $('extBtn').onclick=function(){S.ext=!S.ext;render();};
+  $('buyBtn').onclick=function(){alert('구매 페이지로 연결됩니다.\n\n'+$('sku').textContent);};
+  var canvas=$('canvas');
+  var ticks=[];
+  function mkTicks(){
+    ticks.forEach(function(t){t.remove();});ticks=[];
+    var bLeft=30*SC, bTop=(S.ext?160:130)*SC;
+    for(var i=0;i*50+50<=1100;i++){(function(mm,i){
+      var b=document.createElement('button');b.className='tick top';b.textContent=alpha(i);
+      b.style.left=(bLeft+mm*SC-8)+'px';
+      if(S.cols.indexOf(mm)>=0)b.classList.add('on');
+      b.onclick=function(){var x=S.cols.indexOf(mm);if(x>=0)S.cols.splice(x,1);else{S.cols.push(mm);S.cols.sort(function(a,b){return a-b;});}render();};
+      canvas.appendChild(b);ticks.push(b);
+    })(50+i*50,i);}
+    for(var j=0;j*50+50<=2020;j++){(function(mm,i){
+      var b=document.createElement('button');b.className='tick left';b.textContent=alpha(i).toLowerCase();
+      b.style.top=(bTop+mm*SC-7)+'px';
+      if(S.rows.indexOf(mm)>=0)b.classList.add('on');
+      b.onclick=function(){var x=S.rows.indexOf(mm);if(x>=0)S.rows.splice(x,1);else{S.rows.push(mm);S.rows.sort(function(a,b){return a-b;});}render();};
+      canvas.appendChild(b);ticks.push(b);
+    })(50+j*50,j);}
+  }
+  function SK(p){var s=window.MTG_SKUS&&window.MTG_SKUS[p];return s?'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s).replace(/'/g,'%27'):('customizer/'+p);}
+  function render(){
+    var allowed=HANDLE_ALLOW[S.t]||[];
+    if(allowed.indexOf(S.h)<0&&allowed.length){S.h=allowed[0];}
+    var totalH=S.ext?2230:2200, bTop=(S.ext?160:130)*SC, bLeft=30*SC, bW=1140*SC, bH=2070*SC;
+    var dir=S.t==='원슬라이딩'?'B1':(S.t==='스윙폴딩'?'B2':(S.t==='여닫이'?'B3':'B')), pre=dir;
+    var subSuf=(S.t==='여닫이'&&S.sub!=='od')?'_'+S.sub:'';
+    $('bImg').src=SK('skus/12-22/'+dir+'/'+pre+'_12-22_'+S.d+'_'+S.g+'_no_'+S.h+subSuf+'.svg');
+    $('grpSub').style.display=S.t==='여닫이'?'flex':'none';
+    var w=$('bWrap');Object.assign(w.style,{left:bLeft+'px',top:bTop+'px',width:bW+'px',height:bH+'px',overflow:(S.open&&(S.t==='3연동'||S.t==='원슬라이딩'))?'hidden':'visible'});
+    var xf='none',xo='center';
+    var swingOpen = S.open && S.t==='스윙폴딩';
+    var triOpen = S.open && S.t==='3연동';
+    var hingeOpen = S.open && S.t==='여닫이';
+    if(S.open && !swingOpen && !triOpen && !hingeOpen){
+      if(S.t==='원슬라이딩')xf='translateX(88%)';
+    }
+    var inner=$('bImg');inner.style.transform=xf;inner.style.transformOrigin=xo;inner.style.transition='transform .5s';
+    inner.style.visibility=(swingOpen||triOpen||hingeOpen)?'hidden':'visible';
+    $('ov').style.transform=xf;$('ov').style.transformOrigin=xo;$('ov').style.transition='transform .5s';
+    $('ov').style.visibility=(swingOpen||triOpen||hingeOpen)?'hidden':'visible';
+    var hw=$('swingWrap');
+    if(hingeOpen){
+      hw.style.display='block';
+      var u3="url('"+$('bImg').getAttribute('src')+"')";
+      var wA, wB;
+      if(S.sub==='sy'){wA=50;wB=50;}
+      else if(S.sub==='as'){wA=70.18;wB=29.82;}
+      else {wA=0;wB=100;}
+      var a=$('swA'),b=$('swB');
+      a.style.display=wA?'block':'none';
+      a.style.width=wA+'%';b.style.width=wB+'%';
+      if(wA){a.style.backgroundImage=u3;a.style.backgroundSize=(10000/wA)+'% 100%';}
+      b.style.backgroundImage=u3;b.style.backgroundSize=(10000/wB)+'% 100%';
+      requestAnimationFrame(function(){
+        if(wA)a.style.transform='rotateY(-78deg)';
+        b.style.transform='rotateY(78deg)';
+      });
+    } else {
+      hw.style.display='none';
+      $('swA').style.transform='none';$('swB').style.transform='none';
+    }
+    var sw=$('slideWrap');
+    if(triOpen){
+      sw.style.display='block';
+      var u2="url('"+$('bImg').getAttribute('src')+"')";
+      ['sp1','sp2','sp3'].forEach(function(id){$(id).style.backgroundImage=u2;});
+      requestAnimationFrame(function(){
+        $('sp1').style.transform='translateX(178%)';
+        $('sp2').style.transform='translateX(89%)';
+      });
+    } else {
+      sw.style.display='none';
+      $('sp1').style.transform='none';$('sp2').style.transform='none';
+    }
+    var fw=$('foldWrap');
+    if(swingOpen){
+      fw.style.display='block';
+      var url="url('"+$('bImg').getAttribute('src')+"')";
+      $('segR').style.backgroundImage=url;$('segL').style.backgroundImage=url;
+      requestAnimationFrame(function(){
+        $('segR').style.transform='rotateY(84deg)';
+        $('segL').style.transform='rotateY(-168deg)';
+      });
+    } else {
+      fw.style.display='none';
+      $('segR').style.transform='none';$('segL').style.transform='none';
+    }
+    $('aImg').src=SK('skus/12-22/A/A_12-22_sv'+(S.ext?'_ext':'')+'.svg');
+    $('aImg').style.height=(totalH*SC)+'px';
+    Object.assign($('bg').style,{display:S.bg?'block':'none',left:bLeft+'px',top:bTop+'px',width:bW+'px',height:bH+'px',backgroundImage:"url('customizer/assets/bg.png')"});
+    var ov=$('ov');
+    var c=DPAL[S.d],svg='';
+    S.cols.forEach(function(mm){svg+='<rect x="'+(mm-10)+'" y="30" width="20" height="1980" fill="'+c+'"/>';});
+    S.rows.forEach(function(mm){svg+='<rect x="30" y="'+(mm-10)+'" width="1080" height="20" fill="'+c+'"/>';});
+    if(S.arch==='line')svg+='<path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700" stroke="'+c+'" stroke-width="20" fill="none"/>';
+    if(S.arch==='fill')svg+='<path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700 L 1110 30 L 30 30 Z" fill="'+c+'"/>';
+    ov.innerHTML=svg;
+    $('dimW').textContent='W 1200';$('dimW').style.top=(totalH*SC+4)+'px';
+    $('dimH').textContent='H '+totalH;
+
+    Array.prototype.forEach.call($('gHandle').children,function(b){
+      var ok=allowed.indexOf(b.dataset.v)>=0;
+      b.disabled=!ok;
+      if(ok)b.onclick=function(){S.h=b.dataset.v;render();};
+    });
+    ['gType','gSub','gFrame','gDoor','gGlass','gHandle'].forEach(function(id){
+      var key={gType:'t',gSub:'sub',gFrame:'a',gDoor:'d',gGlass:'g',gHandle:'h'}[id];
+      Array.prototype.forEach.call($(id).children,function(b){
+        if(b===bgBtn)return;
+        b.classList.toggle('on',b.dataset.v===S[key]);
+      });
+    });
+    bgBtn.textContent=S.bg?'배경 빼기':'배경 넣기';bgBtn.classList.toggle('on',S.bg);
+    openBtn.textContent=S.open?'닫아보기':'열어보기';openBtn.classList.toggle('on',S.open);
+    $('archL').classList.toggle('on',S.arch==='line');
+    $('archF').classList.toggle('on',S.arch==='fill');
+    $('extBtn').classList.toggle('on',S.ext);
+    var ca=function(mm){return alpha((mm-50)/50);};
+    $('picked').textContent='세로살: '+(S.cols.length?S.cols.map(ca).join(', '):'—')+' · 가로살: '+(S.rows.length?S.rows.map(function(m){return ca(m).toLowerCase();}).join(', '):'—');
+    var extra=(S.cols.length||S.rows.length||S.arch)?' / 간살['+(S.arch==='line'?'간살아치·':S.arch==='fill'?'채움아치·':'')+S.cols.map(ca).join('')+S.rows.map(function(m){return ca(m).toLowerCase();}).join('')+']':'';
+    var subSku=(S.t==='여닫이')?'-'+S.sub:'';
+    $('sku').textContent='SKU: '+S.t+subSku+' / 12-22 / A-sv / B-'+S.d+'-'+S.g+'-'+S.h+extra;
+    var NM={d:{wh:'화이트',gr:'그레이',bk:'블랙'},g:{cl:'투명',br:'브론즈',mi:'미스트',mo:'모루',sa:'샤틴',fa:'패브릭'},h:{st:'기본',rd:'반원형',ba:'긴 바형',sb:'짧은 바형',lj:'긴 일자형',sj:'짧은 일자형'},sub:{od:'원도어',sy:'정대칭 양개형',as:'비대칭 양개형'}};
+    var gansalTxt=[];
+    if(S.arch==='line')gansalTxt.push('간살아치형');
+    if(S.arch==='fill')gansalTxt.push('채움아치형');
+    if(S.cols.length)gansalTxt.push('세로살 '+S.cols.length+'개 ('+S.cols.map(ca).join(', ')+')');
+    if(S.rows.length)gansalTxt.push('가로살 '+S.rows.length+'개 ('+S.rows.map(function(m){return ca(m).toLowerCase();}).join(', ')+')');
+    var rows=[['제품 유형',S.t+(S.t==='여닫이'?' · '+NM.sub[S.sub]:'')],['설치 규격','W1200 × H'+totalH+' (12-22'+(S.ext?', +30mm 연장':'')+')'],['중문 색상',NM.d[S.d]],['안전창',NM.g[S.g]],['간살',gansalTxt.length?gansalTxt.join(' · '):'없음'],['손잡이',NM.h[S.h]]];
+    $('summary').innerHTML=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#8a877f;flex-shrink:0;">'+r[0]+'</span><span style="text-align:right;">'+r[1]+'</span></div>';}).join('');
+    mkTicks();
+  }
+  render();
+})();
+
+};
+  run();
+})();

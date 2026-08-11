@@ -1,16 +1,18 @@
-# mutagonglab.html 적용 방법 (업로드 3개 파일)
+# 적용 안내
 
-GitHub 웹 업로드 100개 제한에 맞춰 SKU 이미지 956장을 customizer-skus.js 한 파일로 패킹했습니다.
+## 업로드할 파일 (총 5개)
+1. mutagonglab.html — 커스터마이저 이식 완성본 (덮어쓰기)
+2. customizer-skus.js — SKU 이미지 팩 (루트)
+3. customizer-embed.js — 다른 페이지용 자가 주입 스크립트 (루트)
+4. customizer/assets/bg.png — 배경 (customizer/assets/ 경로 유지)
+5. product.html — DIY 제품 페이지 완성본 (덮어쓰기; diy-door에서만 커스터마이저 표시, 혜다움 제품은 기존 위젯 유지)
 
-## 업로드할 파일 (총 3개)
-1. mutagonglab.html  — 커스터마이저 이식 완성본 (기존 파일 덮어쓰기)
-2. customizer-skus.js — SKU 이미지 팩 (저장소 루트, mutagonglab.html 옆)
-3. customizer/assets/bg.png — 거실 배경 (customizer/assets/ 폴더 경로 유지)
+GitHub → Add file → Upload files → 4개 드래그 → Commit changes
 
-## 순서
-1) 저장소 → Add file → Upload files → 위 3개(customizer 폴더는 assets만) 드래그
-   ※ bg.png는 압축 푼 customizer 폴더째 드래그하면 경로가 자동 유지됨
-2) Commit changes → Actions 탭 초록 체크 확인 (1~3분)
-3) 페이지 접속 후 Ctrl+Shift+R
+## DIY 제품 페이지
+product.html 완성본이 포함되어 있어 별도 편집 불필요 — 그대로 덮어쓰면
+product.html?id=diy-door 에서만 커스터마이저가 자동 주입됩니다.
 
-skus 폴더(956개 SVG)는 업로드할 필요 없습니다 — customizer-skus.js에 모두 포함되어 있고, js가 없을 때만 customizer/skus/ 폴더를 참조합니다.
+## 이번 수정
+- 옵션 패널이 이미지 뒤에 숨는 문제: 페이지 그리드 간섭 차단(grid-column:1/-1, z-index)
+  + 패널을 이미지 우측에 고정 배치
