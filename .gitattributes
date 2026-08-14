@@ -1,0 +1,48 @@
+# 맥북(macOS) + 데스크탑(Windows) 혼용 저장소 필수 설정
+# 이게 없으면 파일을 건드리지 않아도 줄바꿈(CRLF/LF) 차이로 전체 파일이 변경된 것처럼 보입니다.
+
+# 기본: 저장소 안에는 항상 LF로 저장
+* text=auto eol=lf
+
+# 소스/설정 파일 (명시)
+*.html   text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.js     text eol=lf
+*.jsx    text eol=lf
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.svg    text eol=lf
+*.sh     text eol=lf
+
+# Windows 전용 스크립트는 CRLF 유지
+*.ps1    text eol=crlf
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+
+# 바이너리: 병합/변환 금지
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.pdf    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.mp4    binary
+*.zip    binary
+
+# 데이터 CSV — 스크립트로 생성되고 Excel에서 열리므로 줄바꿈 변환하지 않음
+*.csv    -text
+
+# lock 파일은 diff 노이즈 줄이기
+package-lock.json  -diff
+pnpm-lock.yaml     -diff
+yarn.lock          -diff

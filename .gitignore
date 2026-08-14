@@ -1,0 +1,41 @@
+# ── 아래 내용을 기존 .gitignore 맨 아래에 붙여넣으세요 ──
+# (기기별로 달라지는 것들 = 절대 커밋하면 안 되는 것들)
+
+# 의존성 (기기마다 다시 설치)
+node_modules/
+.pnpm-store/
+
+# 빌드 산출물
+dist/
+build/
+.next/
+.output/
+.vercel/
+.netlify/
+
+# 환경 변수 (기기별 관리, 커밋 금지)
+.env
+.env.local
+.env.*.local
+
+# OS 찌꺼기 — 이거 때문에 기기 오갈 때 충돌 많이 납니다
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# 에디터
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# 로컬 캐시
+.cache/
+.turbo/
+*.log
