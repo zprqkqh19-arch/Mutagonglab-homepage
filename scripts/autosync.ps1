@@ -34,6 +34,33 @@ try {
     git fetch --quiet origin 2>$null
     if ($LASTEXITCODE -ne 0) { Log "건너뜀 — 원격 접속 실패(네트워크?)"; exit 0 }
 
+    # 0) 받은 패치 자동 반영 (_받은패치\ 에 넣어두면 여기서 풀어 적용)
+    $inbox = Join-Path $repo '_받은패치'
+    $done  = Join-Path $inbox '처리완료'
+    New-Item $done -ItemType Directory -Force *>$null
+    if (Test-Path $inbox) {
+        foreach ($f in @(Get-ChildItem $inbox -File)) {
+            if ($f.Name -like 'README*') { continue }
+            try {
+                if ($f.Extension -eq '.zip') {
+                    $tmp = Join-Path $env:TEMP ('mtgpatch_' + [guid]::NewGuid().ToString('N'))
+                    Expand-Archive -Path $f.FullName -DestinationPath $tmp -Force
+                    $top = @(Get-ChildItem $tmp -Force)
+                    if ($top.Count -eq 1 -and $top[0].PSIsContainer) { $src = $top[0].FullName } else { $src = $tmp }
+                    $dotgit = Join-Path $src '.git'
+                    if (Test-Path $dotgit) { Remove-Item $dotgit -Recurse -Force }
+                    Copy-Item (Join-Path $src '*') $repo -Recurse -Force
+                    Remove-Item $tmp -Recurse -Force
+                    Log "패치 적용: $($f.Name)"
+                } else {
+                    Copy-Item $f.FullName $repo -Force
+                    Log "파일 적용: $($f.Name)"
+                }
+                Move-Item $f.FullName (Join-Path $done $f.Name) -Force
+            } catch { Log "⚠️ 패치 적용 실패: $($f.Name) — $_" }
+        }
+    }
+
     # 1) 이 기기의 변경을 커밋
     if (git status --porcelain) {
         git add -A
