@@ -38,6 +38,20 @@ try {
     $inbox = Join-Path $repo '_받은패치'
     $done  = Join-Path $inbox '처리완료'
     New-Item $done -ItemType Directory -Force *>$null
+
+    # 다운로드 폴더에서 홈페이지 관련 파일 자동 수거
+    $dl = Join-Path $env:USERPROFILE 'Downloads'
+    if (Test-Path $dl) {
+        $pat = 'mutagonglab|homepage|무타공랩|홈페이지|patch'
+        $ext = @('.zip','.html','.css','.js','.svg','.png','.webp','.md')
+        foreach ($d in @(Get-ChildItem $dl -File -ErrorAction SilentlyContinue)) {
+            if ($d.Name -notmatch $pat) { continue }
+            if ($ext -notcontains $d.Extension.ToLower()) { continue }
+            if ($d.LastWriteTime -lt (Get-Date).AddDays(-1)) { continue }
+            try { Move-Item $d.FullName (Join-Path $inbox $d.Name) -Force; Log "다운로드에서 수거: $($d.Name)" }
+            catch { Log "수거 실패: $($d.Name)" }
+        }
+    }
     if (Test-Path $inbox) {
         foreach ($f in @(Get-ChildItem $inbox -File)) {
             if ($f.Name -like 'README*') { continue }

@@ -37,6 +37,17 @@ git fetch --quiet origin 2>/dev/null || { log "건너뜀 — 원격 접속 실�
 # 0) 받은 패치 자동 반영 (_받은패치/ 에 넣어두면 여기서 풀어 적용)
 INBOX="$REPO/_받은패치"
 mkdir -p "$INBOX/처리완료"
+
+# 다운로드 폴더에서 홈페이지 관련 파일 자동 수거
+DL="$HOME/Downloads"
+if [ -d "$DL" ]; then
+  find "$DL" -maxdepth 1 -type f -mmin -1440 \
+    \( -iname '*mutagonglab*' -o -iname '*homepage*' -o -iname '*무타공랩*' -o -iname '*홈페이지*' -o -iname '*patch*' \) \
+    \( -iname '*.zip' -o -iname '*.html' -o -iname '*.css' -o -iname '*.js' -o -iname '*.svg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.md' \) \
+    -print0 2>/dev/null | while IFS= read -r -d '' d; do
+      mv -f "$d" "$INBOX/" 2>/dev/null && log "다운로드에서 수거: $(basename "$d")"
+    done
+fi
 if [ -d "$INBOX" ]; then
   for f in "$INBOX"/*; do
     [ -f "$f" ] || continue
