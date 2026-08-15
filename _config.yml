@@ -1,0 +1,28 @@
+# GitHub Pages 배포 설정
+#
+# 아래 목록의 파일·폴더는 공개 사이트(zprqkqh19-arch.github.io)에 올라가지 않습니다.
+# 저장소에는 그대로 남지만 웹에서는 접근할 수 없습니다.
+# 사이트에 필요한 파일을 여기 넣으면 화면에서 사라지니 주의하세요.
+
+exclude:
+  # 내부 문서 — 작업 규칙·인계 노트
+  - CLAUDE.md
+  - HANDOFF.md
+  - README.md
+
+  # 개발·동기화 스크립트
+  - scripts/
+
+  # Git 설정
+  - .gitattributes
+  - .gitignore
+
+  # 작업용 자료 (사이트에서 쓰지 않음)
+  - "*.zip"
+  - assets/sku/SKU_이미지_목록_무타공.csv
+  - assets/sku/SKU_이미지_목록_시공형.csv
+
+# 사이트 기본 정보
+title: 혜다움
+description: 시공형 중문 전문 브랜드 — 프레임 색상·유리·간살까지 직접 골라 구성하고, 전문 시공팀이 설치합니다.
+lang: ko
