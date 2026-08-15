@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  html,body{margin:0;padding:0;background:#f5f4f2;}
+  a{color:#2a2a2c;} a:hover{color:#000;}
+</style>
+</helmet>
+<div style="display:flex; gap:32px; padding:32px; font-family:Helvetica, Arial, sans-serif; align-items:flex-start; justify-content:center;">
+  <div style="position:relative; background:#ffffff; border:1px solid #e3e1dd; padding:24px 24px 24px 30px;">
+    <div style="position:relative; width:382px; height:712px;">
+      <div style="{{ bgStyle }}"></div>
+      <img src="{{ bSrc }}" style="position:absolute; left:{{ bLeft }}px; top:{{ bTop }}px; width:{{ bW }}px; height:{{ bH }}px;" alt="중문">
+      <svg viewBox="0 0 1140 2070" style="position:absolute; left:{{ bLeft }}px; top:{{ bTop }}px; width:{{ bW }}px; height:{{ bH }}px; pointer-events:none;">
+        <sc-for list="{{ barsV }}" as="bar">
+          <rect x="{{ bar.x }}" y="30" width="20" height="1980" fill="{{ barColor }}"></rect>
+        </sc-for>
+        <sc-for list="{{ barsH }}" as="bar">
+          <rect x="30" y="{{ bar.y }}" width="1080" height="20" fill="{{ barColor }}"></rect>
+        </sc-for>
+        <sc-if value="{{ archLine }}" hint-placeholder-val="{{ false }}">
+          <path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700" stroke="{{ barColor }}" stroke-width="20" fill="none"></path>
+        </sc-if>
+        <sc-if value="{{ archFill }}" hint-placeholder-val="{{ false }}">
+          <path d="M 30 700 Q 30 120 570 120 Q 1110 120 1110 700 L 1110 30 L 30 30 Z" fill="{{ barColor }}"></path>
+        </sc-if>
+      </svg>
+      <img src="{{ aSrc }}" style="position:absolute; left:0; top:0; width:100%; height:{{ aH }}px; pointer-events:none;" alt="프레임">
+      <div style="position:absolute; left:0; width:100%; top:{{ dimWTop }}px; text-align:center; font-size:11px; color:#b0483a; font-weight:700;">W {{ dimW }}</div>
+      <div style="position:absolute; right:-24px; top:50%; transform:rotate(90deg); transform-origin:center; font-size:11px; color:#b0483a; font-weight:700; white-space:nowrap;">H {{ dimH }}</div>
+      <!-- 상단 알파벳 눈금 (중문 상단, 5cm 간격) -->
+      <sc-for list="{{ colLabels }}" as="cl" hint-placeholder-count="5">
+        <button onClick="{{ cl.pick }}" style="{{ cl.style }}">{{ cl.label }}</button>
+      </sc-for>
+      <!-- 좌측 알파벳 눈금 (프레임 왼쪽, 5cm 간격) -->
+      <sc-for list="{{ rowLabels }}" as="rl" hint-placeholder-count="5">
+        <button onClick="{{ rl.pick }}" style="{{ rl.style }}">{{ rl.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:20px; width:320px;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="font-weight:700; font-size:16px; color:#222;">커스터마이징 — 12-22</div>
+      <button onClick="{{ toggleExt }}" style="{{ extStyle }}">+30mm 연장</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="font-size:12px; color:#8a877f; letter-spacing:0.06em;">제품 유형</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <sc-for list="{{ typeOpts }}" as="opt">
+          <button onClick="{{ opt.pick }}" disabled="{{ opt.disabled }}" style="{{ opt.style }}">{{ opt.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <sc-for list="{{ groups }}" as="grp" hint-placeholder-count="4">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="font-size:12px; color:#8a877f; letter-spacing:0.06em;">{{ grp.label }}</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <sc-for list="{{ grp.opts }}" as="opt">
+            <button onClick="{{ opt.pick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="font-size:12px; color:#8a877f; letter-spacing:0.06em;">간살</div>
+      <div style="font-size:11.5px; color:#8a877f; line-height:1.5;">눈금 알파벳을 클릭해 배치합니다. (상단 대문자 = 세로살, 좌측 소문자 = 가로살)</div>
+      <div style="font-size:13px; color:#444;">세로살: {{ colsPicked }} · 가로살: {{ rowsPicked }}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button onClick="{{ pickArchLine }}" style="{{ archLineStyle }}">간살아치형</button>
+        <button onClick="{{ pickArchFill }}" style="{{ archFillStyle }}">채움아치형</button>
+        <button onClick="{{ clearBars }}" style="padding:6px 12px; font-size:12px; border:1px solid #d5d2cc; background:#fff; color:#444; border-radius:4px; cursor:pointer;">간살 전체 지우기</button>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="font-size:12px; color:#8a877f; letter-spacing:0.06em;">손잡이</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <sc-for list="{{ handleOpts }}" as="opt">
+          <button onClick="{{ opt.pick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="font-size:12px; color:#8a877f;">SKU: {{ skuCode }}</div>
+    <div style="display:flex; flex-direction:column; gap:5px; border-top:1px solid #e3e1dd; padding-top:12px; font-size:11.5px; color:#8a877f; line-height:1.5;">
+      <div style="font-weight:700; color:#666;">안내 사항</div>
+      <div style="padding-left:16px; text-indent:-16px;">* 프레임은 마감 후 가려지는 부분입니다.</div>
+      <div style="padding-left:16px; text-indent:-16px;">· 중문 색상, 안전창 디자인, 간살의 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지는 않습니다.</div>
+      <div style="padding-left:16px; text-indent:-16px;">· 기타 옵션은 고객센터를 통해 문의해 주세요.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:920,&quot;height&quot;:860}}">
+class Component extends DCLogic {
+  state = { t:'3연동', a:'sv', d:'wh', g:'cl', n:'no', h:'st', cols:[], rows:[], arch:false, ext:false, bg:false };
+  renderVals() {
+    const s = this.state;
+    const defs = [
+      ['a','프레임 색상 *',[['sv','실버']]],
+      ['d','중문 색상',[['wh','화이트'],['gr','그레이'],['bk','블랙']]],
+      ['g','안전창',[['cl','투명'],['br','브론즈'],['mi','미스트'],['mo','모루'],['sa','샤틴'],['fa','패브릭']]],
+    ];
+    const mkOpts = ([key,label,opts]) => ({
+      label,
+      opts: opts.map(([v,lab]) => ({
+        label: lab,
+        pick: () => this.setState({[key]: v}),
+        style: {
+          padding:'7px 12px', fontSize:'13px', cursor:'pointer', borderRadius:'4px',
+          border: s[key]===v ? '2px solid #222' : '1px solid #d5d2cc',
+          background: s[key]===v ? '#222' : '#fff',
+          color: s[key]===v ? '#fff' : '#444',
+        },
+      })),
+    });
+    const typeOpts = [['3연동',false],['원슬라이딩',false],['스윙폴딩',true],['여닫이',true]].map(([v,dis]) => ({
+      label: v, disabled: dis,
+      pick: dis ? undefined : () => this.setState({t: v}),
+      style: {
+        padding:'7px 12px', fontSize:'13px', borderRadius:'4px',
+        cursor: dis ? 'not-allowed' : 'pointer', opacity: dis ? 0.4 : 1,
+        border: s.t===v ? '2px solid #222' : '1px solid #d5d2cc',
+        background: s.t===v ? '#222' : '#fff',
+        color: s.t===v ? '#fff' : '#444',
+      },
+    }));
+    const groups = defs.map(mkOpts);
+    groups[2].opts.push({
+      label: s.bg ? '배경 빼기' : '배경 넣기',
+      pick: () => this.setState(st => ({bg: !st.bg})),
+      style: { padding:'7px 12px', fontSize:'13px', cursor:'pointer', borderRadius:'4px',
+        border:'1px dashed #b0483a', background: s.bg ? '#b0483a' : '#fff', color: s.bg ? '#fff' : '#b0483a' },
+    });
+    const handleOpts = mkOpts(['h','손잡이',[['st','기본'],['rd','반원형'],['ba','긴 바형'],['sb','짧은 바형']]]).opts;
+    handleOpts.push({ label:'일자형', pick: undefined, style: {
+      padding:'7px 12px', fontSize:'13px', borderRadius:'4px', cursor:'not-allowed', opacity:0.4,
+      border:'1px solid #d5d2cc', background:'#fff', color:'#444' } });
+    const alpha = (n) => { let r=''; do { r=String.fromCharCode(65+n%26)+r; n=Math.floor(n/26)-1; } while(n>=0); return r; };
+    const sc = 382/1200;
+    const totalH = s.ext ? 2230 : 2200;
+    const innerTop = s.ext ? 160 : 130;
+    const bLeft = 30*sc, bTop = innerTop*sc, bW = 1140*sc, bH = 2070*sc;
+    const toggle = (key, v) => () => this.setState(st => ({
+      [key]: st[key].includes(v) ? st[key].filter(x=>x!==v) : st[key].concat(v).sort((a,b)=>a-b)
+    }));
+    // 상단: 중문 내경 기준 50mm 간격 (50..1100) → 22개
+    const colLabels = [];
+    for (let i=0; i*50+50 <= 1140-40; i++) {
+      const mm = 50 + i*50;
+      const on = s.cols.includes(mm);
+      colLabels.push({ label: alpha(i), pick: toggle('cols', mm), style: {
+        position:'absolute', left:(bLeft + mm*sc - 8)+'px', top:'-20px', width:'16px', height:'16px', zIndex:5,
+        padding:0, fontSize:'9px', fontWeight:700, lineHeight:'16px', textAlign:'center', cursor:'pointer', borderRadius:'2px',
+        border:'1px solid #d5d2cc', background: on ? '#222' : '#fff', color: on ? '#fff' : '#555',
+      }});
+    }
+    // 좌측: 50mm 간격 (50..1990) → 39개
+    const rowLabels = [];
+    for (let i=0; i*50+50 <= 2070-50; i++) {
+      const mm = 50 + i*50;
+      const on = s.rows.includes(mm);
+      rowLabels.push({ label: alpha(i).toLowerCase(), pick: toggle('rows', mm), style: {
+        position:'absolute', left:'-26px', top:(bTop + mm*sc - 7)+'px', width:'22px', height:'14px', zIndex:5,
+        padding:0, fontSize:'8px', fontWeight:700, lineHeight:'14px', textAlign:'center', cursor:'pointer', borderRadius:'2px',
+        border:'1px solid #d5d2cc', background: on ? '#222' : '#fff', color: on ? '#fff' : '#555',
+      }});
+    }
+    const dPal = { wh:'#eeece7', gr:'#707074', bk:'#2b2b2e' };
+    const colAlpha = (mm) => alpha((mm-50)/50);
+    return {
+      groups, handleOpts, typeOpts, colLabels, rowLabels,
+      barsV: s.cols.map(mm => ({x: mm-10})),
+      barsH: s.rows.map(mm => ({y: mm-10})),
+      barColor: dPal[s.d],
+      colsPicked: s.cols.length ? s.cols.map(colAlpha).join(', ') : '—',
+      rowsPicked: s.rows.length ? s.rows.map(mm=>colAlpha(mm).toLowerCase()).join(', ') : '—',
+      clearBars: () => this.setState({cols:[], rows:[], arch:false}),
+      archLine: s.arch === 'line', archFill: s.arch === 'fill',
+      pickArchLine: () => this.setState(st => ({arch: st.arch==='line' ? false : 'line'})),
+      pickArchFill: () => this.setState(st => ({arch: st.arch==='fill' ? false : 'fill'})),
+      archLineStyle: { padding:'6px 12px', fontSize:'12px', cursor:'pointer', borderRadius:'4px',
+        border: s.arch==='line' ? '2px solid #222' : '1px solid #d5d2cc',
+        background: s.arch==='line' ? '#222' : '#fff', color: s.arch==='line' ? '#fff' : '#444' },
+      archFillStyle: { padding:'6px 12px', fontSize:'12px', cursor:'pointer', borderRadius:'4px',
+        border: s.arch==='fill' ? '2px solid #222' : '1px solid #d5d2cc',
+        background: s.arch==='fill' ? '#222' : '#fff', color: s.arch==='fill' ? '#fff' : '#444' },
+      aSrc: s.ext ? `skus/12-22/A/A_12-22_${s.a}_ext.svg` : `skus/12-22/A/A_12-22_${s.a}.svg`,
+      aH: totalH*sc, dimW: 1200, dimH: totalH, dimWTop: totalH*sc + 4,
+      toggleExt: () => this.setState(st => ({ext: !st.ext})),
+      bgStyle: !s.bg ? {display:'none'} : {
+        position:'absolute', left:bLeft+'px', top:bTop+'px', width:bW+'px', height:bH+'px', overflow:'hidden',
+        backgroundImage: "url('uploads/ChatGPT Image 2026년 8월 3일 오전 03_01_08.png')", backgroundSize:'cover', backgroundPosition:'center',
+      },
+      extStyle: {
+        padding:'4px 10px', fontSize:'11px', cursor:'pointer', borderRadius:'4px',
+        border: s.ext ? '2px solid #b0483a' : '1px solid #d5d2cc',
+        background: s.ext ? '#b0483a' : '#fff', color: s.ext ? '#fff' : '#555',
+      },
+      bSrc: s.t === '원슬라이딩' ? `skus/12-22/B1/B1_12-22_${s.d}_${s.g}_no_${s.h}.svg` : `skus/12-22/B/B_12-22_${s.d}_${s.g}_no_${s.h}.svg`,
+      bLeft, bTop, bW, bH,
+      skuCode: `${s.t} / 12-22 / A-${s.a} / B-${s.d}-${s.g}-${s.h}` + (s.cols.length||s.rows.length||s.arch ? ` / 간살[${s.arch==='line'?'간살아치·':s.arch==='fill'?'채움아치·':''}${s.cols.map(colAlpha).join('')}${s.rows.map(mm=>colAlpha(mm).toLowerCase()).join('')}]` : ''),
+    };
+  }
+}
+</script>
+</body>
+</html>

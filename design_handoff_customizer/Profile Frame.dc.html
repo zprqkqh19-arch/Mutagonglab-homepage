@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  html,body{margin:0;padding:0;background:#f5f4f2;}
+  a{color:#2a2a2c;} a:hover{color:#000;}
+</style>
+</helmet>
+<div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding:32px; font-family:Helvetica, Arial, sans-serif;">
+  <div style="display:flex; gap:24px; align-items:baseline; color:#555; font-size:13px;">
+    <span style="font-weight:700; color:#222; font-size:15px;">프로파일 프레임</span>
+    <span>{{ sizeLabel }}</span>
+    <span>내경 {{ innerW }} × {{ innerH }}</span>
+    <span>깊이 100 (30+40+30)</span>
+  </div>
+  <div style="display:flex; gap:28px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+    <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+      <span style="font-size:12px; color:#8a877f; letter-spacing:0.08em;">FRONT</span>
+      <svg width="{{ svgW }}" height="720" viewBox="{{ viewBox }}" style="display:block; background:#ffffff; border:1px solid #e3e1dd;">
+        <defs>
+          <linearGradient id="vpost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="{{ cDark }}"></stop>
+            <stop offset="0.18" stop-color="{{ cLight }}"></stop>
+            <stop offset="0.55" stop-color="{{ cMain }}"></stop>
+            <stop offset="0.9" stop-color="{{ cDark }}"></stop>
+          </linearGradient>
+          <linearGradient id="hrail" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="{{ cLight }}"></stop>
+            <stop offset="0.35" stop-color="{{ cMain }}"></stop>
+            <stop offset="0.85" stop-color="{{ cDark }}"></stop>
+          </linearGradient>
+          <pattern id="thread" width="10" height="7" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="6" x2="10" y2="1" stroke="{{ cLight }}" stroke-width="1.8"></line>
+          </pattern>
+        </defs>
+        {{ frontLayer }}
+        <sc-if value="{{ showDims }}" hint-placeholder-val="{{ false }}">{{ dimsLayer }}</sc-if>
+      </svg>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+      <span style="font-size:12px; color:#8a877f; letter-spacing:0.08em;">RIGHT</span>
+      <svg width="{{ rightW }}" height="720" viewBox="{{ rightVB }}" style="display:block; background:#ffffff; border:1px solid #e3e1dd;">{{ rightLayer }}</svg>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+      <span style="font-size:12px; color:#8a877f; letter-spacing:0.08em;">PERSPECTIVE</span>
+      <svg width="{{ perspW }}" height="720" viewBox="{{ perspVB }}" style="display:block; background:#ffffff; border:1px solid #e3e1dd;">{{ perspLayer }}</svg>
+    </div>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+    <span style="font-size:12px; color:#8a877f; letter-spacing:0.08em;">TOP</span>
+    <svg width="{{ topW }}" height="{{ topH }}" viewBox="{{ topVB }}" style="display:block; background:#ffffff; border:1px solid #e3e1dd;">{{ topLayer }}</svg>
+  </div>
+  <div style="color:#8a877f; font-size:12px;">서브 ∏자 H{{ subH }} + 볼트 노출 {{ boltGap }} + 메인 ∏자 H{{ mainH }} = 전체 H{{ H }} · 모든 프로파일 3030 · 단위 mm</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:1000},&quot;sizeCode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;12-22&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;11-20&quot;,&quot;11-21&quot;,&quot;11-22&quot;,&quot;11-23&quot;,&quot;12-20&quot;,&quot;12-21&quot;,&quot;12-22&quot;,&quot;12-23&quot;,&quot;13-22&quot;,&quot;13-23&quot;],&quot;section&quot;:&quot;사이즈&quot;},&quot;frameColor&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;실버&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;실버&quot;,&quot;블랙&quot;,&quot;화이트&quot;,&quot;그레이&quot;],&quot;section&quot;:&quot;프레임&quot;},&quot;postFace&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:30,&quot;min&quot;:20,&quot;max&quot;:60,&quot;unit&quot;:&quot;mm&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;프로파일 단면&quot;},&quot;subHeight&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:70,&quot;min&quot;:50,&quot;max&quot;:100,&quot;unit&quot;:&quot;mm&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;서브 프레임&quot;},&quot;boltGap&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:30,&quot;min&quot;:30,&quot;max&quot;:60,&quot;unit&quot;:&quot;mm&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;서브 프레임&quot;},&quot;showDims&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;표시&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const el = React.createElement;
+    const sizes = {'11-20':[1100,2000],'11-21':[1100,2100],'11-22':[1100,2200],'11-23':[1100,2300],'12-20':[1200,2000],'12-21':[1200,2100],'12-22':[1200,2200],'12-23':[1200,2300],'13-22':[1300,2200],'13-23':[1300,2300]};
+    const code = this.props.sizeCode ?? '12-22';
+    const [W, H] = sizes[code] || sizes['12-22'];
+    const p = this.props.postFace ?? 30;
+    const subH = this.props.subHeight ?? 70;
+    const boltGap = this.props.boltGap ?? 30;
+    const D = 100, GAP = 40;
+    const mainTop = subH + boltGap;
+    const mainH = H - mainTop;
+    const colors = {
+      '실버':   { main:'#c9c9cc', light:'#ececed', dark:'#96969a', slot:'#7e7e83', back:'#a7a7ab' },
+      '블랙':   { main:'#2b2b2e', light:'#4a4a4e', dark:'#151517', slot:'#0a0a0b', back:'#232326' },
+      '화이트': { main:'#eeece7', light:'#fbfaf7', dark:'#c9c6bf', slot:'#b5b2aa', back:'#dbd8d2' },
+      '그레이': { main:'#8e8e91', light:'#b4b4b7', dark:'#5f5f63', slot:'#4c4c50', back:'#77777a' },
+    };
+    const c = colors[this.props.frameColor ?? '실버'] || colors['실버'];
+    const showDims = this.props.showDims ?? true;
+    const rect = (k,x,y,w,h,fill,extra) => el('rect', Object.assign({key:k,x,y,width:w,height:h,fill}, extra||{}));
+    const line = (k,x1,y1,x2,y2,stroke,sw) => el('line',{key:k,x1,y1,x2,y2,stroke,'strokeWidth':sw});
+    const boltXs = [5, p-15, W-p+5, W-15];
+    // 정면 프레임 도형 (front + perspective 재사용)
+    const frameShapes = (pre, vFill, hFill, flat) => {
+      const s = [
+        rect(pre+'sl',0,0,p,subH,vFill), rect(pre+'sr',W-p,0,p,subH,vFill), rect(pre+'sb',0,0,W,p,hFill),
+        rect(pre+'ml',0,mainTop,p,mainH,vFill), rect(pre+'mr',W-p,mainTop,p,mainH,vFill), rect(pre+'mb',0,mainTop,W,p,hFill),
+      ];
+      boltXs.forEach((x,i)=>{ s.push(rect(pre+'b'+i,x,subH,10,boltGap,c.dark)); if(!flat) s.push(rect(pre+'bt'+i,x,subH,10,boltGap,'url(#thread)')); });
+      if (!flat) {
+        s.push(line(pre+'e1',p,p,p,subH,c.dark,2), line(pre+'e2',W-p,p,W-p,subH,c.dark,2), line(pre+'e3',p,p,W-p,p,c.dark,2));
+        s.push(line(pre+'e4',p,mainTop+p,p,H,c.dark,2), line(pre+'e5',W-p,mainTop+p,W-p,H,c.dark,2), line(pre+'e6',p,mainTop+p,W-p,mainTop+p,c.dark,2));
+        s.push(line(pre+'t1',0,p/2,W,p/2,c.slot,6), line(pre+'t2',p/2,p,p/2,subH,c.slot,6), line(pre+'t3',W-p/2,p,W-p/2,subH,c.slot,6));
+        s.push(line(pre+'t4',p/2,mainTop,p/2,H,c.slot,6), line(pre+'t5',W-p/2,mainTop,W-p/2,H,c.slot,6), line(pre+'t6',0,mainTop+p/2,W,mainTop+p/2,c.slot,6));
+      }
+      return s;
+    };
+    const frontLayer = el('g',{key:'f'}, frameShapes('f','url(#vpost)','url(#hrail)',false));
+    // 우측면도: 깊이 100 (앞뒤 30 + 틈 40), 연결 프로파일 3030 단면
+    const legMid = mainTop + (mainH - p) / 2;
+    const rightLayer = el('g',{key:'r'}, [
+      rect('rs1',0,0,p,subH,'url(#vpost)'), rect('rs2',D-p,0,p,subH,'url(#vpost)'),
+      rect('rc1',p,0,GAP,p,c.main,{stroke:c.dark,strokeWidth:2}),
+      rect('rb1',10,subH,10,boltGap,c.dark), rect('rbt1',10,subH,10,boltGap,'url(#thread)'),
+      rect('rb2',D-20,subH,10,boltGap,c.dark), rect('rbt2',D-20,subH,10,boltGap,'url(#thread)'),
+      rect('rm1',0,mainTop,p,mainH,'url(#vpost)'), rect('rm2',D-p,mainTop,p,mainH,'url(#vpost)'),
+      rect('rc2',p,mainTop,GAP,p,c.main,{stroke:c.dark,strokeWidth:2}),
+      rect('rc3',p,legMid,GAP,p,c.main,{stroke:c.dark,strokeWidth:2}),
+      rect('rc4',p,H-p,GAP,p,c.main,{stroke:c.dark,strokeWidth:2}),
+      line('rcs1',p,p/2,p+GAP,p/2,c.slot,6),
+      line('rcs2',p,mainTop+p/2,p+GAP,mainTop+p/2,c.slot,6),
+      line('rcs3',p,legMid+p/2,p+GAP,legMid+p/2,c.slot,6),
+      line('rcs4',p,H-p/2,p+GAP,H-p/2,c.slot,6),
+      line('rt1',p/2,0,p/2,subH,c.slot,6), line('rt2',D-p/2,0,D-p/2,subH,c.slot,6),
+      line('rt3',p/2,mainTop,p/2,H,c.slot,6), line('rt4',D-p/2,mainTop,D-p/2,H,c.slot,6),
+    ]);
+    // 평면도: 서브 상부 바 (앞뒤 레일 + 연결 3개)
+    const topLayer = el('g',{key:'t'}, [
+      rect('ta',0,0,W,p,'url(#hrail)'), rect('tb',0,D-p,W,p,'url(#hrail)'),
+      rect('tc1',0,p,p,GAP,c.main,{stroke:c.dark,strokeWidth:2}),
+      rect('tc2',(W-p)/2,p,p,GAP,c.main,{stroke:c.dark,strokeWidth:2}),
+      rect('tc3',W-p,p,p,GAP,c.main,{stroke:c.dark,strokeWidth:2}),
+      line('tcs1',p/2,p,p/2,p+GAP,c.slot,6),
+      line('tcs2',W/2,p,W/2,p+GAP,c.slot,6),
+      line('tcs3',W-p/2,p,W-p/2,p+GAP,c.slot,6),
+      line('tt1',0,p/2,W,p/2,c.slot,6), line('tt2',0,D-p/2,W,D-p/2,c.slot,6),
+    ]);
+    // 퍼스펙티브 (경사 투영): 뒤판 offset + 모서리 에지 + 앞판
+    const ox = 70, oy = -70;
+    const edges = [[0,0],[W,0],[0,H],[W,H],[p,mainTop+p],[W-p,mainTop+p]].map((pt,i)=>
+      line('pe'+i, pt[0], pt[1], pt[0]+ox, pt[1]+oy, c.dark, 3));
+    const perspLayer = el('g',{key:'p'}, [
+      el('g',{key:'pb', transform:`translate(${ox},${oy})`}, frameShapes('pb', c.back, c.back, true)),
+      el('g',{key:'ped'}, edges),
+      el('g',{key:'pf'}, frameShapes('pf','url(#vpost)','url(#hrail)',false)),
+    ]);
+    const dimsLayer = el('g',{key:'d'}, [
+      el('g',{key:'dl', fill:'none', stroke:'#b0483a', strokeWidth:3}, [
+        line('d1',0,-70,W,-70,'#b0483a',3), line('d2',0,-110,0,-30,'#b0483a',3), line('d3',W,-110,W,-30,'#b0483a',3),
+        line('d4',-70,0,-70,H,'#b0483a',3), line('d5',-110,0,-30,0,'#b0483a',3), line('d6',-110,H,-30,H,'#b0483a',3),
+        line('d7',p,H*0.45,W-p,H*0.45,'#3a6ab0',3),
+      ]),
+      el('g',{key:'dt', fill:'#b0483a', fontSize:52, fontFamily:'Helvetica, Arial, sans-serif', textAnchor:'middle'}, [
+        el('text',{key:'w', x:W/2, y:-95}, `W ${W}`),
+        el('text',{key:'h', x:-95, y:H/2, transform:`rotate(-90 -95 ${H/2})`}, `H ${H}`),
+        el('text',{key:'i', x:W/2, y:H*0.45-25, fill:'#3a6ab0'}, `내경 ${W-p*2}`),
+      ]),
+    ]);
+    const pad = showDims ? 180 : 60;
+    const vb = `${-pad} ${-pad} ${W+pad*2} ${H+pad*2}`;
+    const rPad = 60;
+    const pPadL = 60, pPadT = 60;
+    const pVBw = W + ox + pPadL*2, pVBh = H - oy + pPadT*2;
+    return {
+      W, H, subH, boltGap, mainH, showDims,
+      innerW: W - p*2, innerH: H - mainTop - p,
+      sizeLabel: `W${W} × H${H} (${code})`,
+      cMain: c.main, cLight: c.light, cDark: c.dark, cSlot: c.slot,
+      frontLayer, rightLayer, topLayer, perspLayer, dimsLayer,
+      viewBox: vb, svgW: Math.round(720*(W+pad*2)/(H+pad*2)),
+      rightVB: `${-rPad} ${-rPad} ${D+rPad*2} ${H+rPad*2}`, rightW: Math.round(720*(D+rPad*2)/(H+rPad*2)),
+      perspVB: `${-pPadL} ${oy-pPadT} ${pVBw} ${pVBh}`, perspW: Math.round(720*pVBw/pVBh),
+      topVB: `${-rPad} ${-rPad} ${W+rPad*2} ${D+rPad*2}`, topW: 560, topH: Math.round(560*(D+rPad*2)/(W+rPad*2)),
+    };
+  }
+}
+</script>
+</body>
+</html>
