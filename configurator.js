@@ -878,9 +878,7 @@
     var groupsEl = mount.querySelector("[data-opt-groups]");
     if (!stage || !groupsEl) return;
 
-    // 이 모드에서 쓰지 않는 제네릭 UI 정리
-    var typeFinder = mount.querySelector(".type-finder-btn");
-    if (typeFinder) typeFinder.style.display = "none";
+    // 이 모드에서 쓰지 않는 제네릭 UI 정리("구조에 맞는 제품 유형 찾기"는 무타공랩과 동일하게 그대로 노출)
     var dimEl = mount.querySelector("[data-preview-dim]");
     if (dimEl) dimEl.style.display = "none";
     var summaryEl = mount.querySelector("[data-spec-summary]");
