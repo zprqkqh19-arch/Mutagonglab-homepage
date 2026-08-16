@@ -1003,7 +1003,7 @@
       var bgDis = !bgOk;
       glassHtml += '<button type="button" class="lc-opt lc-bg' + (state.bg ? " on" : "") + (bgDis ? " disabled" : "") + '"' +
         (bgDis ? ' disabled title="배경 이미지 준비 중"' : ' data-act="bg"') + ">" + (state.bg ? "배경 빼기" : "배경 넣기") + "</button>";
-      h += row("안전창", glassHtml);
+      h += row(cfg.glassLabel || "안전창", glassHtml);
       // 간살
       var colsPicked = state.cols.length ? state.cols.map(colAlpha).join(", ") : "—";
       var rowsPicked = state.rows.length ? state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join(", ") : "—";
@@ -1019,7 +1019,7 @@
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
       h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
         "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
-        "<div>· 중문 색상·안전창 디자인·간살 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지 않을 수 있습니다.</div>" +
+        "<div>· 중문 색상·" + (cfg.glassLabel || "안전창") + " 디자인·간살 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지 않을 수 있습니다.</div>" +
         "<div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div></div>";
       return h;
     }

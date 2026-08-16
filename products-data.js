@@ -381,9 +381,46 @@
     defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
   };
 
+  // ============ 레이어 합성 커스터마이저 스펙 (혜다움 시공형, 12-22) ============
+  // 무타공랩 DIY(LAYERED_CUSTOMIZER_12_22)와 동일한 자산 세트를 그대로 재사용.
+  // 다른 점: ① 안전창(PC)이 아니라 실유리라 라벨을 "유리"로 표시(glassLabel, configurator.js에서 참조)
+  //         ② 프레임 색상은 FRAME_COLORS 6종(도장/필름 × 화이트/그레이/블랙) 노출 —
+  //            단, 지금은 '실버' 1종의 프레임 이미지 자산만 있어 나머지 5종은 비활성(disabled) 처리.
+  //            실사 자산(A_12-22_{value}.svg)이 준비되면 disabled를 지우면 바로 활성화됨.
+  //         ③ 자동문 유형은 이미지 자산(prefix)이 아직 없어 비활성 처리 — 자산 준비 후 disabled 제거.
+  var LAYERED_CUSTOMIZER_HEDAUM = {
+    assetSize: "12-22",
+    assetBase: "assets/sku/12-22",
+    profile: 30, innerTop: 130, innerTopExt: 160, extDelta: 30,
+    sizes: LAYERED_CUSTOMIZER_12_22.sizes,
+    glassLabel: "유리",
+    types: [
+      { value: "3연동", label: "3연동", prefix: "B" },
+      { value: "원슬라이딩", label: "원슬라이딩", prefix: "B1" },
+      { value: "스윙폴딩", label: "스윙폴딩", disabled: true },
+      { value: "여닫이", label: "여닫이", disabled: true },
+      { value: "자동문", label: "자동문", disabled: true },
+    ],
+    frameColors: [
+      { value: "sv", label: "실버" },
+      { value: "paint_white", label: "화이트(도장)", disabled: true },
+      { value: "paint_gray", label: "그레이(도장)", disabled: true },
+      { value: "paint_black", label: "블랙(도장)", disabled: true },
+      { value: "film_white", label: "화이트(필름)", disabled: true },
+      { value: "film_gray", label: "그레이(필름)", disabled: true },
+      { value: "film_black", label: "블랙(필름)", disabled: true },
+    ],
+    doorColors: LAYERED_CUSTOMIZER_12_22.doorColors,
+    glass: LAYERED_CUSTOMIZER_12_22.glass,
+    handles: LAYERED_CUSTOMIZER_12_22.handles,
+    background: "assets/sku/room-bg.webp",
+    defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
+  };
+
   window.MUTAGONG_PRODUCTS = {
     "standard-door": {
       id: "standard-door",
+      layeredCustomizer: LAYERED_CUSTOMIZER_HEDAUM,
       name: "시공형 중문",
       brand: "혜다움",
       heroPhoto: "assets/hedaum-concept-01.png",
