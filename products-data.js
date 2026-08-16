@@ -368,12 +368,14 @@
       { value: "sa", label: "샤틴" },
       { value: "fa", label: "패브릭" },
     ],
+    // 무타공랩 DIY와 동일한 6종(customizer-skus.js에서 lj/sj 자산을 assets/sku/12-22/B, B1에 추가 반영, 2026-08-16).
     handles: [
       { value: "st", label: "기본" },
       { value: "rd", label: "반원형" },
       { value: "ba", label: "긴 바형" },
       { value: "sb", label: "짧은 바형" },
-      { value: "line", label: "일자형", disabled: true },
+      { value: "lj", label: "긴 일자형" },
+      { value: "sj", label: "짧은 일자형" },
     ],
     // 배경 넣기(유리 비침 비교)용 이미지. 이 경로에 파일이 존재하면 '배경 넣기' 토글이 자동 활성화되고,
     // 없으면(로드 실패) 토글은 비활성으로 표시된다. 거실 사진을 아래 경로에 넣기만 하면 켜진다.
@@ -411,30 +413,44 @@
       { value: "sy", label: "정대칭 양개형" },
       { value: "as", label: "비대칭 양개형" },
     ],
-    // 손잡이는 문 유형별로 실제 자산이 있는 코드만 선택 가능(무타공랩 DIY의 HANDLE_ALLOW와 동일 기준으로
-    // assets/sku/12-22/{B,B1,B2,B3} 폴더의 실제 파일을 확인해 산출).
+    // 손잡이는 무타공랩 DIY의 HANDLE_ALLOW와 완전히 동일(문 유형별 실제 자산 존재 여부 기준).
     handleAllow: {
-      "3연동": ["st", "rd", "ba", "sb"],
-      "원슬라이딩": ["st", "rd", "ba", "sb"],
+      "3연동": ["st", "lj", "sj"],
+      "원슬라이딩": ["st", "lj", "sj"],
       "스윙폴딩": ["ba", "sb"],
       "여닫이": ["rd", "ba", "sb"],
     },
-    // 미리보기에서 프레임(A) 레이어를 더 이상 그리지 않으므로(2026-08-16),
-    // 프레임 색상은 이미지 자산 유무와 무관하게 전부 선택 가능(사양 표기용).
+    // 프레임 색상: 도장/필름 2단 선택(1단 마감 → 2단 화이트/그레이/블랙). 실버는 삭제.
+    // 미리보기에서 프레임(A) 레이어를 그리지 않으므로 이미지 자산 유무와 무관하게 전부 선택 가능(사양 표기용).
+    frameFinishes: [
+      { value: "paint", label: "도장" },
+      { value: "film", label: "필름" },
+    ],
     frameColors: [
-      { value: "sv", label: "실버" },
-      { value: "paint_white", label: "화이트(도장)" },
-      { value: "paint_gray", label: "그레이(도장)" },
-      { value: "paint_black", label: "블랙(도장)" },
-      { value: "film_white", label: "화이트(필름)" },
-      { value: "film_gray", label: "그레이(필름)" },
-      { value: "film_black", label: "블랙(필름)" },
+      { value: "paint_white", label: "화이트", finish: "paint", color: "white" },
+      { value: "paint_gray", label: "그레이", finish: "paint", color: "gray" },
+      { value: "paint_black", label: "블랙", finish: "paint", color: "black" },
+      { value: "film_white", label: "화이트", finish: "film", color: "white" },
+      { value: "film_gray", label: "그레이", finish: "film", color: "gray" },
+      { value: "film_black", label: "블랙", finish: "film", color: "black" },
     ],
     doorColors: LAYERED_CUSTOMIZER_12_22.doorColors,
     glass: LAYERED_CUSTOMIZER_12_22.glass,
+    // 유리 예시 이미지 보기 팝업용 실사 자료(assets/glass/, 9장).
+    glassExamples: [
+      { src: "assets/glass/glass-moru.jpg", label: "모루" },
+      { src: "assets/glass/glass-mist.jpg", label: "미스트" },
+      { src: "assets/glass/glass-flute.jpg", label: "플루트" },
+      { src: "assets/glass/glass-satin.jpg", label: "샤틴" },
+      { src: "assets/glass/glass-bronze.jpg", label: "브론즈" },
+      { src: "assets/glass/glass-clear.jpg", label: "투명" },
+      { src: "assets/glass/glass-fabric-1.jpg", label: "패브릭(웜화이트)" },
+      { src: "assets/glass/glass-fabric-2.jpg", label: "패브릭" },
+      { src: "assets/glass/glass-aqua.png", label: "아쿠아" },
+    ],
     handles: LAYERED_CUSTOMIZER_12_22.handles,
     background: "assets/sku/room-bg.webp",
-    defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st", sub: "od" },
+    defaults: { sz: "12-22", t: "3연동", a: "paint_white", d: "wh", g: "cl", h: "st", sub: "od" },
   };
 
   window.MUTAGONG_PRODUCTS = {

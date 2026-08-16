@@ -889,7 +889,12 @@
     stage.classList.add("lc-stage");
 
     var d0 = cfg.defaults;
-    var state = { sz: d0.sz, t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od", cols: [], rows: [], arch: false, ext: false, bg: false };
+    var d0Frame = cfg.frameColors.filter(function (o) { return o.value === d0.a; })[0];
+    var state = {
+      sz: d0.sz, t: d0.t, a: d0.a, aFinish: d0Frame ? d0Frame.finish : null,
+      d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od",
+      cols: [], rows: [], arch: false, ext: false, bg: false, open: false,
+    };
     if (overrides && overrides.doorType) {
       var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
       if (pm) state.t = pm.value;
@@ -909,6 +914,15 @@
     function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
     function allowedHandles() { return (cfg.handleAllow && cfg.handleAllow[state.t]) || null; }
     function syncHandle() { var al = allowedHandles(); if (al && al.indexOf(state.h) < 0) state.h = al[0]; }
+    // 프레임 마감(도장/필름)을 바꿀 때, 같은 색상 계열을 유지한 채 새 마감의 옵션으로 전환한다.
+    function syncFrameColor() {
+      if (!cfg.frameFinishes) return;
+      var cur = cfg.frameColors.filter(function (o) { return o.value === state.a; })[0];
+      var curColor = cur ? cur.color : null;
+      var next = cfg.frameColors.filter(function (o) { return o.finish === state.aFinish && o.color === curColor; })[0] ||
+        cfg.frameColors.filter(function (o) { return o.finish === state.aFinish; })[0];
+      if (next) state.a = next.value;
+    }
     function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
     function selSize() { return cfg.sizes.filter(function (s) { return s.code === state.sz; })[0] || cfg.sizes[0]; }
     function baseSize() { return cfg.sizes.filter(function (s) { return s.code === cfg.assetSize; })[0] || cfg.sizes[0]; }
@@ -1007,17 +1021,30 @@
           return '<button type="button" class="lc-size-item' + (on ? " on" : "") + '" data-act="setsz" data-val="' + sz.code + '">' + sz.w + "×" + sz.h + "</button>";
         }).join("") +
         "</div></div></div>";
-      h += row("제품 유형", cfg.types.map(function (o) { return optBtn("t", o); }).join(""));
+      var typeHtml = cfg.types.map(function (o) { return optBtn("t", o); }).join("") +
+        '<button type="button" class="lc-opt ghost' + (state.open ? " on" : "") + '" data-act="toggleopen">' + (state.open ? "닫아보기" : "열어보기") + "</button>";
+      h += row("제품 유형", typeHtml);
       if (cfg.subTypes && state.t === "여닫이") {
         h += row("세부 유형", cfg.subTypes.map(function (o) { return optBtn("sub", o); }).join(""));
       }
-      h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
+      // 프레임 색상: 도장/필름 2단 선택(cfg.frameFinishes 있을 때만) — 없으면 기존처럼 단일 나열.
+      if (cfg.frameFinishes) {
+        var finishHtml = cfg.frameFinishes.map(function (o) { return optBtn("aFinish", o); }).join("");
+        h += row("프레임 마감", finishHtml);
+        var colorOpts = cfg.frameColors.filter(function (o) { return o.finish === state.aFinish; });
+        h += row("프레임 색상 <em>*</em>", colorOpts.map(function (o) { return optBtn("a", o); }).join(""));
+      } else {
+        h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
+      }
       h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
-      // 안전창 + 배경 토글
+      // 안전창 + 배경 토글 + 유리 예시 이미지 보기
       var glassHtml = cfg.glass.map(function (o) { return optBtn("g", o); }).join("");
       var bgDis = !bgOk;
       glassHtml += '<button type="button" class="lc-opt lc-bg' + (state.bg ? " on" : "") + (bgDis ? " disabled" : "") + '"' +
         (bgDis ? ' disabled title="배경 이미지 준비 중"' : ' data-act="bg"') + ">" + (state.bg ? "배경 빼기" : "배경 넣기") + "</button>";
+      if (cfg.glassExamples && cfg.glassExamples.length) {
+        glassHtml += '<button type="button" class="lc-opt ghost" data-act="glassexample">유리 예시 이미지 보기</button>';
+      }
       h += row(cfg.glassLabel || "안전창", glassHtml);
       // 간살
       var colsPicked = state.cols.length ? state.cols.map(colAlpha).join(", ") : "—";
@@ -1033,6 +1060,10 @@
       var handleAl = allowedHandles();
       h += row("손잡이", cfg.handles.map(function (o) { return optBtn("h", o, handleAl ? handleAl.indexOf(o.value) < 0 : false); }).join(""));
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
+      h += '<div class="lc-cta">' +
+        '<button type="button" class="lc-consult-btn" data-act="consult">내 중문 상담하기</button>' +
+        '<button type="button" class="lc-buy-btn" data-act="buy">내 중문 구매하기</button>' +
+        "</div>";
       h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
         "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
         "<div>· 중문 색상·" + (cfg.glassLabel || "안전창") + " 디자인·간살 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지 않을 수 있습니다.</div>" +
@@ -1068,11 +1099,31 @@
         var k = b.getAttribute("data-key");
         state[k] = b.getAttribute("data-val");
         if (k === "t") { syncHandle(); if (state.t !== "여닫이") state.sub = "od"; }
+        else if (k === "aFinish") { syncFrameColor(); }
       }
       else if (act === "setsz") { state.sz = b.getAttribute("data-val"); }
       else if (act === "bg") { state.bg = !state.bg; }
       else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
       else if (act === "clear") { state.cols = []; state.rows = []; state.arch = false; }
+      else if (act === "toggleopen") { state.open = !state.open; }
+      else if (act === "glassexample") {
+        var grid = '<div class="glass-example-grid">' +
+          cfg.glassExamples.map(function (o) {
+            return '<figure class="glass-example-card"><img src="' + o.src + '" alt="' + o.label + ' 유리 예시" loading="lazy"><figcaption>' + o.label + "</figcaption></figure>";
+          }).join("") +
+          "</div>";
+        window.MUTAGONG_openExampleModal("유리 디자인 예시", grid, "실제 유리 질감·톤은 조명과 화면 환경에 따라 다르게 보일 수 있습니다.");
+        return;
+      }
+      else if (act === "consult") {
+        var brandQ = (product.brand === "무타공랩") ? "brand=mutagonglab&" : "";
+        location.href = "contact.html?" + brandQ + "sku=" + encodeURIComponent(skuCode());
+        return;
+      }
+      else if (act === "buy") {
+        alert("구매 페이지로 연결됩니다.\n\n" + skuCode());
+        return;
+      }
       render();
     });
     document.addEventListener("click", function (e) {
