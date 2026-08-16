@@ -889,7 +889,7 @@
     stage.classList.add("lc-stage");
 
     var d0 = cfg.defaults;
-    var state = { sz: d0.sz, t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, cols: [], rows: [], arch: false, ext: false, bg: false };
+    var state = { sz: d0.sz, t: d0.t, a: d0.a, d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od", cols: [], rows: [], arch: false, ext: false, bg: false };
     if (overrides && overrides.doorType) {
       var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
       if (pm) state.t = pm.value;
@@ -907,6 +907,8 @@
     function alpha(n) { var r = ""; do { r = String.fromCharCode(65 + (n % 26)) + r; n = Math.floor(n / 26) - 1; } while (n >= 0); return r; }
     function colAlpha(mm) { return alpha((mm - 50) / 50); }
     function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
+    function allowedHandles() { return (cfg.handleAllow && cfg.handleAllow[state.t]) || null; }
+    function syncHandle() { var al = allowedHandles(); if (al && al.indexOf(state.h) < 0) state.h = al[0]; }
     function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
     function selSize() { return cfg.sizes.filter(function (s) { return s.code === state.sz; })[0] || cfg.sizes[0]; }
     function baseSize() { return cfg.sizes.filter(function (s) { return s.code === cfg.assetSize; })[0] || cfg.sizes[0]; }
@@ -922,11 +924,17 @@
       };
     }
     // SVG 자산은 12-22 세트 하나(디자인 동일)를 모든 사이즈에 스케일해 재사용
-    function bSrc() { var p = typePrefix(); return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.assetSize + "_" + state.d + "_" + state.g + "_no_" + state.h + ".svg"; }
+    // 여닫이는 세부 유형(원도어/정대칭/비대칭)에 따라 파일명 접미사가 붙는다(_sy, _as / 원도어는 접미사 없음).
+    function bSrc() {
+      var p = typePrefix();
+      var subSuf = (state.t === "여닫이" && state.sub && state.sub !== "od") ? "_" + state.sub : "";
+      return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.assetSize + "_" + state.d + "_" + state.g + "_no_" + state.h + subSuf + ".svg";
+    }
     function aSrc() { return cfg.assetBase + "/A/A_" + cfg.assetSize + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
 
     function skuCode() {
-      var code = state.t + " / " + state.sz + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
+      var subLabel = (state.t === "여닫이" && cfg.subTypes) ? (cfg.subTypes.filter(function (o) { return o.value === state.sub; })[0] || {}).label : null;
+      var code = state.t + (subLabel ? " · " + subLabel : "") + " / " + state.sz + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
       if (state.cols.length || state.rows.length || state.arch) {
         var pre = state.arch === "line" ? "간살아치·" : state.arch === "fill" ? "채움아치·" : "";
         var cv = state.cols.map(colAlpha).join("");
@@ -976,8 +984,8 @@
     }
 
     // ---- 옵션 패널 ----
-    function optBtn(key, opt) {
-      if (opt.disabled) return '<button type="button" class="lc-opt disabled" disabled>' + opt.label + "</button>";
+    function optBtn(key, opt, forceDisabled) {
+      if (opt.disabled || forceDisabled) return '<button type="button" class="lc-opt disabled" disabled>' + opt.label + "</button>";
       var on = state[key] === opt.value;
       var sw = (key === "d" && opt.hex) ? '<span class="lc-sw" style="background:' + opt.hex + '"></span>' : "";
       return '<button type="button" class="lc-opt' + (on ? " on" : "") + '" data-act="set" data-key="' + key + '" data-val="' + opt.value + '">' + sw + opt.label + "</button>";
@@ -1000,6 +1008,9 @@
         }).join("") +
         "</div></div></div>";
       h += row("제품 유형", cfg.types.map(function (o) { return optBtn("t", o); }).join(""));
+      if (cfg.subTypes && state.t === "여닫이") {
+        h += row("세부 유형", cfg.subTypes.map(function (o) { return optBtn("sub", o); }).join(""));
+      }
       h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
       h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
       // 안전창 + 배경 토글
@@ -1019,7 +1030,8 @@
         '<div class="lc-hint">눈금 알파벳을 클릭해 배치합니다. (상단 대문자 = 세로살, 좌측 소문자 = 가로살)</div>' +
         '<div class="lc-picked">세로살: ' + colsPicked + " · 가로살: " + rowsPicked + "</div>" +
         '<div class="lc-row-opts">' + garHtml + "</div></div>";
-      h += row("손잡이", cfg.handles.map(function (o) { return optBtn("h", o); }).join(""));
+      var handleAl = allowedHandles();
+      h += row("손잡이", cfg.handles.map(function (o) { return optBtn("h", o, handleAl ? handleAl.indexOf(o.value) < 0 : false); }).join(""));
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
       h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
         "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
@@ -1052,7 +1064,11 @@
         if (list) list.hidden = !list.hidden;
         return;
       }
-      if (act === "set") { state[b.getAttribute("data-key")] = b.getAttribute("data-val"); }
+      if (act === "set") {
+        var k = b.getAttribute("data-key");
+        state[k] = b.getAttribute("data-val");
+        if (k === "t") { syncHandle(); if (state.t !== "여닫이") state.sub = "od"; }
+      }
       else if (act === "setsz") { state.sz = b.getAttribute("data-val"); }
       else if (act === "bg") { state.bg = !state.bg; }
       else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }

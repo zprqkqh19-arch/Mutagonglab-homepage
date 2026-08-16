@@ -397,12 +397,28 @@
     types: [
       { value: "3연동", label: "3연동", prefix: "B" },
       { value: "원슬라이딩", label: "원슬라이딩", prefix: "B1" },
-      // 스윙폴딩/여닫이/자동문은 assets/sku/12-22/ 경로에 이미지 자산이 없어(B2/B3 폴더 자체가 없음,
-      // DIY 커스터마이저 전용 skus/12-22/ 자산과는 별개) 비활성 유지 — 자산 준비 후 활성화.
-      { value: "스윙폴딩", label: "스윙폴딩", disabled: true },
-      { value: "여닫이", label: "여닫이", disabled: true },
+      // 스윙폴딩/여닫이: 무타공랩 DIY 커스터마이저(skus/12-22/B2,B3, customizer-skus.js)에서
+      // 동일 SVG 자산을 그대로 추출해 assets/sku/12-22/B2, B3에 반영(2026-08-16, 36/162개).
+      { value: "스윙폴딩", label: "스윙폴딩", prefix: "B2" },
+      { value: "여닫이", label: "여닫이", prefix: "B3" },
+      // 자동문은 무타공랩 DIY에도 이미지 자산이 전혀 없어(어느 경로에도 B4/자동문 관련 파일 없음) 비활성 유지.
       { value: "자동문", label: "자동문", disabled: true },
     ],
+    // 여닫이 전용 세부 유형(무타공랩 DIY와 동일: 원도어/정대칭 양개형/비대칭 양개형).
+    // 파일명 접미사: 원도어=접미사 없음, 정대칭=_sy, 비대칭=_as.
+    subTypes: [
+      { value: "od", label: "원도어" },
+      { value: "sy", label: "정대칭 양개형" },
+      { value: "as", label: "비대칭 양개형" },
+    ],
+    // 손잡이는 문 유형별로 실제 자산이 있는 코드만 선택 가능(무타공랩 DIY의 HANDLE_ALLOW와 동일 기준으로
+    // assets/sku/12-22/{B,B1,B2,B3} 폴더의 실제 파일을 확인해 산출).
+    handleAllow: {
+      "3연동": ["st", "rd", "ba", "sb"],
+      "원슬라이딩": ["st", "rd", "ba", "sb"],
+      "스윙폴딩": ["ba", "sb"],
+      "여닫이": ["rd", "ba", "sb"],
+    },
     // 미리보기에서 프레임(A) 레이어를 더 이상 그리지 않으므로(2026-08-16),
     // 프레임 색상은 이미지 자산 유무와 무관하게 전부 선택 가능(사양 표기용).
     frameColors: [
@@ -418,7 +434,7 @@
     glass: LAYERED_CUSTOMIZER_12_22.glass,
     handles: LAYERED_CUSTOMIZER_12_22.handles,
     background: "assets/sku/room-bg.webp",
-    defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
+    defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st", sub: "od" },
   };
 
   window.MUTAGONG_PRODUCTS = {
