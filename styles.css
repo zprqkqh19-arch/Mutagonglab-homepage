@@ -305,6 +305,10 @@
   .hero-visual svg.diagram{ position:absolute; inset:0; width:100%; height:100%; padding:16%; }
   .hero-visual .diagram path.draw{ fill:none; stroke:var(--accent); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   .hero-visual .diagram .fill-soft{ fill:var(--paper); stroke:none; opacity:.9; }
+  .hero-visual img{ position:relative; z-index:0; }
+  .hero-visual img ~ .hero-caption{ z-index:2; color:rgba(255,255,255,.92); }
+  .hero-visual .hero-photo-scrim{ position:absolute; inset:0; z-index:1;
+    background:linear-gradient(to top, rgba(20,17,14,.68) 0%, rgba(20,17,14,.24) 42%, rgba(20,17,14,0) 68%); }
   .hero-caption{ position:absolute; left:8%; bottom:6%; right:8%; font-size:var(--step--1); color:var(--ink-soft); }
 
   .hero-brandline{ display:flex; align-items:center; gap:.9rem; margin-top:2.2rem; }
