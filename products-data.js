@@ -510,7 +510,7 @@
       brand: "무타공랩",
       heroPhoto: "assets/mutagonglab-diy-door-tile.png",
       tagline: "벽과 문틀에 구멍을 내지 않는 무타공랩의 자체 R&D 제품입니다.",
-      saleStatus: "coming-soon",
+      saleStatus: "available",
       category: "중문",
       summary:
         "무타공(無打孔) 방식으로 셀프 실측·셀프 시공이 가능한 무타공랩 자체 제품입니다. 문짝에는 유리 대신 깨지지 않는 안전창(폴리카보네이트)을 사용하며, 3연동·원슬라이딩·스윙폴딩·여닫이 4가지 구조로 제작합니다.",
@@ -568,7 +568,7 @@
       name: "마감판",
       brand: "무타공랩",
       tagline: "표준 규격 제품을 내 공간 크기에 맞추는 부속품입니다.",
-      saleStatus: "coming-soon",
+      saleStatus: "available",
       category: "기타",
       summary:
         "무타공랩 제품의 문틀·벽면 마감용 부속품입니다. 높이 조절용 조절볼트는 모든 중문에 기본 포함되어 있어 별도 구매가 필요 없습니다.",

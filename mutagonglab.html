@@ -411,12 +411,12 @@
     </div>
   </div>
 
-  <!-- ============ 출시 알림 (커스터마이징 바로 다음) ============ -->
+  <!-- ============ 구매·상담 (커스터마이징 바로 다음) ============ -->
   <section class="band pdp-cta-section" id="buy">
     <div class="wrap">
-      <h2 style="font-size:var(--step-3); margin-top:.6rem;">이 구성으로 '자동문' 출시 알림을 받아보세요.</h2>
+      <h2 style="font-size:var(--step-3); margin-top:.6rem;">이 구성으로 구매·상담 신청해 보세요</h2>
       <div class="pdp-cta" id="finalCta" style="justify-content:center; margin-top:1.6rem;"></div>
-      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;">출시되면 카카오톡으로 가장 먼저 안내해 드립니다.</p>
+      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;">카카오톡 상담으로 실측·제작 일정을 안내해 드립니다.</p>
     </div>
   </section>
 
@@ -607,8 +607,8 @@
   <section class="band pdp-cta-section">
     <div class="wrap">
       <span class="eyebrow">문의하기</span>
-      <h2 style="font-size:var(--step-3); margin-top:.6rem;">출시 소식을 가장 먼저 받아보세요</h2>
-      <p style="color:var(--ink-soft); font-size:var(--step-1); margin-top:.8rem;">DIY 제품 출시 알림과 제품디자인·인테리어 협업 문의를 카카오톡과 문의 폼으로 받고 있습니다.</p>
+      <h2 style="font-size:var(--step-3); margin-top:.6rem;">궁금한 점을 바로 물어보세요</h2>
+      <p style="color:var(--ink-soft); font-size:var(--step-1); margin-top:.8rem;">DIY 제품 구매 상담과 제품디자인·인테리어 협업 문의를 카카오톡과 문의 폼으로 받고 있습니다.</p>
       <div class="pdp-cta" style="justify-content:center; margin-top:1.8rem;">
         <a href="contact.html?brand=mutagonglab" class="btn btn-primary">상담 문의하기</a>
         <a href="#" class="btn btn-kakao">카카오톡으로 바로 문의</a>
@@ -674,8 +674,11 @@
   var product = window.MUTAGONG_PRODUCTS["diy-door"];
   if (!product) return;
 
+  var isAvailable = product.saleStatus === "available";
   var ctaMarkup =
-    '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">출시 알림 · 카카오톡 상담</a>' +
+    '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">' +
+    (isAvailable ? "카카오톡으로 구매·상담 문의" : "출시 알림 · 카카오톡 상담") +
+    "</a>" +
     '<a href="contact.html?brand=mutagonglab" class="btn btn-ghost">문의 폼 남기기</a>';
   document.getElementById("finalCta").innerHTML = ctaMarkup;
 })();
