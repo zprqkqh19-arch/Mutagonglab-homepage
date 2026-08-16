@@ -1152,7 +1152,7 @@ h3{position:relative}
 /* ============ 레이어 합성 커스터마이저 (무타공랩 DIY 12-22) ============ */
 /* 프리뷰: 반응형 단일 SVG(배경→중문 B→간살 오버레이→프레임 A) + 클릭 간살 눈금 */
 .preview-stage.lc-stage{ aspect-ratio:auto; overflow:visible; background:var(--paper-deep);
-  padding:10px 14px; display:flex; justify-content:center; }
+  padding:10px 14px; display:flex; justify-content:center; position:relative; }
 .preview-stage.lc-stage svg{ padding:0; width:100%; height:auto; max-height:80vh; display:block; }
 .lc-dim{ fill:var(--accent); font-weight:700; font-size:40px; font-family:inherit; }
 .lc-tick{ cursor:pointer; }
@@ -1161,6 +1161,28 @@ h3{position:relative}
 .lc-tick:hover rect{ stroke:var(--accent); }
 .lc-tick.on rect{ fill:var(--ink); stroke:var(--ink); }
 .lc-tick.on text{ fill:var(--paper); }
+
+/* 열어보기: SVG 프리뷰 위에 얹는 실 HTML/CSS 레이어(무타공랩 DIY 커스터마이저와 동일 방식).
+   perspective·rotateY 3D는 SVG foreignObject 안에서 지원이 불안정해 SVG 바깥에 절대좌표로 배치한다
+   (renderLayeredCustomizer의 syncOpenOverlay가 SVG 렌더 크기 기준으로 위치·크기를 매 렌더마다 동기화).
+   문 유형별 개방 표현(3연동=3패널 슬라이드, 스윙폴딩=폴딩, 여닫이=경첩 스윙) 비율은 원본과 동일. */
+.lc-open-overlay{ display:none; }
+.lc-open-wrap{ position:absolute; left:0; top:0; width:100%; height:100%; }
+.lc-open-sp{ position:absolute; top:0; width:35.96%; height:100%; background-repeat:no-repeat; background-size:278.1% 100%; }
+.lc-open-sp1{ left:0; background-position:0% 0; transform:translateX(178%); }
+.lc-open-sp2{ left:32.02%; background-position:50% 0; transform:translateX(89%); }
+.lc-open-sp3{ left:64.04%; background-position:100% 0; }
+.lc-open-fold{ perspective:1800px; }
+.lc-open-segR{ position:absolute; right:0; top:0; width:36.4%; height:100%; transform-origin:100% 50%;
+  transform-style:preserve-3d; background-repeat:no-repeat; background-size:274.7% 100%; background-position:100% 0;
+  transform:rotateY(84deg); }
+.lc-open-segL{ position:absolute; right:100%; top:0; width:174.7%; height:100%; transform-origin:100% 50%;
+  background-repeat:no-repeat; background-size:157.2% 100%; background-position:0 0; transform:rotateY(-168deg); }
+.lc-open-swing{ perspective:1800px; }
+.lc-open-swA{ position:absolute; left:0; top:0; height:100%; transform-origin:0% 50%;
+  background-repeat:no-repeat; background-position:0 0; transform:rotateY(-78deg); }
+.lc-open-swB{ position:absolute; right:0; top:0; height:100%; transform-origin:100% 50%;
+  background-repeat:no-repeat; background-position:100% 0; transform:rotateY(78deg); }
 
 .lc-head{ display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
 .lc-title{ font-size:var(--step-0); font-weight:700; color:var(--ink); }
@@ -1202,10 +1224,25 @@ h3{position:relative}
 .lc-bg{ border-style:dashed; border-color:var(--accent); color:var(--accent); }
 .lc-bg.on{ background:var(--accent); color:#fff; border-style:solid; }
 .lc-bg.disabled{ border-color:var(--paper-line); color:var(--ink-soft); border-style:dashed; }
+.lc-opt.ghost{ border-style:dashed; border-color:var(--accent); color:var(--accent); }
+.lc-opt.ghost.on{ background:var(--accent); color:#fff; border-style:solid; }
 
 .lc-hint{ font-size:.72rem; line-height:1.5; color:var(--ink-soft); }
 .lc-picked{ font-size:.8rem; color:var(--ink); font-variant-numeric:tabular-nums; }
 .lc-sku{ font-size:.72rem; color:var(--ink-soft); word-break:break-all; }
+.lc-cta{ display:flex; flex-direction:column; gap:.6rem; }
+.lc-consult-btn, .lc-buy-btn{ font:inherit; font-size:var(--step--1); font-weight:700; padding:.85rem 0;
+  width:100%; border-radius:10px; cursor:pointer; text-align:center; transition:opacity .2s; }
+.lc-consult-btn{ background:var(--paper); color:var(--accent); border:1px solid var(--accent); }
+.lc-buy-btn{ background:var(--accent); color:#fff; border:none; }
+.lc-consult-btn:hover, .lc-buy-btn:hover{ opacity:.85; }
+.glass-example-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:.9rem; }
+.glass-example-card{ margin:0; overflow:hidden; border:1px solid var(--paper-line); border-radius:12px; background:var(--paper); }
+.glass-example-card img{ display:block; width:100%; height:auto; aspect-ratio:1/1; object-fit:cover; }
+.glass-example-card figcaption{ padding:.5rem .3rem; text-align:center; font-size:.78rem; color:var(--ink-soft); }
+@media (max-width:640px){
+  .glass-example-grid{ grid-template-columns:repeat(2, 1fr); }
+}
 .lc-notes{ display:flex; flex-direction:column; gap:.3rem; border-top:1px solid var(--paper-line); padding-top:.9rem;
   font-size:.72rem; line-height:1.55; color:var(--ink-soft); }
 .lc-notes-h{ font-weight:700; color:var(--ink); }

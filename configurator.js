@@ -958,6 +958,60 @@
       return code;
     }
 
+    // ---- 열어보기: 무타공랩 DIY 커스터마이저(customizer-embed.js)와 동일한 구동 방식 ----
+    // 3연동=3패널 슬라이드, 스윙폴딩=2세그먼트 폴딩(3D), 여닫이=경첩 스윙(3D), 원슬라이딩=단순 이동.
+    // perspective·rotateY 3D 변형은 SVG foreignObject 안에서 브라우저 지원이 불안정해(레이아웃 왜곡·미표시),
+    // 무타공랩과 동일하게 실 HTML/CSS 레이어를 SVG 프리뷰 "바깥"에 얹는 방식으로 구현한다(syncOpenOverlay).
+    function openOverlayHtml(href) {
+      var t = state.t;
+      if (t === "3연동") {
+        return '<div class="lc-open-wrap">' +
+          '<div class="lc-open-sp lc-open-sp1" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
+          '<div class="lc-open-sp lc-open-sp2" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
+          '<div class="lc-open-sp lc-open-sp3" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
+          "</div>";
+      }
+      if (t === "스윙폴딩") {
+        return '<div class="lc-open-wrap lc-open-fold">' +
+          '<div class="lc-open-segR" style="background-image:url(&quot;' + href + '&quot;)">' +
+          '<div class="lc-open-segL" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
+          "</div></div>";
+      }
+      if (t === "여닫이") {
+        var wA, wB;
+        if (state.sub === "sy") { wA = 50; wB = 50; }
+        else if (state.sub === "as") { wA = 70.18; wB = 29.82; }
+        else { wA = 0; wB = 100; }
+        var segs = "";
+        if (wA) segs += '<div class="lc-open-swA" style="width:' + wA + '%;background-image:url(&quot;' + href + '&quot;);background-size:' + (10000 / wA) + '% 100%"></div>';
+        segs += '<div class="lc-open-swB" style="width:' + wB + '%;background-image:url(&quot;' + href + '&quot;);background-size:' + (10000 / wB) + '% 100%"></div>';
+        return '<div class="lc-open-wrap lc-open-swing">' + segs + "</div>";
+      }
+      return "";
+    }
+
+    var openOverlayEl = document.createElement("div");
+    openOverlayEl.className = "lc-open-overlay";
+    function syncOpenOverlay() {
+      var overlayTypes = state.t === "3연동" || state.t === "스윙폴딩" || state.t === "여닫이";
+      if (!state.open || !overlayTypes) {
+        openOverlayEl.style.display = "none";
+        openOverlayEl.innerHTML = "";
+        return;
+      }
+      var svg = stage.querySelector(".lc-svg");
+      if (!svg) { openOverlayEl.style.display = "none"; return; }
+      var svgRect = svg.getBoundingClientRect();
+      var stageRect = stage.getBoundingClientRect();
+      var vb = svg.viewBox.baseVal;
+      var scale = svgRect.width / vb.width;
+      var G = geom();
+      var left = (svgRect.left - stageRect.left) + (G.innerX - vb.x) * scale;
+      var top = (svgRect.top - stageRect.top) + (G.innerTop - vb.y) * scale;
+      openOverlayEl.style.cssText = "position:absolute; left:" + left + "px; top:" + top + "px; width:" + (G.innerW * scale) + "px; height:" + (G.innerH * scale) + "px; display:block; overflow:visible; pointer-events:none;";
+      openOverlayEl.innerHTML = openOverlayHtml(bSrc());
+    }
+
     // ---- 프리뷰 SVG ----
     function buildStageHtml() {
       var G = geom(), bc = doorHex();
@@ -971,8 +1025,15 @@
         s += '<defs><clipPath id="lcClip"><rect x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/></clipPath></defs>';
         s += '<image href="' + cfg.background + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#lcClip)"/>';
       }
-      s += '<image href="' + bSrc() + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/>';
-      s += '<g transform="translate(' + iX + " " + iTop + ')" pointer-events="none">';
+      var href = bSrc();
+      var overlayTypes = state.t === "3연동" || state.t === "스윙폴딩" || state.t === "여닫이";
+      var doorOpen = state.open && overlayTypes;
+      var slideOpen = state.open && state.t === "원슬라이딩";
+      var slideDx = slideOpen ? iW * 0.88 : 0;
+      var doorXf = slideOpen ? ' transform="translate(' + slideDx + ' 0)"' : "";
+      s += '<image href="' + href + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"' + doorXf +
+        (doorOpen ? ' visibility="hidden"' : "") + ' style="transition:transform .5s ease"/>';
+      s += '<g transform="translate(' + (iX + slideDx) + " " + iTop + ')" pointer-events="none"' + (doorOpen ? ' visibility="hidden"' : "") + ">";
       state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="' + (iH - 90) + '" fill="' + bc + '"/>'; });
       state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="' + (iW - 60) + '" height="20" fill="' + bc + '"/>'; });
       if (state.arch) {
@@ -1073,8 +1134,11 @@
 
     function render() {
       stage.innerHTML = buildStageHtml();
+      stage.appendChild(openOverlayEl);
+      syncOpenOverlay();
       groupsEl.innerHTML = buildOptionsHtml();
     }
+    window.addEventListener("resize", syncOpenOverlay);
 
     // 이벤트 위임 (부모는 유지되므로 innerHTML 갱신과 무관하게 동작)
     stage.addEventListener("click", function (e) {
