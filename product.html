@@ -103,9 +103,11 @@
           };
           document.body.appendChild(s1);
         } else if (id === "standard-door") {
-          // 혜다움: 옵션 선택 패널만 무타공랩과 동일한 구조로 교체 — 미리보기(preview-pane)는 그대로 유지
+          // 혜다움: 옵션 선택 패널만 무타공랩과 동일한 구조로 교체.
+          // 미리보기 이미지 박스(.preview-stage)는 남겨두되, 새 패널과 연동되지 않아 값이 어긋나는
+          // 구 옵션 요약(.spec-summary)·치수(.preview-dim)와 "프레임 색상" 라벨은 숨긴다.
           var css2 = document.createElement("style");
-          css2.textContent = "#configuratorMount .opt-groups { display: none !important; }";
+          css2.textContent = "#configuratorMount .opt-groups, #configuratorMount .spec-summary, #configuratorMount .preview-dim { display: none !important; }";
           document.head.appendChild(css2);
           var s3 = document.createElement("script");
           s3.src = "customizer-embed-hyedaum.js";

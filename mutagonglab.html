@@ -114,6 +114,13 @@
   #mtg-customizer .thead{display:flex;align-items:center;gap:10px;}
   #mtg-customizer .ext{padding:4px 10px;font-size:11px;}
   #mtg-customizer .ext.on{border:2px solid #b0483a;background:#b0483a;color:#fff;}
+  #mtg-customizer .size-picker{position:relative;}
+  #mtg-customizer .size-picker-trigger{width:100%;text-align:left;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;}
+  #mtg-customizer .size-picker-trigger::after{content:'⌄';font-size:14px;color:#8a877f;}
+  #mtg-customizer .size-picker-list{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:10;max-height:220px;overflow-y:auto;background:#fff;border:1px solid #d5d2cc;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);scroll-snap-type:y mandatory;}
+  #mtg-customizer .size-picker-list button{display:block;width:100%;text-align:left;border:none;border-radius:0;border-bottom:1px solid #f0efec;scroll-snap-align:start;}
+  #mtg-customizer .size-picker-list button:last-child{border-bottom:none;}
+  #mtg-customizer .size-picker-list button.on{background:#f5f3f0;color:#222;font-weight:700;}
 
 </style>
 <div class="wrap">
@@ -159,7 +166,13 @@
       </div>
     </div>
     <div class="grp"><div class="lbl">손잡이</div><div class="row" id="gHandle"></div></div>
-    <div class="grp"><div class="lbl">사이즈 선택</div><div class="row" id="gSize"></div></div>
+    <div class="grp">
+      <div class="lbl">사이즈 선택</div>
+      <div class="size-picker" id="sizePicker">
+        <button type="button" class="size-picker-trigger" id="sizeTrigger"></button>
+        <div class="size-picker-list" id="sizeList" hidden></div>
+      </div>
+    </div>
     <div class="sku" id="sku"></div>
     <div class="grp" style="border-top:1px solid #e3e1dd;padding-top:14px;">
       <div class="lbl">선택하신 옵션</div>
@@ -218,7 +231,18 @@
   var bgBtn=document.createElement('button');bgBtn.className='acc';bgBtn.onclick=function(){S.bg=!S.bg;render();};$('gGlass').appendChild(bgBtn);
   var HANDLE_ALLOW={'3연동':['st','lj','sj'],'원슬라이딩':['st','lj','sj'],'스윙폴딩':['ba','sb'],'여닫이':['rd','ba','sb']};
   mkGroup($('gHandle'),'h',[['st','기본'],['rd','반원형'],['ba','긴 바형'],['sb','짧은 바형'],['lj','긴 일자형'],['sj','짧은 일자형']]);
-  mkGroup($('gSize'),'size',SIZES.map(function(s){return [s[0],s[0]];}));
+  var sizeList=$('sizeList'), sizeTrigger=$('sizeTrigger');
+  SIZES.forEach(function(s){
+    var b=document.createElement('button');
+    b.textContent='W'+s[1]+' × H'+s[2]+' ('+s[0]+')';
+    b.dataset.v=s[0];
+    b.onclick=function(){S.size=s[0];sizeList.hidden=true;render();};
+    sizeList.appendChild(b);
+  });
+  sizeTrigger.onclick=function(){sizeList.hidden=!sizeList.hidden;};
+  document.addEventListener('click',function(e){
+    if(!$('sizePicker').contains(e.target))sizeList.hidden=true;
+  });
   $('archL').onclick=function(){S.arch=S.arch==='line'?false:'line';render();};
   $('archF').onclick=function(){S.arch=S.arch==='fill'?false:'fill';render();};
   $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
@@ -339,13 +363,15 @@
       b.disabled=!ok;
       if(ok)b.onclick=function(){S.h=b.dataset.v;render();};
     });
-    ['gType','gSub','gFrame','gDoor','gGlass','gHandle','gSize'].forEach(function(id){
-      var key={gType:'t',gSub:'sub',gFrame:'a',gDoor:'d',gGlass:'g',gHandle:'h',gSize:'size'}[id];
+    ['gType','gSub','gFrame','gDoor','gGlass','gHandle'].forEach(function(id){
+      var key={gType:'t',gSub:'sub',gFrame:'a',gDoor:'d',gGlass:'g',gHandle:'h'}[id];
       Array.prototype.forEach.call($(id).children,function(b){
         if(b===bgBtn)return;
         b.classList.toggle('on',b.dataset.v===S[key]);
       });
     });
+    sizeTrigger.textContent='W'+sz.w+' × H'+totalH+' ('+S.size+')';
+    Array.prototype.forEach.call(sizeList.children,function(b){b.classList.toggle('on',b.dataset.v===S.size);});
     bgBtn.textContent=S.bg?'배경 빼기':'배경 넣기';bgBtn.classList.toggle('on',S.bg);
     openBtn.textContent=S.open?'닫아보기':'열어보기';openBtn.classList.toggle('on',S.open);
     $('archL').classList.toggle('on',S.arch==='line');
