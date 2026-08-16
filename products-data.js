@@ -397,9 +397,10 @@
     types: [
       { value: "3연동", label: "3연동", prefix: "B" },
       { value: "원슬라이딩", label: "원슬라이딩", prefix: "B1" },
-      { value: "스윙폴딩", label: "스윙폴딩", prefix: "B2" },
-      { value: "여닫이", label: "여닫이", prefix: "B3" },
-      // 자동문은 SKU 이미지 자산이 아직 없어(prefix 없음) 비활성 유지 — 자산 준비 후 활성화.
+      // 스윙폴딩/여닫이/자동문은 assets/sku/12-22/ 경로에 이미지 자산이 없어(B2/B3 폴더 자체가 없음,
+      // DIY 커스터마이저 전용 skus/12-22/ 자산과는 별개) 비활성 유지 — 자산 준비 후 활성화.
+      { value: "스윙폴딩", label: "스윙폴딩", disabled: true },
+      { value: "여닫이", label: "여닫이", disabled: true },
       { value: "자동문", label: "자동문", disabled: true },
     ],
     // 미리보기에서 프레임(A) 레이어를 더 이상 그리지 않으므로(2026-08-16),
