@@ -372,10 +372,12 @@
           '<a class="tile-card" href="product.html?id=' +
           p.id +
           '">' +
-          '<div class="tile-image"><div class="tile-badge-row">' +
+          '<div class="tile-image' +
+          (p.heroPhoto ? " has-photo" : "") +
+          '"><div class="tile-badge-row">' +
           badge +
           "</div>" +
-          p.previewSVG() +
+          (p.heroPhoto ? '<img src="' + p.heroPhoto + '" alt="' + p.name + '">' : p.previewSVG()) +
           "</div>" +
           '<div class="tile-body"><h3>' +
           p.name +

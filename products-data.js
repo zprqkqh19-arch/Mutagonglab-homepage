@@ -508,6 +508,7 @@
       layeredCustomizer: LAYERED_CUSTOMIZER_12_22,
       name: "무타공 DIY 중문",
       brand: "무타공랩",
+      heroPhoto: "assets/mutagonglab-diy-door-tile.png",
       tagline: "벽과 문틀에 구멍을 내지 않는 무타공랩의 자체 R&D 제품입니다.",
       saleStatus: "coming-soon",
       category: "중문",
