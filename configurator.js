@@ -1041,10 +1041,16 @@
       var doorOpen = state.open && overlayTypes;
       var slideOpen = state.open && state.t === "원슬라이딩";
       var slideDx = slideOpen ? iW * 0.88 : 0;
-      var doorXf = slideOpen ? ' transform="translate(' + slideDx + ' 0)" clip-path="url(#lcDoorClip)"' : "";
+      // clip-path는 같은 엘리먼트의 transform이 적용된 뒤의 좌표계를 기준으로 해석되므로,
+      // translate와 clip을 같은 엘리먼트에 함께 걸면 클립 창도 문과 같이 밀려버린다.
+      // 그래서 클립만 거는 바깥 <g>(transform 없음)로 감싸고, 그 안에서 이미지를 이동시킨다.
+      if (slideOpen) s += '<g clip-path="url(#lcDoorClip)">';
+      var doorXf = slideOpen ? ' transform="translate(' + slideDx + ' 0)"' : "";
       s += '<image href="' + href + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"' + doorXf +
         (doorOpen ? ' visibility="hidden"' : "") + ' style="transition:transform .5s ease"/>';
-      s += '<g transform="translate(' + (iX + slideDx) + " " + iTop + ')" pointer-events="none"' + (slideOpen ? ' clip-path="url(#lcDoorClip)"' : "") + (doorOpen ? ' visibility="hidden"' : "") + ">";
+      if (slideOpen) s += "</g>";
+      if (slideOpen) s += '<g clip-path="url(#lcDoorClip)">';
+      s += '<g transform="translate(' + (iX + slideDx) + " " + iTop + ')" pointer-events="none"' + (doorOpen ? ' visibility="hidden"' : "") + ">";
       state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="' + (iH - 90) + '" fill="' + bc + '"/>'; });
       state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="' + (iW - 60) + '" height="20" fill="' + bc + '"/>'; });
       if (state.arch) {
@@ -1054,6 +1060,7 @@
         if (state.arch === "fill") s += '<path d="' + dPath + " L " + rx + " 30 L 30 30 Z\" fill=\"" + bc + '"/>';
       }
       s += "</g>";
+      if (slideOpen) s += "</g>";
       s += '<text class="lc-dim" x="' + (w / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W ' + labW + "</text>";
       s += '<text class="lc-dim" x="' + (w + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (w + 48) + " " + (tH / 2) + ')">H ' + labH + "</text>";
       var mm;
