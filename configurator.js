@@ -960,7 +960,6 @@
         if (state.arch === "fill") s += '<path d="' + dPath + " L " + rx + " 30 L 30 30 Z\" fill=\"" + bc + '"/>';
       }
       s += "</g>";
-      s += '<image href="' + aSrc() + '" x="0" y="0" width="' + w + '" height="' + tH + '" pointer-events="none"/>';
       s += '<text class="lc-dim" x="' + (w / 2) + '" y="' + (tH + 46) + '" text-anchor="middle">W ' + labW + "</text>";
       s += '<text class="lc-dim" x="' + (w + 48) + '" y="' + (tH / 2) + '" text-anchor="middle" transform="rotate(90 ' + (w + 48) + " " + (tH / 2) + ')">H ' + labH + "</text>";
       var mm;
@@ -987,14 +986,19 @@
 
     function buildOptionsHtml() {
       var h = "";
-      h += '<div class="lc-head"><span class="lc-title">커스터마이징</span>' +
-        '<button type="button" class="lc-ext' + (state.ext ? " on" : "") + '" data-act="ext">+30mm 연장</button></div>';
-      // 사이즈 — 이것만 고르면 나머지 디자인 옵션은 12-22와 동일하게 적용된다
-      var szHtml = cfg.sizes.map(function (sz) {
-        var on = state.sz === sz.code;
-        return '<button type="button" class="lc-opt' + (on ? " on" : "") + '" data-act="setsz" data-val="' + sz.code + '">' + sz.w + "×" + sz.h + "</button>";
-      }).join("");
-      h += row("사이즈 <em>(W×H mm)</em>", szHtml);
+      h += '<div class="lc-head"><span class="lc-title">커스터마이징</span></div>';
+      // 사이즈 — 이것만 고르면 나머지 디자인 옵션은 12-22와 동일하게 적용된다.
+      // 나열형 목록 대신 클릭→스크롤 선택하는 피커 UI(미리보기 이미지에는 영향 없음, 텍스트만 갱신).
+      var selSz = selSize();
+      h += '<div class="lc-row"><div class="lc-row-label">사이즈 <em>(W×H mm)</em></div>' +
+        '<div class="lc-size-picker" data-act="sizepicker">' +
+        '<button type="button" class="lc-size-trigger" data-act="sizetoggle">' + selSz.w + "×" + selSz.h + "</button>" +
+        '<div class="lc-size-list" hidden>' +
+        cfg.sizes.map(function (sz) {
+          var on = state.sz === sz.code;
+          return '<button type="button" class="lc-size-item' + (on ? " on" : "") + '" data-act="setsz" data-val="' + sz.code + '">' + sz.w + "×" + sz.h + "</button>";
+        }).join("") +
+        "</div></div></div>";
       h += row("제품 유형", cfg.types.map(function (o) { return optBtn("t", o); }).join(""));
       h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
       h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
@@ -1043,13 +1047,22 @@
       var b = e.target.closest ? e.target.closest("[data-act]") : null;
       if (!b) return;
       var act = b.getAttribute("data-act");
+      if (act === "sizetoggle") {
+        var list = groupsEl.querySelector(".lc-size-list");
+        if (list) list.hidden = !list.hidden;
+        return;
+      }
       if (act === "set") { state[b.getAttribute("data-key")] = b.getAttribute("data-val"); }
       else if (act === "setsz") { state.sz = b.getAttribute("data-val"); }
       else if (act === "bg") { state.bg = !state.bg; }
-      else if (act === "ext") { state.ext = !state.ext; }
       else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
       else if (act === "clear") { state.cols = []; state.rows = []; state.arch = false; }
       render();
+    });
+    document.addEventListener("click", function (e) {
+      if (e.target.closest && e.target.closest(".lc-size-picker")) return;
+      var list = groupsEl.querySelector(".lc-size-list");
+      if (list && !list.hidden) list.hidden = true;
     });
 
     render();
