@@ -253,7 +253,8 @@
   var ticks=[];
   function mkTicks(){
     ticks.forEach(function(t){t.remove();});ticks=[];
-    var sz=SIZE_MAP[S.size]||SIZE_MAP['12-22'];
+    // 미리보기 박스는 사이즈 선택과 무관하게 항상 12-22 기준으로 고정되므로, 눈금 위치도 같은 기준으로 계산
+    var sz=SIZE_MAP['12-22'];
     var SCd=382/sz.w, bLeft=30*SCd, bTop=(S.ext?160:130)*SCd;
     var colsMax=(sz.w-60)-40, rowsMax=(sz.h+(S.ext?30:0)-(S.ext?160:130))-50;
     for(var i=0;i*50+50<=colsMax;i++){(function(mm,i){
@@ -275,9 +276,13 @@
   function render(){
     var allowed=HANDLE_ALLOW[S.t]||[];
     if(allowed.indexOf(S.h)<0&&allowed.length){S.h=allowed[0];}
-    var sz=SIZE_MAP[S.size]||SIZE_MAP['12-22'];
+    // 미리보기 박스·프레임은 사이즈 선택과 무관하게 항상 12-22 기준으로 고정 표시하고,
+    // 실제 선택한 치수는 dispW/dispTotalH로 따로 계산해 텍스트(치수 라벨·요약)에만 반영한다.
+    var sz=SIZE_MAP['12-22'];
     var W=sz.w, SCd=382/W, bTopMM=(S.ext?160:130), totalH=sz.h+(S.ext?30:0);
     var bTop=bTopMM*SCd, bLeft=30*SCd, bW=(W-60)*SCd, bH=(totalH-bTopMM)*SCd;
+    var dispSz=SIZE_MAP[S.size]||SIZE_MAP['12-22'];
+    var dispW=dispSz.w, dispTotalH=dispSz.h+(S.ext?30:0);
     var dir=S.t==='원슬라이딩'?'B1':(S.t==='스윙폴딩'?'B2':(S.t==='여닫이'?'B3':'B')), pre=dir;
     var subSuf=(S.t==='여닫이'&&S.sub!=='od')?'_'+S.sub:'';
     $('bImg').src=SK('skus/12-22/'+dir+'/'+pre+'_12-22_'+S.d+'_'+S.g+'_no_'+S.h+subSuf+'.svg');
@@ -341,7 +346,7 @@
       fw.style.display='none';
       $('segR').style.transform='none';$('segL').style.transform='none';
     }
-    $('aImg').src=(S.size==='12-22')?SK('skus/12-22/A/A_12-22_sv'+(S.ext?'_ext':'')+'.svg'):('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(frameSVG(W,totalH,S.ext)).replace(/'/g,'%27'));
+    $('aImg').src=SK('skus/12-22/A/A_12-22_sv'+(S.ext?'_ext':'')+'.svg');
     $('aImg').style.height=(totalH*SCd)+'px';
     Object.assign($('bg').style,{display:S.bg?'block':'none',left:bLeft+'px',top:bTop+'px',width:bW+'px',height:bH+'px',backgroundImage:"url('customizer/assets/bg.png')"});
     var ov=$('ov');
@@ -354,8 +359,8 @@
     if(S.arch==='line')svg+='<path d="M '+aL+' '+aB+' Q '+aL+' '+aT+' '+aM+' '+aT+' Q '+aR+' '+aT+' '+aR+' '+aB+'" stroke="'+c+'" stroke-width="20" fill="none"/>';
     if(S.arch==='fill')svg+='<path d="M '+aL+' '+aB+' Q '+aL+' '+aT+' '+aM+' '+aT+' Q '+aR+' '+aT+' '+aR+' '+aB+' L '+aR+' 30 L '+aL+' 30 Z" fill="'+c+'"/>';
     ov.innerHTML=svg;
-    $('dimW').textContent='W '+W;$('dimW').style.top=(totalH*SCd+4)+'px';
-    $('dimH').textContent='H '+totalH;
+    $('dimW').textContent='W '+dispW;$('dimW').style.top=(totalH*SCd+4)+'px';
+    $('dimH').textContent='H '+dispTotalH;
     $('titleSz').textContent='커스터마이징 — '+S.size;
 
     Array.prototype.forEach.call($('gHandle').children,function(b){
@@ -388,7 +393,7 @@
     if(S.arch==='fill')gansalTxt.push('채움아치형');
     if(S.cols.length)gansalTxt.push('세로살 '+S.cols.length+'개 ('+S.cols.map(ca).join(', ')+')');
     if(S.rows.length)gansalTxt.push('가로살 '+S.rows.length+'개 ('+S.rows.map(function(m){return ca(m).toLowerCase();}).join(', ')+')');
-    var rows=[['제품 유형',S.t+(S.t==='여닫이'?' · '+NM.sub[S.sub]:'')],['설치 규격','W'+W+' × H'+totalH+' ('+S.size+(S.ext?', +30mm 연장':'')+')'],['중문 색상',NM.d[S.d]],['안전창',NM.g[S.g]],['간살',gansalTxt.length?gansalTxt.join(' · '):'없음'],['손잡이',NM.h[S.h]]];
+    var rows=[['제품 유형',S.t+(S.t==='여닫이'?' · '+NM.sub[S.sub]:'')],['설치 규격','W'+dispW+' × H'+dispTotalH+' ('+S.size+(S.ext?', +30mm 연장':'')+')'],['중문 색상',NM.d[S.d]],['안전창',NM.g[S.g]],['간살',gansalTxt.length?gansalTxt.join(' · '):'없음'],['손잡이',NM.h[S.h]]];
     $('summary').innerHTML=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#8a877f;flex-shrink:0;">'+r[0]+'</span><span style="text-align:right;">'+r[1]+'</span></div>';}).join('');
     mkTicks();
   }
