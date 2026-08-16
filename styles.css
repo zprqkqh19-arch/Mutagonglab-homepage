@@ -359,6 +359,18 @@
   .keyword-row{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.6rem; }
   .keyword-pill{ font-size:var(--step--1); border:1px solid var(--paper-line); border-radius:999px; padding:.4rem .9rem; color:var(--ink-soft); }
 
+  /* 대표 이야기 배경 사진 — 텍스트 가독성용 스크림 + 밝은 텍스트로 전환 */
+  .brand-photo-section{ position:relative; overflow:hidden; border-block:none; }
+  .brand-photo-section .brand-bg{ position:absolute; inset:0; z-index:0; }
+  .brand-photo-section .brand-bg img{ width:100%; height:100%; object-fit:cover; object-position:50% 20%; display:block; }
+  .brand-photo-section .brand-bg-scrim{ position:absolute; inset:0;
+    background:linear-gradient(100deg, rgba(20,17,14,.86) 0%, rgba(20,17,14,.72) 45%, rgba(20,17,14,.5) 75%, rgba(20,17,14,.3) 100%); }
+  .brand-photo-section .wrap{ position:relative; z-index:1; }
+  .brand-photo-section .eyebrow{ color:rgba(255,255,255,.75); }
+  .brand-photo-section .about-copy h2{ color:#fff; }
+  .brand-photo-section .about-copy p.lead{ color:rgba(255,255,255,.82); }
+  .brand-photo-section .keyword-pill{ color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.3); }
+
   .logo-card{
     border-radius:28px; padding:clamp(2.5rem,6vw,4rem) clamp(1.5rem,4vw,2.5rem);
     background:var(--card); border:1px solid var(--card-border); overflow:hidden;
