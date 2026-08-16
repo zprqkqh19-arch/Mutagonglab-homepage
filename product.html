@@ -85,26 +85,35 @@
         <div class="opt-groups" data-opt-groups></div>
       </div>
 
-      <!-- ▼▼ 무타공랩 커스터마이저 (diy-door 전용 — 아래 스크립트가 조건 주입) ▼▼ -->
+      <!-- ▼▼ 무타공랩/혜다움 커스터마이저 (아래 스크립트가 제품별로 조건 주입) ▼▼ -->
       <div id="mtg-customizer-mount"></div>
       <script>
       (function () {
         var id = new URLSearchParams(window.location.search).get("id") || "standard-door";
-        if (id !== "diy-door") return;
-        var css = document.createElement("style");
-        css.textContent = "#configuratorMount .preview-pane, #configuratorMount .opt-groups { display: none !important; } #configuratorMount.configurator { background:none !important; border:none !important; box-shadow:none !important; padding:0 !important; min-height:0 !important; } #configuratorMount .type-finder-btn { display:inline-flex !important; width:auto !important; }";
-        document.head.appendChild(css);
-        var s1 = document.createElement("script");
-        s1.src = "customizer-skus.js";
-        s1.onload = function () {
-          var s2 = document.createElement("script");
-          s2.src = "customizer-embed.js";
-          document.body.appendChild(s2);
-        };
-        document.body.appendChild(s1);
+        if (id === "diy-door") {
+          var css = document.createElement("style");
+          css.textContent = "#configuratorMount .preview-pane, #configuratorMount .opt-groups { display: none !important; } #configuratorMount.configurator { background:none !important; border:none !important; box-shadow:none !important; padding:0 !important; min-height:0 !important; } #configuratorMount .type-finder-btn { display:inline-flex !important; width:auto !important; }";
+          document.head.appendChild(css);
+          var s1 = document.createElement("script");
+          s1.src = "customizer-skus.js";
+          s1.onload = function () {
+            var s2 = document.createElement("script");
+            s2.src = "customizer-embed.js";
+            document.body.appendChild(s2);
+          };
+          document.body.appendChild(s1);
+        } else if (id === "standard-door") {
+          // 혜다움: 옵션 선택 패널만 무타공랩과 동일한 구조로 교체 — 미리보기(preview-pane)는 그대로 유지
+          var css2 = document.createElement("style");
+          css2.textContent = "#configuratorMount .opt-groups { display: none !important; }";
+          document.head.appendChild(css2);
+          var s3 = document.createElement("script");
+          s3.src = "customizer-embed-hyedaum.js";
+          document.body.appendChild(s3);
+        }
       })();
       </script>
-      <!-- ▲▲ 무타공랩 커스터마이저 끝 ▲▲ -->
+      <!-- ▲▲ 무타공랩/혜다움 커스터마이저 끝 ▲▲ -->
     </div>
   </section>
 
