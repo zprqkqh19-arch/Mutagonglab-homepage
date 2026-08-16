@@ -2,8 +2,8 @@
 (function () {
   "use strict";
 
-  // 카카오톡 채널 링크 — 확보되면 이 한 곳만 바꾸면 전체 사이트에 반영됨
-  window.MUTAGONG_KAKAO_URL = "#";
+  // 카카오톡 채널 링크(혜다움x무타공랩)
+  window.MUTAGONG_KAKAO_URL = "https://pf.kakao.com/_xjFxjiX";
 
   var header = document.getElementById("siteHeader");
   if (header) {
