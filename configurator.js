@@ -892,6 +892,7 @@
       sz: d0.sz, t: d0.t, a: d0.a, aFinish: d0Frame ? d0Frame.finish : null,
       d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od",
       cols: [], rows: [], arch: false, ext: false, bg: false, open: false,
+      partition: false, auto: false,
     };
     if (overrides && overrides.doorType) {
       var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
@@ -953,6 +954,8 @@
         var rv = state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join("");
         code += " / 간살[" + pre + cv + rv + "]";
       }
+      if (state.partition) code += " +파티션";
+      if (state.auto) code += " +자동문";
       return code;
     }
 
@@ -1138,6 +1141,18 @@
         '<div class="lc-row-opts">' + garHtml + "</div></div>";
       var handleAl = allowedHandles();
       h += row("손잡이", cfg.handles.map(function (o) { return optBtn("h", o, handleAl ? handleAl.indexOf(o.value) < 0 : false); }).join(""));
+      // 추가 옵션(파티션·자동문 — 문 유형이 아니라 옵션 선택 최하단 체크형으로 다룬다)
+      if (cfg.addons && cfg.addons.length) {
+        var addonHtml = cfg.addons.map(function (o) {
+          var on = state[o.value];
+          var btn = '<button type="button" class="lc-opt ghost' + (on ? " on" : "") + '" data-act="addon" data-key="' + o.value + '">' + o.label + "</button>";
+          if (o.hasExample) {
+            btn += '<button type="button" class="lc-opt ghost" data-act="partitionexample">예시 이미지 보기</button>';
+          }
+          return btn;
+        }).join("");
+        h += row("추가 옵션", addonHtml);
+      }
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
       h += '<div class="lc-cta">' +
         '<button type="button" class="lc-consult-btn" data-act="consult">내 중문 상담하기</button>' +
@@ -1188,6 +1203,20 @@
       else if (act === "arch") { var v = b.getAttribute("data-val"); state.arch = state.arch === v ? false : v; }
       else if (act === "clear") { state.cols = []; state.rows = []; state.arch = false; }
       else if (act === "toggleopen") { state.open = !state.open; }
+      else if (act === "addon") { var ak = b.getAttribute("data-key"); state[ak] = !state[ak]; }
+      else if (act === "partitionexample") {
+        var pGrid = '<div class="partition-example-grid">' +
+          '<figure class="partition-example-card">' +
+          '<img src="assets/partition-example-alpha-room-white.jpg" alt="화이트 중문과 유리 파티션으로 알파룸을 구분한 설치 사례" width="1448" height="1086">' +
+          '<figcaption><strong>알파룸 구분용 파티션</strong><span>화이트 중문과 유리 파티션으로 생활공간과 알파룸을 분리한 사례입니다.</span></figcaption>' +
+          "</figure>" +
+          '<figure class="partition-example-card">' +
+          '<img src="assets/partition-example-entry-black.jpg" alt="블랙 중문과 모루유리 파티션으로 현관을 구분한 설치 사례" width="885" height="1448">' +
+          '<figcaption><strong>현관 파티션</strong><span>블랙 프레임과 모루유리로 현관 영역을 구분한 사례입니다.</span></figcaption>' +
+          "</figure></div>";
+        window.MUTAGONG_openExampleModal("파티션 설치 예시", pGrid, "제품 사양과 현장 조건에 따라 구성과 마감은 달라질 수 있습니다.");
+        return;
+      }
       else if (act === "glassexample") {
         var grid = '<div class="glass-example-grid">' +
           cfg.glassExamples.map(function (o) {
