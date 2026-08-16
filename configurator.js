@@ -1002,11 +1002,18 @@
       var svgRect = svg.getBoundingClientRect();
       var stageRect = stage.getBoundingClientRect();
       var vb = svg.viewBox.baseVal;
-      var scale = svgRect.width / vb.width;
+      // preserveAspectRatio="xMidYMid meet" — svg 엘리먼트 박스가 viewBox 비율과 다르면(예: max-height로
+      // 세로가 눌리면) 좁은 쪽 축 기준으로 축소되고 남는 쪽 축에는 레터박스(여백)가 생긴다.
+      // 폭 기준 스케일만 쓰면 레터박스가 생기는 상황에서 위치가 어긋나므로, 두 축 중 작은 스케일을 쓰고
+      // 남는 여백만큼 오프셋을 더한다.
+      var scaleW = svgRect.width / vb.width, scaleH = svgRect.height / vb.height;
+      var scale = Math.min(scaleW, scaleH);
+      var offsetX = (svgRect.width - vb.width * scale) / 2;
+      var offsetY = (svgRect.height - vb.height * scale) / 2;
       var G = geom();
-      var left = (svgRect.left - stageRect.left) + (G.innerX - vb.x) * scale;
-      var top = (svgRect.top - stageRect.top) + (G.innerTop - vb.y) * scale;
-      openOverlayEl.style.cssText = "position:absolute; left:" + left + "px; top:" + top + "px; width:" + (G.innerW * scale) + "px; height:" + (G.innerH * scale) + "px; display:block; overflow:visible; pointer-events:none;";
+      var left = (svgRect.left - stageRect.left) + offsetX + (G.innerX - vb.x) * scale;
+      var top = (svgRect.top - stageRect.top) + offsetY + (G.innerTop - vb.y) * scale;
+      openOverlayEl.style.cssText = "position:absolute; left:" + left + "px; top:" + top + "px; width:" + (G.innerW * scale) + "px; height:" + (G.innerH * scale) + "px; display:block; overflow:hidden; pointer-events:none;";
       openOverlayEl.innerHTML = openOverlayHtml(bSrc());
     }
 
@@ -1019,8 +1026,14 @@
       var sel = selSize(), labW = sel.w, labH = sel.h + (state.ext ? cfg.extDelta : 0);
       var vb = "-70 -70 " + (w + 150) + " " + (tH + 130);
       var s = '<svg class="lc-svg" viewBox="' + vb + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="중문 커스터마이징 미리보기">';
+      // 원슬라이딩 열어보기: 문이 옆으로 밀려 들어가는(포켓형) 모습을 표현하되, 프리뷰 프레임 밖으로
+      // 시각적으로 빠져나가지 않도록 문 박스 영역으로 클립한다.
+      s += '<defs><clipPath id="lcDoorClip"><rect x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/></clipPath>';
       if (state.bg && bgOk && cfg.background) {
-        s += '<defs><clipPath id="lcClip"><rect x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/></clipPath></defs>';
+        s += '<clipPath id="lcClip"><rect x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"/></clipPath>';
+      }
+      s += "</defs>";
+      if (state.bg && bgOk && cfg.background) {
         s += '<image href="' + cfg.background + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#lcClip)"/>';
       }
       var href = bSrc();
@@ -1028,10 +1041,10 @@
       var doorOpen = state.open && overlayTypes;
       var slideOpen = state.open && state.t === "원슬라이딩";
       var slideDx = slideOpen ? iW * 0.88 : 0;
-      var doorXf = slideOpen ? ' transform="translate(' + slideDx + ' 0)"' : "";
+      var doorXf = slideOpen ? ' transform="translate(' + slideDx + ' 0)" clip-path="url(#lcDoorClip)"' : "";
       s += '<image href="' + href + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"' + doorXf +
         (doorOpen ? ' visibility="hidden"' : "") + ' style="transition:transform .5s ease"/>';
-      s += '<g transform="translate(' + (iX + slideDx) + " " + iTop + ')" pointer-events="none"' + (doorOpen ? ' visibility="hidden"' : "") + ">";
+      s += '<g transform="translate(' + (iX + slideDx) + " " + iTop + ')" pointer-events="none"' + (slideOpen ? ' clip-path="url(#lcDoorClip)"' : "") + (doorOpen ? ' visibility="hidden"' : "") + ">";
       state.cols.forEach(function (mm) { s += '<rect x="' + (mm - 10) + '" y="30" width="20" height="' + (iH - 90) + '" fill="' + bc + '"/>'; });
       state.rows.forEach(function (mm) { s += '<rect x="30" y="' + (mm - 10) + '" width="' + (iW - 60) + '" height="20" fill="' + bc + '"/>'; });
       if (state.arch) {

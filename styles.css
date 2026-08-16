@@ -1166,7 +1166,7 @@ h3{position:relative}
    perspective·rotateY 3D는 SVG foreignObject 안에서 지원이 불안정해 SVG 바깥에 절대좌표로 배치한다
    (renderLayeredCustomizer의 syncOpenOverlay가 SVG 렌더 크기 기준으로 위치·크기를 매 렌더마다 동기화).
    문 유형별 개방 표현(3연동=3패널 슬라이드, 스윙폴딩=폴딩, 여닫이=경첩 스윙) 비율은 원본과 동일. */
-.lc-open-overlay{ display:none; }
+.lc-open-overlay{ display:none; overflow:hidden; }
 .lc-open-wrap{ position:absolute; left:0; top:0; width:100%; height:100%; }
 .lc-open-sp{ position:absolute; top:0; width:35.96%; height:100%; background-repeat:no-repeat; background-size:278.1% 100%; }
 .lc-open-sp1{ left:0; background-position:0% 0; transform:translateX(178%); }
