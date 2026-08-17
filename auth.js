@@ -55,15 +55,25 @@
     });
   }
 
-  // data-nav-auth 마크업이 있는 헤더 링크를 로그인 상태에 맞춰 "로그인"↔"마이페이지"로 전환
+  // data-nav-auth 마크업이 있는 헤더 링크를 로그인 상태에 맞춰 "로그인"→"{닉네임}님" + 로그아웃 링크로 전환
   function applyNavAuthLinks() {
     var links = document.querySelectorAll("[data-nav-auth]");
     if (!links.length) return;
     getMe().then(function (me) {
       if (!me || !me.loggedIn) return;
       links.forEach(function (link) {
-        link.textContent = "마이페이지";
+        link.textContent = (me.nickname || "회원") + "님";
         link.setAttribute("href", "mypage.html");
+
+        var logoutLink = document.createElement("a");
+        logoutLink.href = "#";
+        logoutLink.textContent = "로그아웃";
+        logoutLink.className = link.className;
+        logoutLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          logout();
+        });
+        link.insertAdjacentElement("afterend", logoutLink);
       });
     });
   }
