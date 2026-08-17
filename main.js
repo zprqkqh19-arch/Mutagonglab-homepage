@@ -242,7 +242,7 @@
       "<h4>7. 정보주체의 권리</h4>" +
       "<p>정보주체는 언제든지 자신의 개인정보에 대한 열람·정정·삭제·처리정지를 요구할 수 있습니다. 아래 문의처로 연락 주시면 지체 없이 조치합니다.</p>" +
       "<h4>8. 개인정보 보호책임자 및 문의처</h4>" +
-      "<p>상호 무타공랩 · 대표 심혜미<br>사업자등록번호 896-15-02645<br>대구광역시 남구 명덕로 104 계명대학교 비사관 6층<br>문의: 카카오톡 채널 또는 상담 문의 폼</p>" +
+      "<p>상호 무타공랩 · 대표 심혜미<br>사업자등록번호 896-15-02645<br>대구광역시 남구 명덕로 104 계명대학교 비사관 6층<br>문의: 카카오톡 채널</p>" +
       '<p class="privacy-modal-effective">본 방침은 2026년 7월 28일부터 적용됩니다.</p>' +
       "</div></div>";
     document.body.appendChild(privacyOverlay);
@@ -305,20 +305,6 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && !typeFinderModal.hidden) closeTypeFinder();
-    });
-  }
-
-  var form = document.getElementById("inquiryForm");
-  if (form) {
-    var status = document.getElementById("formStatus");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      status.textContent = "문의 내용이 화면에 임시 저장되었습니다. (프로토타입 — 실제 전송은 연결 전)";
-      form.reset();
     });
   }
 

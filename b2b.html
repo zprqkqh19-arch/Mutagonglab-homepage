@@ -180,14 +180,6 @@
   "use strict";
   var link = document.getElementById("b2bKakaoLink");
   if (link && window.MUTAGONG_KAKAO_URL) link.href = window.MUTAGONG_KAKAO_URL;
-  var form = document.getElementById("b2bForm");
-  var status = document.getElementById("b2bFormStatus");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (!form.checkValidity()) { form.reportValidity(); return; }
-    status.textContent = "제안 내용이 화면에 임시 저장되었습니다. (프로토타입 — 실제 전송은 연결 전)";
-    form.reset();
-  });
 })();
 </script>
 

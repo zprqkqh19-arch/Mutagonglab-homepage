@@ -437,25 +437,6 @@
   @media (max-width:700px){ #installStepsList{ grid-template-columns:1fr; } }
 
   /* ============ Contact ============ */
-  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
-  @media (max-width: 860px){ .contact-grid{ grid-template-columns:1fr; } }
-  .field{ display:flex; flex-direction:column; gap:.45rem; margin-bottom:1.1rem; }
-  .field label{ font-size:var(--step--1); font-weight:700; color:var(--ink-soft); }
-  .field input, .field select, .field textarea{
-    font:inherit; font-size:var(--step-0); padding:.75rem .9rem; border-radius:10px;
-    border:1px solid var(--paper-line); background:var(--card); color:var(--ink);
-  }
-  .field textarea{ resize:vertical; min-height:110px; }
-  .field input[type="file"]{ padding:.6rem; font-size:var(--step--1); }
-  .field-hint{ font-size:.74rem; color:var(--ink-soft); }
-  .field-row{ display:flex; gap:1rem; }
-  @media (max-width: 480px){ .field-row{ flex-direction:column; gap:0; } }
-  .field-row .field{ flex:1; }
-  .consent{ display:flex; align-items:flex-start; gap:.6rem; font-size:var(--step--1); color:var(--ink-soft); margin-block:.6rem 1.3rem; }
-  .consent input{ margin-top:.3rem; }
-  .form-note{ font-size:var(--step--1); color:var(--ink-soft); margin-top:.9rem; }
-  #formStatus{ font-size:var(--step--1); color:var(--accent); margin-top:.8rem; min-height:1.2em; }
-
   .contact-side{ display:flex; flex-direction:column; gap:1.4rem; }
   .contact-side--solo{ max-width:520px; margin-inline:auto; }
   .contact-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:clamp(1.4rem,2.5vw,2rem); }

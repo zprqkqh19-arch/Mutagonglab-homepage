@@ -329,18 +329,11 @@
     ? '<span class="sale-badge sale-badge--available">판매 중</span>'
     : '<span class="sale-badge sale-badge--soon">출시 예정</span>';
 
-  var contactHref = brand === "무타공랩" ? "contact.html?brand=mutagonglab" : "contact.html";
   function ctaMarkup() {
     if (isAvailable) {
-      return (
-        '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">카카오톡으로 구매·상담 문의</a>' +
-        '<a href="' + contactHref + '" class="btn btn-ghost">문의 폼 남기기</a>'
-      );
+      return '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">카카오톡으로 구매·상담 문의</a>';
     }
-    return (
-      '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">출시 알림 · 카카오톡 상담</a>' +
-      '<a href="' + contactHref + '" class="btn btn-ghost">문의 폼 남기기</a>'
-    );
+    return '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">출시 알림 · 카카오톡 상담</a>';
   }
   document.getElementById("heroCta").innerHTML = ctaMarkup();
   document.getElementById("finalCta").innerHTML = ctaMarkup();
