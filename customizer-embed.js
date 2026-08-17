@@ -60,8 +60,14 @@
   $('archF').onclick=function(){S.arch=S.arch==='fill'?false:'fill';render();};
   $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
   $('extBtn').onclick=function(){S.ext=!S.ext;render();};
-  $('buyBtn').onclick=function(){window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매 문의',$('sku').textContent);};
-  $('consultBtn').onclick=function(){window.MUTAGONG_copyToKakao('무타공 DIY 중문 상담 문의',$('sku').textContent);};
+  $('buyBtn').onclick=function(){
+    window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매 문의',$('sku').textContent);
+    if(window.MUTAGONG_AUTH){window.MUTAGONG_AUTH.saveConfig({brand:'무타공랩',productId:'diy-door',label:'무타공 DIY 중문 구매 문의',text:$('sku').textContent});}
+  };
+  $('consultBtn').onclick=function(){
+    window.MUTAGONG_copyToKakao('무타공 DIY 중문 상담 문의',$('sku').textContent);
+    if(window.MUTAGONG_AUTH){window.MUTAGONG_AUTH.saveConfig({brand:'무타공랩',productId:'diy-door',label:'무타공 DIY 중문 상담 문의',text:$('sku').textContent});}
+  };
   var canvas=$('canvas');
   var ticks=[];
   function mkTicks(){

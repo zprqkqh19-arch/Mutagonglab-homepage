@@ -1248,11 +1248,19 @@
         return;
       }
       else if (act === "consult") {
-        window.MUTAGONG_copyToKakao((product.name || "중문") + " 상담 문의", skuCode());
+        var consultLabel = (product.name || "중문") + " 상담 문의";
+        window.MUTAGONG_copyToKakao(consultLabel, skuCode());
+        if (window.MUTAGONG_AUTH) {
+          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: consultLabel, text: skuCode() });
+        }
         return;
       }
       else if (act === "buy") {
-        window.MUTAGONG_copyToKakao((product.name || "중문") + " 구매 문의", skuCode());
+        var buyLabel = (product.name || "중문") + " 구매 문의";
+        window.MUTAGONG_copyToKakao(buyLabel, skuCode());
+        if (window.MUTAGONG_AUTH) {
+          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: buyLabel, text: skuCode() });
+        }
         return;
       }
       render();

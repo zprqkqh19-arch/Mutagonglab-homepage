@@ -228,12 +228,13 @@
       '<a href="product.html?id=standard-door&type=여닫이#customize">여닫이</a>' +
       '</div></div>' +
       '<a href="service.html">서비스</a><a href="contact.html">상담 문의</a>' +
+      '<a href="login.html" class="nav-login" data-nav-auth>로그인</a>' +
       '</nav>' +
       '<a href="mutagonglab.html" class="brand-switch"><span class="bs-label">무타공랩 홈페이지</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>' +
       '<button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>' +
       '</div>' +
       '<div class="mobile-panel" id="mobilePanel">' +
-      '<a href="products.html">제품</a><a href="service.html">서비스</a><a href="contact.html">상담 문의</a><a href="mutagonglab.html">무타공랩 홈페이지</a>' +
+      '<a href="products.html">제품</a><a href="service.html">서비스</a><a href="contact.html">상담 문의</a><a href="login.html" data-nav-auth>로그인</a><a href="mutagonglab.html">무타공랩 홈페이지</a>' +
       '</div>',
     "무타공랩": '<div class="wrap nav">' +
       '<a href="mutagonglab.html" class="logo">' +
@@ -243,12 +244,13 @@
       '<a href="technology.html">무타공연구소</a><a href="design.html">제품디자인</a>' +
       '<a href="product.html?id=diy-door">DIY 제품</a>' +
       '<a href="contact.html?brand=mutagonglab">상담 문의</a>' +
+      '<a href="login.html?brand=mutagonglab" class="nav-login" data-nav-auth>로그인</a>' +
       '</nav>' +
       '<a href="index.html" class="brand-switch"><span class="bs-label">혜다움 홈페이지</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>' +
       '<button class="burger" aria-expanded="false" aria-controls="mobilePanel" aria-label="메뉴 열기"><span></span></button>' +
       '</div>' +
       '<div class="mobile-panel" id="mobilePanel">' +
-      '<a href="technology.html">무타공연구소</a><a href="design.html">제품디자인</a><a href="mutagonglab.html#products">DIY 제품</a><a href="contact.html?brand=mutagonglab">상담 문의</a><a href="index.html">혜다움 홈페이지</a>' +
+      '<a href="technology.html">무타공연구소</a><a href="design.html">제품디자인</a><a href="mutagonglab.html#products">DIY 제품</a><a href="contact.html?brand=mutagonglab">상담 문의</a><a href="login.html?brand=mutagonglab" data-nav-auth>로그인</a><a href="index.html">혜다움 홈페이지</a>' +
       '</div>'
   };
 
@@ -293,6 +295,7 @@
 })();
 </script>
 <script src="configurator.js"></script>
+<script src="auth.js"></script>
 <script src="main.js"></script>
 <script>
 (function () {

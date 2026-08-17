@@ -20,6 +20,7 @@
       <a href="design.html">제품디자인</a>
       <a href="product.html?id=diy-door">DIY 제품</a>
       <a href="contact.html?brand=mutagonglab">상담 문의</a>
+      <a href="login.html?brand=mutagonglab" class="nav-login" data-nav-auth>로그인</a>
     </nav>
     <a href="index.html" class="brand-switch">
       <span class="bs-label">혜다움 홈페이지</span>
@@ -32,6 +33,7 @@
     <a href="design.html">제품디자인</a>
     <a href="mutagonglab.html#products">DIY 제품</a>
     <a href="contact.html?brand=mutagonglab">상담 문의</a>
+    <a href="login.html?brand=mutagonglab" data-nav-auth>로그인</a>
     <a href="index.html">혜다움 홈페이지</a>
   </div>
 </header>
@@ -239,8 +241,14 @@
   $('archF').onclick=function(){S.arch=S.arch==='fill'?false:'fill';render();};
   $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
   $('extBtn').onclick=function(){S.ext=!S.ext;render();};
-  $('buyBtn').onclick=function(){window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매 문의',$('sku').textContent);};
-  $('consultBtn').onclick=function(){window.MUTAGONG_copyToKakao('무타공 DIY 중문 상담 문의',$('sku').textContent);};
+  $('buyBtn').onclick=function(){
+    window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매 문의',$('sku').textContent);
+    if(window.MUTAGONG_AUTH){window.MUTAGONG_AUTH.saveConfig({brand:'무타공랩',productId:'diy-door',label:'무타공 DIY 중문 구매 문의',text:$('sku').textContent});}
+  };
+  $('consultBtn').onclick=function(){
+    window.MUTAGONG_copyToKakao('무타공 DIY 중문 상담 문의',$('sku').textContent);
+    if(window.MUTAGONG_AUTH){window.MUTAGONG_AUTH.saveConfig({brand:'무타공랩',productId:'diy-door',label:'무타공 DIY 중문 상담 문의',text:$('sku').textContent});}
+  };
   var canvas=$('canvas');
   var ticks=[];
   function mkTicks(){
@@ -667,6 +675,7 @@
 
 <script src="products-data.js"></script>
 <script src="configurator.js"></script>
+<script src="auth.js"></script>
 <script src="main.js"></script>
 <script>
 (function () {

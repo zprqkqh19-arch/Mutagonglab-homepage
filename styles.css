@@ -30,6 +30,7 @@
     --focus: var(--walnut);
     --kakao: #FEE500;
     --kakao-ink: #391B1B;
+    --naver: #03C75A;
 
     --font: "Gowun Dodum", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
 
@@ -299,6 +300,8 @@
   .btn-ghost:hover{ transform:translateY(-2px); border-color:var(--accent); color:var(--accent); }
   .btn-kakao{ background:var(--kakao); color:var(--kakao-ink); }
   .btn-kakao:hover{ transform:translateY(-2px); filter:brightness(1.05); }
+  .btn-naver{ background:var(--naver); color:#fff; }
+  .btn-naver:hover{ transform:translateY(-2px); filter:brightness(1.08); }
 
   .hero-visual{ position:relative; aspect-ratio: 4/5; border-radius:28px; overflow:hidden; border:1px solid var(--paper-line); background:var(--card); }
   .hero-visual img{ width:100%; height:100%; object-fit:cover; display:block; }
