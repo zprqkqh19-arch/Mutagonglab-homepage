@@ -46,6 +46,27 @@
     document.body.style.overflow = "hidden";
   };
 
+  // ============ 상담·구매 문의는 카카오톡으로만 진행 — 커스터마이징 옵션을 클립보드에 복사한 뒤 채널로 이동 ============
+  window.MUTAGONG_copyToKakao = function (label, text) {
+    var full = label + "\n\n" + text;
+    function finish(copied) {
+      alert(
+        copied
+          ? "옵션 정보가 복사되었습니다. 카카오톡 채팅창에 붙여넣어 상담해 주세요."
+          : "옵션 정보를 자동으로 복사하지 못했습니다. 아래 내용을 카카오톡 채팅창에 직접 남겨주세요.\n\n" + full
+      );
+      window.open(window.MUTAGONG_KAKAO_URL, "_blank");
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(full).then(
+        function () { finish(true); },
+        function () { finish(false); }
+      );
+    } else {
+      finish(false);
+    }
+  };
+
   // ============ "우리 집에 놓아보기" — 배경 없는 제품 컷아웃을 공간 사진 위에 얹어보는 2D 오버레이 도구 ============
   // 진짜 AR(3D/실측 스케일)이 아니라, 사용자가 눈대중으로 드래그·크기조절해 대략 가늠해보는 용도.
   var arModalEl = null;
@@ -1227,12 +1248,11 @@
         return;
       }
       else if (act === "consult") {
-        var brandQ = (product.brand === "무타공랩") ? "brand=mutagonglab&" : "";
-        location.href = "contact.html?" + brandQ + "sku=" + encodeURIComponent(skuCode());
+        window.MUTAGONG_copyToKakao((product.name || "중문") + " 상담 문의", skuCode());
         return;
       }
       else if (act === "buy") {
-        alert("구매 페이지로 연결됩니다.\n\n" + skuCode());
+        window.MUTAGONG_copyToKakao((product.name || "중문") + " 구매 문의", skuCode());
         return;
       }
       render();

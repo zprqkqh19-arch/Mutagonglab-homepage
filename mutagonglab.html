@@ -239,8 +239,8 @@
   $('archF').onclick=function(){S.arch=S.arch==='fill'?false:'fill';render();};
   $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
   $('extBtn').onclick=function(){S.ext=!S.ext;render();};
-  $('buyBtn').onclick=function(){alert('구매 페이지로 연결됩니다.\n\n'+$('sku').textContent);};
-  $('consultBtn').onclick=function(){location.href='contact.html?brand=mutagonglab&sku='+encodeURIComponent($('sku').textContent);};
+  $('buyBtn').onclick=function(){window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매 문의',$('sku').textContent);};
+  $('consultBtn').onclick=function(){window.MUTAGONG_copyToKakao('무타공 DIY 중문 상담 문의',$('sku').textContent);};
   var canvas=$('canvas');
   var ticks=[];
   function mkTicks(){
