@@ -515,6 +515,26 @@
   .sale-badge--soon{ background:transparent; border:1px solid var(--paper-line); color:var(--ink-soft); }
   .sale-badge::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
 
+  /* ============ 무타공 DIY 중문 회차 판매 현황 배너 ============ */
+  .sale-round-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1.2rem; margin-top:2rem; }
+  @media (max-width:820px){ .sale-round-grid{ grid-template-columns:1fr; } }
+  .sale-round-card{
+    display:flex; flex-direction:column; align-items:center; gap:.55rem; text-align:center;
+    background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius);
+    padding:1.7rem 1.5rem;
+  }
+  .sale-round-card.is-closed{ opacity:.72; }
+  .sale-round-card.is-open{ border-color:var(--accent); box-shadow:0 10px 30px rgba(0,0,0,.08); }
+  .sale-round-tag{ font-size:var(--step--1); font-weight:700; letter-spacing:.03em; color:var(--ink-soft); }
+  .sale-round-card.is-open .sale-round-tag{ color:var(--accent); }
+  .sale-round-date{ font-size:var(--step-1); font-weight:700; }
+  .sale-round-status{ display:inline-flex; padding:.35rem .9rem; border-radius:999px; font-size:var(--step--1); font-weight:700; }
+  .sale-round-card.is-closed .sale-round-status{ background:transparent; border:1px solid var(--card-border); color:var(--ink-soft); }
+  .sale-round-card.is-open .sale-round-status{ background:var(--accent); color:#fff; }
+  .sale-round-card p{ font-size:var(--step--1); color:var(--ink-soft); margin:0; }
+  .sale-round-card .btn{ margin-top:.5rem; }
+  .sale-round-note{ text-align:center; margin-top:1.8rem; font-size:var(--step--1); color:var(--ink-soft); }
+
   /* ============ 랜딩 — 제품 4타일 ============ */
   .tile-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:var(--gap); }
   @media (max-width:760px){ .tile-grid{ grid-template-columns:1fr; } }
