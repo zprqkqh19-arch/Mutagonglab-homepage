@@ -2,18 +2,18 @@
 
 두 브랜드를 한 저장소에서 운영하는 정적 사이트입니다. 빌드 도구 없이 HTML·CSS·JS 로만 구성되어 있습니다.
 
-**공개 주소** — https://zprqkqh19-arch.github.io/Mutagonglab-homepage/
+**공개 주소** — https://mutagonglab.com
 
 | 브랜드 | 성격 | 진입 |
 |---|---|---|
-| 혜다움 | 시공형 중문 (시공팀 설치) | `index.html` |
-| 무타공랩 | 무타공 DIY 중문 (셀프 시공) | `mutagonglab.html` |
+| 무타공랩 | 무타공 DIY 중문 (셀프 시공) | `index.html` (루트) |
+| 혜다움 | 시공형 중문 (시공팀 설치) | `hyedaum.html` |
 
 ## 구조
 
 ```
-index.html          혜다움 홈
-mutagonglab.html    무타공랩 홈 (+ 레이어 합성 커스터마이저)
+index.html          무타공랩 홈 (루트, + 레이어 합성 커스터마이저)
+hyedaum.html         혜다움 홈
 products.html       브랜드별 제품 목록
 product.html        제품 상세 — ?id=standard-door | diy-door
 service.html · technology.html · design.html · b2b.html · contact.html

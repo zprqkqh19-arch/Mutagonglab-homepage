@@ -25,7 +25,7 @@
 | 맥북 | `~/dev/Mutagonglab-homepage` |
 | 데스크탑(Windows) | `C:\Users\blood\dev\Mutagonglab-homepage` |
 | 사이트 구성 | 정적 사이트 (HTML/CSS/JS, 빌드 도구 없음) |
-| 주요 파일 | `index.html`, `mutagonglab.html`, `product.html`, `styles.css`, `products-data.js`, `configurator.js`, `customizer-embed.js` |
+| 주요 파일 | `index.html`(무타공랩 홈, 루트), `hyedaum.html`(혜다움 홈), `product.html`, `styles.css`, `products-data.js`, `configurator.js`, `customizer-embed.js` |
 | SKU 도면 | `assets/sku/12-22/` (SVG 542개) |
 
 ## 3. 자동 동기화
