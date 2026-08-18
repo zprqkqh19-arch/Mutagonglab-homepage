@@ -1177,7 +1177,7 @@
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
       h += '<div class="lc-cta">' +
         '<button type="button" class="lc-consult-btn" data-act="consult">내 중문 상담하기</button>' +
-        '<button type="button" class="lc-buy-btn" data-act="buy">내 중문 구매하기</button>' +
+        '<button type="button" class="lc-buy-btn" data-act="buy">카카오톡으로 구매 문의</button>' +
         "</div>";
       h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
         "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
