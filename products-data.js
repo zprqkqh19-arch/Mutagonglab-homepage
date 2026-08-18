@@ -381,6 +381,19 @@
     // 없으면(로드 실패) 토글은 비활성으로 표시된다. 거실 사진을 아래 경로에 넣기만 하면 켜진다.
     background: "assets/sku/room-bg.webp",
     defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
+    // 가격표(2026-08-18 대표 확정) — 시공가는 배송비 개념이라 혜다움과 동일하게 책정.
+    pricing: {
+      base: { "3연동": 990000, "원슬라이딩": 890000 },
+      baseSizeMM: { w: 1100, h: 2000 },
+      sizePer100mm: { w: 10000, h: 10000 },
+      doorColor: { wh: 0, gr: 0, bk: 0 },
+      glassPattern: { cl: 0, br: 20000, mo: 40000, mi: 40000, sa: 100000, fa: 300000 },
+      muntinEach: 30000,
+      muntinArch: 200000,
+      handle: { st: 0, rd: 100000, ba: 100000, sb: 50000, lj: 100000, sj: 50000 },
+      // 마감판은 최초 구매 시 기본 포함이라 추가금 없음(단독 구매 가격은 accessories 상품 참고).
+      addon: { footFinish: 0, partitionAddon: 400000 },
+    },
   };
 
   // ============ 레이어 합성 커스터마이저 스펙 (혜다움 시공형, 12-22) ============
@@ -454,6 +467,20 @@
     handles: LAYERED_CUSTOMIZER_12_22.handles,
     background: "assets/sku/room-bg.webp",
     defaults: { sz: "12-22", t: "3연동", a: "paint_white", d: "wh", g: "cl", h: "st", sub: "od" },
+    // 가격표(2026-08-18 대표 확정)
+    pricing: {
+      base: { "3연동": 990000, "원슬라이딩": 890000, "스윙폴딩": 990000, "여닫이": 990000 },
+      baseSizeMM: { w: 1100, h: 2000 },
+      sizePer100mm: { w: 10000, h: 10000 },
+      // 프레임 색상(finish+color 6종 통합) — 도장 기준 0원, 필름 +3만원(색상별 추가금은 없음)
+      frameColor: { paint_white: 0, paint_gray: 0, paint_black: 0, film_white: 30000, film_gray: 30000, film_black: 30000 },
+      doorColor: { wh: 0, gr: 0, bk: 0 },
+      glassPattern: { cl: 0, br: 20000, mo: 40000, mi: 40000, sa: 100000, fa: 300000 },
+      muntinEach: 30000,
+      muntinArch: 200000,
+      handle: { st: 0, rd: 100000, ba: 100000, sb: 50000, lj: 100000, sj: 50000 },
+      addon: { partition: 400000, auto: 1000000 },
+    },
   };
 
   window.MUTAGONG_PRODUCTS = {
@@ -567,6 +594,8 @@
       id: "accessories",
       name: "마감판",
       brand: "무타공랩",
+      // 중문 구매 시 기본 포함, 단독 구매 시에만 적용되는 가격(배송비 포함, 2026-08-18 대표 확정)
+      price: 70000,
       tagline: "표준 규격 제품을 내 공간 크기에 맞추는 부속품입니다.",
       saleStatus: "available",
       category: "기타",

@@ -75,6 +75,7 @@
       </div>
 <!-- ▼▼ 무타공랩 커스터마이저 시작 — index.html의 '무타공랩 커스터마이징' 섹션 내부에 붙여넣기 ▼▼ -->
 <div id="mtg-customizer" style="display:block;width:100%;opacity:1;transform:none;visibility:visible;">
+<script src="products-data.js"></script>
 <script src="customizer-skus.js"></script>
 <style>
 #mtg-customizer{display:block;width:100%;grid-column:1 / -1;position:relative;z-index:5;isolation:isolate;}
@@ -168,6 +169,7 @@
       </div>
     </div>
     <div class="sku" id="sku"></div>
+    <div class="price" id="price" style="font-size:14px;font-weight:700;color:#222;display:none;"></div>
     <div class="grp" style="border-top:1px solid #e3e1dd;padding-top:14px;">
       <div class="lbl">선택하신 옵션</div>
       <div id="summary" style="display:flex;flex-direction:column;gap:4px;font-size:13px;color:#333;line-height:1.5;"></div>
@@ -241,8 +243,10 @@
   $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
   $('extBtn').onclick=function(){S.ext=!S.ext;render();};
   $('buyBtn').onclick=function(){
-    window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매·상담 문의',$('sku').textContent);
-    if(window.MUTAGONG_AUTH){window.MUTAGONG_AUTH.saveConfig({brand:'무타공랩',productId:'diy-door',label:'무타공 DIY 중문 구매·상담 문의',text:$('sku').textContent});}
+    var priceText=($('price').style.display!=='none'&&$('price').textContent)?('\n'+$('price').textContent):'';
+    var kakaoText=$('sku').textContent+priceText;
+    window.MUTAGONG_copyToKakao('무타공 DIY 중문 구매·상담 문의',kakaoText);
+    if(window.MUTAGONG_AUTH){window.MUTAGONG_AUTH.saveConfig({brand:'무타공랩',productId:'diy-door',label:'무타공 DIY 중문 구매·상담 문의',text:kakaoText});}
   };
   var canvas=$('canvas');
   var ticks=[];
@@ -382,6 +386,22 @@
     var extra=(S.cols.length||S.rows.length||S.arch)?' / 간살['+(S.arch==='line'?'간살아치·':S.arch==='fill'?'채움아치·':'')+S.cols.map(ca).join('')+S.rows.map(function(m){return ca(m).toLowerCase();}).join('')+']':'';
     var subSku=(S.t==='여닫이')?'-'+S.sub:'';
     $('sku').textContent='SKU: '+S.t+subSku+' / '+S.size+' / A-sv / B-'+S.d+'-'+S.g+'-'+S.h+extra;
+    var PR=(window.MUTAGONG_PRODUCTS&&window.MUTAGONG_PRODUCTS['diy-door']&&window.MUTAGONG_PRODUCTS['diy-door'].layeredCustomizer&&window.MUTAGONG_PRODUCTS['diy-door'].layeredCustomizer.pricing)||null;
+    if(PR){
+      var pSz=SIZE_MAP[S.size]||SIZE_MAP['12-22'];
+      var pTotal=(PR.base&&PR.base[S.t])||0;
+      if(PR.baseSizeMM&&PR.sizePer100mm){
+        pTotal+=Math.max(0,pSz.w-PR.baseSizeMM.w)/100*PR.sizePer100mm.w;
+        pTotal+=Math.max(0,pSz.h-PR.baseSizeMM.h)/100*PR.sizePer100mm.h;
+      }
+      if(PR.doorColor)pTotal+=PR.doorColor[S.d]||0;
+      if(PR.glassPattern)pTotal+=PR.glassPattern[S.g]||0;
+      pTotal+=(S.cols.length+S.rows.length)*(PR.muntinEach||0);
+      if(S.arch)pTotal+=PR.muntinArch||0;
+      if(PR.handle)pTotal+=PR.handle[S.h]||0;
+      $('price').textContent='예상 가격 '+pTotal.toLocaleString('ko-KR')+'원 (실측 후 확정)';
+      $('price').style.display='block';
+    }
     var NM={d:{wh:'화이트',gr:'그레이',bk:'블랙'},g:{cl:'투명',br:'브론즈',mi:'미스트',mo:'모루',sa:'샤틴',fa:'패브릭'},h:{st:'기본',rd:'반원형',ba:'긴 바형',sb:'짧은 바형',lj:'긴 일자형',sj:'짧은 일자형'},sub:{od:'원도어',sy:'정대칭 양개형',as:'비대칭 양개형'}};
     var gansalTxt=[];
     if(S.arch==='line')gansalTxt.push('간살아치형');
@@ -659,7 +679,6 @@
   <svg id="themeIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
 </button>
 
-<script src="products-data.js"></script>
 <script src="configurator.js"></script>
 <script src="auth.js"></script>
 <script src="main.js"></script>

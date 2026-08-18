@@ -43,6 +43,7 @@
         <h1 id="productName">-</h1>
         <span class="brand-tag" id="productBrandTag" style="display:none;"></span>
         <p class="lede" id="productTagline"></p>
+        <p class="lede" id="productFlatPrice" style="display:none; font-weight:700;"></p>
 
         <div class="pdp-brief" id="briefFeatures" style="display:none;">
           <span class="pdp-brief-label">특징</span>
@@ -331,6 +332,11 @@
     brandTagEl.style.display = "inline-block";
   }
   document.getElementById("productTagline").textContent = product.tagline;
+  if (product.price) {
+    var flatPriceEl = document.getElementById("productFlatPrice");
+    flatPriceEl.textContent = product.price.toLocaleString("ko-KR") + "원";
+    flatPriceEl.style.display = "block";
+  }
 
   var configuratorBadgeText = document.getElementById("configuratorBadgeText");
   if (configuratorBadgeText) {

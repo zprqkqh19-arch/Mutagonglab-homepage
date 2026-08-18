@@ -980,6 +980,30 @@
     }
     function aSrc() { return cfg.assetBase + "/A/A_" + cfg.assetSize + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
 
+    // 옵션 조합에 따른 예상 가격 합산(가격표 없는 제품은 null 반환 → 가격 영역 숨김)
+    function priceTotal() {
+      var p = cfg.pricing;
+      if (!p) return null;
+      var sz = selSize();
+      var total = (p.base && p.base[state.t]) || 0;
+      if (p.baseSizeMM && p.sizePer100mm) {
+        total += Math.max(0, sz.w - p.baseSizeMM.w) / 100 * p.sizePer100mm.w;
+        total += Math.max(0, sz.h - p.baseSizeMM.h) / 100 * p.sizePer100mm.h;
+      }
+      if (p.frameColor) total += p.frameColor[state.a] || 0;
+      if (p.doorColor) total += p.doorColor[state.d] || 0;
+      if (p.glassPattern) total += p.glassPattern[state.g] || 0;
+      var muntinCount = state.cols.length + state.rows.length;
+      total += muntinCount * (p.muntinEach || 0);
+      if (state.arch) total += p.muntinArch || 0;
+      if (p.handle) total += p.handle[state.h] || 0;
+      if (p.addon) {
+        if (state.partition && p.addon.partition) total += p.addon.partition;
+        if (state.auto && p.addon.auto) total += p.addon.auto;
+      }
+      return total;
+    }
+
     function skuCode() {
       var subLabel = (state.t === "여닫이" && cfg.subTypes) ? (cfg.subTypes.filter(function (o) { return o.value === state.sub; })[0] || {}).label : null;
       var code = state.t + (subLabel ? " · " + subLabel : "") + " / " + state.sz + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
@@ -1189,6 +1213,10 @@
         h += row("추가 옵션", addonHtml);
       }
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
+      var priceVal = priceTotal();
+      if (priceVal !== null) {
+        h += '<div class="lc-price">예상 가격 <strong>' + priceVal.toLocaleString("ko-KR") + "원</strong><span>실측 후 확정됩니다</span></div>";
+      }
       h += '<div class="lc-cta">' +
         '<button type="button" class="lc-buy-btn" data-act="contact">카카오톡으로 구매·상담 문의</button>' +
         "</div>";
@@ -1262,9 +1290,11 @@
       }
       else if (act === "contact") {
         var contactLabel = (product.name || "중문") + " 구매·상담 문의";
-        window.MUTAGONG_copyToKakao(contactLabel, skuCode());
+        var contactPrice = priceTotal();
+        var contactText = skuCode() + (contactPrice !== null ? "\n예상 가격: " + contactPrice.toLocaleString("ko-KR") + "원(실측 후 확정)" : "");
+        window.MUTAGONG_copyToKakao(contactLabel, contactText);
         if (window.MUTAGONG_AUTH) {
-          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: contactLabel, text: skuCode() });
+          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: contactLabel, text: contactText });
         }
         return;
       }

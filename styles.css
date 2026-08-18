@@ -1262,6 +1262,9 @@ h3{position:relative}
 .lc-hint{ font-size:.72rem; line-height:1.5; color:var(--ink-soft); }
 .lc-picked{ font-size:.8rem; color:var(--ink); font-variant-numeric:tabular-nums; }
 .lc-sku{ font-size:.72rem; color:var(--ink-soft); word-break:break-all; }
+.lc-price{ display:flex; align-items:baseline; gap:.5rem; flex-wrap:wrap; font-size:var(--step--1); color:var(--ink-soft); }
+.lc-price strong{ font-size:var(--step-1); color:var(--ink); font-variant-numeric:tabular-nums; }
+.lc-price span{ font-size:.72rem; }
 .lc-cta{ display:flex; flex-direction:column; gap:.6rem; }
 .lc-buy-btn{ font:inherit; font-size:var(--step--1); font-weight:700; padding:.85rem 0;
   width:100%; border-radius:10px; cursor:pointer; text-align:center; transition:opacity .2s;
