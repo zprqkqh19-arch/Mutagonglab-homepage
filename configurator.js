@@ -46,25 +46,39 @@
     document.body.style.overflow = "hidden";
   };
 
-  // ============ 상담·구매 문의는 카카오톡으로만 진행 — 커스터마이징 옵션을 클립보드에 복사한 뒤 채널로 이동 ============
+  // ============ 상담·구매 문의는 카카오톡으로만 진행 ============
+  // 모바일에서는 OS 공유창(navigator.share)으로 카카오톡을 직접 선택하면 옵션 텍스트가 그대로
+  // 채팅창에 넘어가므로 복사·붙여넣기가 필요 없다. 공유창이 없거나 실패하면(대부분 데스크톱)
+  // 클립보드에 복사한 뒤 채널로 이동하는 방식으로 폴백한다 — 이때 복사가 끝난 뒤에만 이동해야
+  // 페이지 전환으로 비동기 복사가 도중에 끊기는 문제(모바일에서 자주 발생)가 없다.
   window.MUTAGONG_copyToKakao = function (label, text) {
     var full = label + "\n\n" + text;
-    function finish(copied) {
-      alert(
-        copied
-          ? "옵션 정보가 복사되었습니다. 카카오톡 채팅창에 붙여넣어 상담해 주세요."
-          : "옵션 정보를 자동으로 복사하지 못했습니다. 아래 내용을 카카오톡 채팅창에 직접 남겨주세요.\n\n" + full
-      );
-      window.open(window.MUTAGONG_KAKAO_URL, "_blank");
+
+    function fallbackCopyThenGo() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(full).then(
+          function () {
+            alert("옵션 정보가 복사되었습니다. 카카오톡 채팅창에 붙여넣어 상담해 주세요.");
+            window.location.href = window.MUTAGONG_KAKAO_URL;
+          },
+          function () {
+            alert("옵션 정보를 자동으로 복사하지 못했습니다. 아래 내용을 카카오톡 채팅창에 직접 남겨주세요.\n\n" + full);
+            window.location.href = window.MUTAGONG_KAKAO_URL;
+          }
+        );
+      } else {
+        alert("아래 내용을 카카오톡 채팅창에 직접 남겨주세요.\n\n" + full);
+        window.location.href = window.MUTAGONG_KAKAO_URL;
+      }
     }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(full).then(
-        function () { finish(true); },
-        function () { finish(false); }
-      );
-    } else {
-      finish(false);
+
+    if (navigator.share) {
+      navigator.share({ text: full }).catch(function () {
+        fallbackCopyThenGo();
+      });
+      return;
     }
+    fallbackCopyThenGo();
   };
 
   // ============ "우리 집에 놓아보기" — 배경 없는 제품 컷아웃을 공간 사진 위에 얹어보는 2D 오버레이 도구 ============
@@ -1176,8 +1190,7 @@
       }
       h += '<div class="lc-sku">SKU: ' + skuCode() + "</div>";
       h += '<div class="lc-cta">' +
-        '<button type="button" class="lc-consult-btn" data-act="consult">내 중문 상담하기</button>' +
-        '<button type="button" class="lc-buy-btn" data-act="buy">카카오톡으로 구매 문의</button>' +
+        '<button type="button" class="lc-buy-btn" data-act="contact">카카오톡으로 구매·상담 문의</button>' +
         "</div>";
       h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
         "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
@@ -1247,19 +1260,11 @@
         window.MUTAGONG_openExampleModal("유리 디자인 예시", grid, "실제 유리 질감·톤은 조명과 화면 환경에 따라 다르게 보일 수 있습니다.");
         return;
       }
-      else if (act === "consult") {
-        var consultLabel = (product.name || "중문") + " 상담 문의";
-        window.MUTAGONG_copyToKakao(consultLabel, skuCode());
+      else if (act === "contact") {
+        var contactLabel = (product.name || "중문") + " 구매·상담 문의";
+        window.MUTAGONG_copyToKakao(contactLabel, skuCode());
         if (window.MUTAGONG_AUTH) {
-          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: consultLabel, text: skuCode() });
-        }
-        return;
-      }
-      else if (act === "buy") {
-        var buyLabel = (product.name || "중문") + " 구매 문의";
-        window.MUTAGONG_copyToKakao(buyLabel, skuCode());
-        if (window.MUTAGONG_AUTH) {
-          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: buyLabel, text: skuCode() });
+          window.MUTAGONG_AUTH.saveConfig({ brand: product.brand, productId: product.id, label: contactLabel, text: skuCode() });
         }
         return;
       }
