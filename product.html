@@ -126,15 +126,6 @@
   <div id="comingSoonNoteWrap" class="wrap" style="display:none;"></div>
 
   <!-- ============ 구매 / 상담 (커스터마이징 바로 다음 — 클릭 최소화) ============ -->
-  <section class="band pdp-cta-section" id="buy">
-    <div class="wrap">
-      <span class="eyebrow">다음 단계</span>
-      <h2 style="font-size:var(--step-3); margin-top:.6rem;">선택한 구성으로 진행해 보세요</h2>
-      <div class="pdp-cta" id="finalCta" style="justify-content:center; margin-top:1.6rem;"></div>
-      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;" id="orderConfirmNote">카카오톡 상담으로 실측값을 다시 한번 확인한 뒤 주문이 확정됩니다. 주문 확정 안내에 "네, 확인했습니다"로 답변해 주시면 접수가 완료됩니다.</p>
-    </div>
-  </section>
-
   <!-- ============ 배송 패키지 & 설치 방법 (셀프시공 제품만) ============ -->
   <section class="band" id="installSection" style="display:none;">
     <div class="wrap">
@@ -358,7 +349,6 @@
     return '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">출시 알림 · 카카오톡 상담</a>';
   }
   document.getElementById("heroCta").innerHTML = ctaMarkup();
-  document.getElementById("finalCta").innerHTML = ctaMarkup();
 
   if (product.purchaseNotice) {
     document.getElementById("purchaseNoticeText").textContent = product.purchaseNotice;

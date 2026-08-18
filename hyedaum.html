@@ -105,13 +105,9 @@
   </div>
 
   <!-- ============ 구매 / 상담 (커스터마이징 바로 다음) ============ -->
-  <section class="band pdp-cta-section" id="buy">
+  <section class="band" id="buy">
     <div class="wrap">
-      <span class="eyebrow">다음 단계</span>
-      <h2 style="font-size:var(--step-3); margin-top:.6rem;">선택한 구성으로 진행해 보세요</h2>
-      <div class="pdp-cta" id="finalCta" style="justify-content:center; margin-top:1.6rem;"></div>
-      <p style="text-align:center; font-size:var(--step--1); color:var(--ink-soft); margin-top:1rem;">카카오톡 상담으로 실측값을 다시 한번 확인한 뒤 주문이 확정됩니다.</p>
-      <div class="coming-soon-note reveal" data-reveal style="margin-top:1.6rem;" id="purchaseNoticeBox">
+      <div class="coming-soon-note reveal" data-reveal id="purchaseNoticeBox">
         <svg viewBox="0 0 24 24" width="20" height="20" style="flex:0 0 auto; margin-top:.1rem;" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5l3 2"></path></svg>
         <span><strong style="color:var(--ink);">구매 전 꼭 확인해주세요.</strong> <span id="purchaseNoticeText"></span> 자세한 내용은 <a href="service.html#faq" style="text-decoration:underline;">자주 묻는 질문</a>에서 확인하실 수 있습니다.</span>
       </div>
@@ -228,10 +224,6 @@
   if (!product) return;
 
   window.MUTAGONG_initConfigurator(product, document.getElementById("configuratorMount"));
-
-  var ctaMarkup =
-    '<a href="' + window.MUTAGONG_KAKAO_URL + '" class="btn btn-kakao">카카오톡으로 구매·상담 문의</a>';
-  document.getElementById("finalCta").innerHTML = ctaMarkup;
 
   if (product.purchaseNotice) {
     document.getElementById("purchaseNoticeText").textContent = product.purchaseNotice;
