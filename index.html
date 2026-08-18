@@ -460,6 +460,53 @@
     </div>
   </div>
 
+  <!-- ============ 후기 보기·남기기 (요약) ============ -->
+  <section id="reviewsTeaser" class="band">
+    <div class="wrap">
+      <div class="section-head reveal" data-reveal>
+        <span class="eyebrow">후기</span>
+        <h2>먼저 사용해 보신 분들의 이야기</h2>
+      </div>
+      <p class="reviews-teaser-summary" id="reviewsTeaserSummary">후기를 불러오는 중입니다…</p>
+      <div class="reviews-teaser-list" id="reviewsTeaserList"></div>
+      <div class="reviews-teaser-actions reveal" data-reveal>
+        <a href="product.html?id=diy-door#reviews" class="btn btn-ghost">후기 보기</a>
+        <a href="product.html?id=diy-door&review=write#reviews" class="btn btn-primary">후기 남기기</a>
+      </div>
+    </div>
+  </section>
+  <script>
+  (function () {
+    "use strict";
+    var API_BASE = "https://api.mutagonglab.com";
+    var summaryEl = document.getElementById("reviewsTeaserSummary");
+    var listEl = document.getElementById("reviewsTeaserList");
+    function escapeHtml(str) { var d = document.createElement("div"); d.textContent = str; return d.innerHTML; }
+    function stars(n) { return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n); }
+    fetch(API_BASE + "/api/reviews?productId=diy-door")
+      .then(function (res) { return res.ok ? res.json() : { reviews: [] }; })
+      .catch(function () { return { reviews: [] }; })
+      .then(function (data) {
+        var reviews = data.reviews || [];
+        if (!reviews.length) {
+          summaryEl.textContent = "아직 등록된 후기가 없습니다. 첫 구매 후기를 남겨주세요.";
+          return;
+        }
+        var avg = reviews.reduce(function (s, r) { return s + r.rating; }, 0) / reviews.length;
+        summaryEl.innerHTML = "후기 <strong>" + reviews.length + "개</strong> · 평균 <strong>" + avg.toFixed(1) + "점</strong>";
+        listEl.innerHTML = reviews
+          .slice(0, 3)
+          .map(function (r) {
+            var snippet = r.content.length > 80 ? r.content.slice(0, 80) + "…" : r.content;
+            return '<div class="reviews-teaser-card"><span class="review-stars">' + stars(r.rating) + "</span>" +
+              '<p class="review-content">' + escapeHtml(snippet) + "</p>" +
+              '<span class="review-author">' + escapeHtml(r.nickname) + "</span></div>";
+          })
+          .join("");
+      });
+  })();
+  </script>
+
   <!-- ============ BRAND / ABOUT ============ -->
   <section id="brand" class="band brand-photo-section">
     <div class="brand-bg" aria-hidden="true">
