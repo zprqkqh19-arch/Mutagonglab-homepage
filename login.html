@@ -58,7 +58,8 @@
 (function () {
   "use strict";
   var params = new URLSearchParams(window.location.search);
-  var brand = params.get("brand") === "mutagonglab" ? "무타공랩" : "혜다움";
+  var isMutagonglab = params.get("brand") === "mutagonglab";
+  var brand = isMutagonglab ? "무타공랩" : "혜다움";
 
   document.getElementById("pageTitle").textContent = "로그인 | " + brand;
 
@@ -125,6 +126,13 @@
 
   document.getElementById("siteHeader").innerHTML = headers[brand];
   document.getElementById("siteFooter").innerHTML = footers[brand];
+
+  // 로그인 후에도 지금 보고 있던 브랜드(무타공랩/혜다움)의 마이페이지로 돌아오도록,
+  // 로그인 시작 요청에 브랜드를 실어 보낸다(백엔드가 쿠키로 기억했다가 콜백에서 그대로 되돌려줌).
+  if (isMutagonglab) {
+    document.getElementById("kakaoLoginBtn").href = "https://api.mutagonglab.com/api/auth/kakao/start?brand=mutagonglab";
+    document.getElementById("naverLoginBtn").href = "https://api.mutagonglab.com/api/auth/naver/start?brand=mutagonglab";
+  }
 
   if (params.get("error")) {
     document.getElementById("loginError").style.display = "block";

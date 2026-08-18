@@ -931,7 +931,9 @@
     };
     if (overrides && overrides.doorType) {
       var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
-      if (pm) state.t = pm.value;
+      // 문 유형별 손잡이 허용 목록과 어긋난 기본값(state.h='st')이 남아있으면 가격 계산에서
+      // 조용히 누락되므로(스윙폴딩·여닫이는 'st'가 비허용), 클릭 시와 동일하게 손잡이를 동기화한다.
+      if (pm) { state.t = pm.value; syncHandle(); }
     }
 
     // 배경 이미지: 경로에 파일이 실제로 로드되면 '배경 넣기'가 자동 활성화됨(없으면 비활성 유지)
