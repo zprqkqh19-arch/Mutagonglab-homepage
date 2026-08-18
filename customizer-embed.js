@@ -241,7 +241,22 @@
     if(S.arch==='fill')gansalTxt.push('채움아치형');
     if(S.cols.length)gansalTxt.push('세로살 '+S.cols.length+'개 ('+S.cols.map(ca).join(', ')+')');
     if(S.rows.length)gansalTxt.push('가로살 '+S.rows.length+'개 ('+S.rows.map(function(m){return ca(m).toLowerCase();}).join(', ')+')');
-    var rows=[['제품 유형',S.t+(S.t==='여닫이'?' · '+NM.sub[S.sub]:'')],['설치 규격','W'+dispW+' × H'+dispTotalH+' ('+S.size+(S.ext?', +30mm 연장':'')+')'],['중문 색상',NM.d[S.d]],['안전창',NM.g[S.g]],['간살',gansalTxt.length?gansalTxt.join(' · '):'없음'],['손잡이',NM.h[S.h]]];
+    function fmtDelta(n){return n>0?' (+'+n.toLocaleString('ko-KR')+'원)':'';}
+    var typeDelta=0, sizeDelta=0, doorDelta=0, glassDelta=0, gansalDelta=0, handleDelta=0;
+    if(PR){
+      if(PR.base){
+        var baseVals=Object.keys(PR.base).map(function(k){return PR.base[k];});
+        typeDelta=(PR.base[S.t]||0)-Math.min.apply(null,baseVals);
+      }
+      if(PR.baseSizeMM&&PR.sizePer100mm){
+        sizeDelta=Math.max(0,pSz.w-PR.baseSizeMM.w)/100*PR.sizePer100mm.w+Math.max(0,pSz.h-PR.baseSizeMM.h)/100*PR.sizePer100mm.h;
+      }
+      doorDelta=(PR.doorColor&&PR.doorColor[S.d])||0;
+      glassDelta=(PR.glassPattern&&PR.glassPattern[S.g])||0;
+      gansalDelta=(S.cols.length+S.rows.length)*(PR.muntinEach||0)+(S.arch?(PR.muntinArch||0):0);
+      handleDelta=(PR.handle&&PR.handle[S.h])||0;
+    }
+    var rows=[['제품 유형',S.t+(S.t==='여닫이'?' · '+NM.sub[S.sub]:'')+fmtDelta(typeDelta)],['설치 규격','W'+dispW+' × H'+dispTotalH+' ('+S.size+(S.ext?', +30mm 연장':'')+')'+fmtDelta(sizeDelta)],['중문 색상',NM.d[S.d]+fmtDelta(doorDelta)],['안전창',NM.g[S.g]+fmtDelta(glassDelta)],['간살',(gansalTxt.length?gansalTxt.join(' · '):'없음')+fmtDelta(gansalDelta)],['손잡이',NM.h[S.h]+fmtDelta(handleDelta)]];
     if(S.foot)rows.push(['마감판','추가 (기본 포함)']);
     if(S.partition)rows.push(['무타공 파티션','추가 (+40만원)']);
     if(S.measure)rows.push(['유상 출장 실측','신청 (지역별 3~10만원 별도)']);
