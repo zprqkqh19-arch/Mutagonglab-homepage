@@ -1263,11 +1263,10 @@ h3{position:relative}
 .lc-picked{ font-size:.8rem; color:var(--ink); font-variant-numeric:tabular-nums; }
 .lc-sku{ font-size:.72rem; color:var(--ink-soft); word-break:break-all; }
 .lc-cta{ display:flex; flex-direction:column; gap:.6rem; }
-.lc-consult-btn, .lc-buy-btn{ font:inherit; font-size:var(--step--1); font-weight:700; padding:.85rem 0;
-  width:100%; border-radius:10px; cursor:pointer; text-align:center; transition:opacity .2s; }
-.lc-consult-btn{ background:var(--paper); color:var(--accent); border:1px solid var(--accent); }
-.lc-buy-btn{ background:var(--accent); color:#fff; border:none; }
-.lc-consult-btn:hover, .lc-buy-btn:hover{ opacity:.85; }
+.lc-buy-btn{ font:inherit; font-size:var(--step--1); font-weight:700; padding:.85rem 0;
+  width:100%; border-radius:10px; cursor:pointer; text-align:center; transition:opacity .2s;
+  background:var(--accent); color:#fff; border:none; }
+.lc-buy-btn:hover{ opacity:.85; }
 .glass-example-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:.9rem; }
 .glass-example-card{ margin:0; overflow:hidden; border:1px solid var(--paper-line); border-radius:12px; background:var(--paper); }
 .glass-example-card img{ display:block; width:100%; height:auto; aspect-ratio:1/1; object-fit:cover; }
