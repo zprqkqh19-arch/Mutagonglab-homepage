@@ -551,9 +551,16 @@
     position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:space-between;
     gap:.6rem; padding:.7rem .9rem; background:rgba(30,27,23,.82); backdrop-filter:blur(2px);
   }
-  .sale-round-cta-bar span{ font-size:.72rem; font-weight:700; color:#fff; text-align:left; }
+  .sale-round-cta-bar > span{ font-size:.72rem; font-weight:700; color:#fff; text-align:left; }
   .sale-round-cta-bar .btn{ flex-shrink:0; }
   .btn-sm{ padding:.5rem 1.1rem; font-size:.78rem; }
+  .sale-round-cta-text{ display:flex; flex-direction:column; gap:.1rem; text-align:left; }
+  .cta-title{ font-size:.72rem; font-weight:700; color:#fff; }
+  .cta-sub{ font-size:.62rem; color:rgba(255,255,255,.75); }
+  .sale-round-closed-pill{
+    flex-shrink:0; display:inline-flex; padding:.5rem 1.1rem; border-radius:999px;
+    font-size:.78rem; font-weight:700; background:var(--accent); color:#fff;
+  }
   .sale-round-card p{ font-size:var(--step--1); color:var(--ink-soft); margin:0; padding:1rem 1.2rem; }
   .sale-round-note{ text-align:center; margin-top:1.8rem; font-size:var(--step--1); color:var(--ink-soft); }
 
