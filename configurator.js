@@ -925,7 +925,7 @@
     var d0Frame = cfg.frameColors.filter(function (o) { return o.value === d0.a; })[0];
     var state = {
       sz: d0.sz, t: d0.t, a: d0.a, aFinish: d0Frame ? d0Frame.finish : null,
-      d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od",
+      d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od", gt: d0.gt || "general",
       cols: [], rows: [], arch: false, ext: false, bg: false, open: false,
       partition: false, auto: false,
     };
@@ -992,6 +992,7 @@
       }
       if (p.frameColor) total += p.frameColor[state.a] || 0;
       if (p.doorColor) total += p.doorColor[state.d] || 0;
+      if (p.glassType) total += p.glassType[state.gt] || 0;
       if (p.glassPattern) total += p.glassPattern[state.g] || 0;
       var muntinCount = state.cols.length + state.rows.length;
       total += muntinCount * (p.muntinEach || 0);
@@ -1013,6 +1014,7 @@
         var rv = state.rows.map(function (mm) { return colAlpha(mm).toLowerCase(); }).join("");
         code += " / 간살[" + pre + cv + rv + "]";
       }
+      if (cfg.glassTypes && state.gt === "tempered") code += " +강화유리";
       if (state.partition) code += " +파티션";
       if (state.auto) code += " +자동문";
       return code;
@@ -1178,6 +1180,10 @@
         h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
       }
       h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
+      // 유리 종류(일반/강화) — 실유리를 쓰는 혜다움 전용(cfg.glassTypes 있을 때만 노출)
+      if (cfg.glassTypes) {
+        h += row("유리 종류", cfg.glassTypes.map(function (o) { return optBtn("gt", o); }).join(""));
+      }
       // 안전창 + 배경 토글 + 유리 예시 이미지 보기
       var glassHtml = cfg.glass.map(function (o) { return optBtn("g", o); }).join("");
       var bgDis = !bgOk;

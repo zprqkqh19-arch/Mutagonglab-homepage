@@ -465,8 +465,13 @@
       { src: "assets/glass/glass-aqua.png", label: "아쿠아" },
     ],
     handles: LAYERED_CUSTOMIZER_12_22.handles,
+    // 유리 종류 — 실유리를 쓰는 혜다움(시공형) 전용. 무타공(DIY)은 안전창(폴리카보네이트) 단일 소재라 해당 없음.
+    glassTypes: [
+      { value: "general", label: "일반유리" },
+      { value: "tempered", label: "강화유리" },
+    ],
     background: "assets/sku/room-bg.webp",
-    defaults: { sz: "12-22", t: "3연동", a: "paint_white", d: "wh", g: "cl", h: "st", sub: "od" },
+    defaults: { sz: "12-22", t: "3연동", a: "paint_white", d: "wh", g: "cl", h: "st", sub: "od", gt: "general" },
     // 가격표(2026-08-18 대표 확정)
     pricing: {
       base: { "3연동": 990000, "원슬라이딩": 890000, "스윙폴딩": 990000, "여닫이": 990000 },
@@ -475,6 +480,7 @@
       // 프레임 색상(finish+color 6종 통합) — 도장 기준 0원, 필름 +3만원(색상별 추가금은 없음)
       frameColor: { paint_white: 0, paint_gray: 0, paint_black: 0, film_white: 30000, film_gray: 30000, film_black: 30000 },
       doorColor: { wh: 0, gr: 0, bk: 0 },
+      glassType: { general: 0, tempered: 40000 },
       glassPattern: { cl: 0, br: 20000, mo: 40000, mi: 40000, sa: 100000, fa: 300000 },
       muntinEach: 30000,
       muntinArch: 200000,
