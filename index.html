@@ -221,12 +221,13 @@
     opts.forEach(function(o){
       var b=document.createElement('button');
       b.textContent=o[1];
-      if(dis&&dis.indexOf(o[0])>=0){b.disabled=true;}
+      if(dis&&dis.indexOf(o[0])>=0){b.disabled=true;b.title='준비 중인 구조입니다.';}
       else b.onclick=function(){S[key]=o[0];render();};
       b.dataset.v=o[0];el.appendChild(b);
     });
   }
-  mkGroup($('gType'),'t',[['3연동','3연동'],['원슬라이딩','원슬라이딩'],['스윙폴딩','스윙폴딩'],['여닫이','여닫이']],[]);
+  // 무타공 DIY는 현재 3연동·원슬라이딩만 판매 중(스윙폴딩·여닫이는 가격표 없음 — 선택 가능하게 두면 기본가가 누락된 채 계산됨).
+  mkGroup($('gType'),'t',[['3연동','3연동'],['원슬라이딩','원슬라이딩'],['스윙폴딩','스윙폴딩'],['여닫이','여닫이']],['스윙폴딩','여닫이']);
   var openBtn=document.createElement('button');openBtn.className='acc';openBtn.onclick=function(){S.open=!S.open;render();};$('gType').appendChild(openBtn);
   mkGroup($('gSub'),'sub',[['od','원도어'],['sy','정대칭 양개형'],['as','비대칭 양개형']]);
   mkGroup($('gFrame'),'a',[['sv','실버']]); S.a='sv';
