@@ -210,7 +210,7 @@
     <div class="grp"><div class="lbl">안전창</div><div class="row" id="gGlass"></div></div>
     <div class="grp">
       <div class="lbl">간살</div>
-      <div class="hint">눈금 알파벳을 클릭해 배치합니다.</div>
+      <div class="hint" style="color:#b0483a;font-weight:700;">눈금 알파벳을 클릭해 배치합니다.</div>
       <div class="picked" id="picked">세로살: — · 가로살: —</div>
       <div class="row">
         <button id="archL" style="font-size:12px;padding:6px 12px;">간살아치형</button>
@@ -230,11 +230,10 @@
     <div class="grp">
       <div class="lbl">추가 옵션</div>
       <div class="row">
-        <button id="addonFoot" class="acc" style="font-size:12px;padding:6px 12px;">마감판 추가</button>
         <button id="addonPartition" class="acc" style="font-size:12px;padding:6px 12px;">무타공 파티션 추가</button>
         <button id="addonMeasure" class="acc" style="font-size:12px;padding:6px 12px;">유상 출장 실측 신청</button>
       </div>
-      <div class="hint">마감판은 첫 구매 시 기본 포함되어 추가 비용이 없습니다. 유상 출장 실측은 지역에 따라 3~10만원이 별도 발생하며 예상 가격에는 포함되지 않습니다.</div>
+      <div class="hint">유상 출장 실측은 지역에 따라 3~10만원이 별도 발생하며 예상 가격에는 포함되지 않습니다.</div>
     </div>
     <div class="sku" id="sku"></div>
     <div class="price" id="price" style="font-size:14px;font-weight:700;color:#222;display:none;"></div>
@@ -247,6 +246,9 @@
       <div style="font-weight:700;color:#666;padding-left:0;text-indent:0;">안내 사항</div>
       <div>* 프레임은 마감 후 가려지는 부분입니다.</div>
       <div>· 중문 색상, 안전창 디자인, 간살의 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지는 않습니다.</div>
+      <div>· 우드는 필름 마감입니다.</div>
+      <div>· 지지프레임 마감판은 설치공간 사이즈에서 선택하신 중문 사이즈를 뺀 크기로 주문 제작됩니다.</div>
+      <div>· 선택하신 옵션으로 카카오톡 구매·상담이 진행되며, 상담을 통해 사이즈·옵션을 확인한 뒤 구매가 진행됩니다.</div>
       <div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div>
     </div>
   </div>
@@ -255,8 +257,8 @@
 <script>
 
 (function(){
-  var S = {t:'3연동',d:'wh',g:'cl',h:'st',sub:'od',size:'12-22',cols:[],rows:[],arch:false,ext:false,bg:true,open:false,foot:false,partition:false,measure:false};
-  var DPAL = {wh:'#eeece7',gr:'#707074',bk:'#2b2b2e'};
+  var S = {t:'3연동',d:'wh',g:'cl',h:'st',sub:'od',size:'12-22',cols:[],rows:[],arch:false,ext:false,bg:true,open:false,partition:false,measure:false};
+  var DPAL = {wh:'#eeece7',gr:'#707074',bk:'#2b2b2e',wd:'#8a5a34'};
   var SIZES=[['11-20',1100,2000],['11-21',1100,2100],['11-22',1100,2200],['11-23',1100,2300],['12-20',1200,2000],['12-21',1200,2100],['12-22',1200,2200],['12-23',1200,2300],['13-22',1300,2200],['13-23',1300,2300]];
   var SIZE_MAP={}; SIZES.forEach(function(s){SIZE_MAP[s[0]]={w:s[1],h:s[2]};});
   function frameSVG(W,H,ext){
@@ -290,7 +292,7 @@
   var openBtn=document.createElement('button');openBtn.className='acc';openBtn.onclick=function(){S.open=!S.open;render();};$('gType').appendChild(openBtn);
   mkGroup($('gSub'),'sub',[['od','원도어'],['sy','정대칭 양개형'],['as','비대칭 양개형']]);
   mkGroup($('gFrame'),'a',[['sv','실버']]); S.a='sv';
-  mkGroup($('gDoor'),'d',[['wh','화이트'],['gr','그레이'],['bk','블랙']]);
+  mkGroup($('gDoor'),'d',[['wh','화이트'],['gr','그레이'],['bk','블랙'],['wd','우드']]);
   mkGroup($('gGlass'),'g',[['cl','투명'],['br','브론즈'],['mi','미스트'],['mo','모루'],['sa','샤틴'],['fa','패브릭']]);
   var bgBtn=document.createElement('button');bgBtn.className='acc';bgBtn.onclick=function(){S.bg=!S.bg;render();};$('gGlass').appendChild(bgBtn);
   var HANDLE_ALLOW={'3연동':['st','lj','sj'],'원슬라이딩':['st','lj','sj'],'스윙폴딩':['ba','sb'],'여닫이':['rd','ba','sb']};
@@ -311,7 +313,6 @@
   $('archF').onclick=function(){S.arch=S.arch==='fill'?false:'fill';render();};
   $('clear').onclick=function(){S.cols=[];S.rows=[];S.arch=false;render();};
   $('extBtn').onclick=function(){S.ext=!S.ext;render();};
-  $('addonFoot').onclick=function(){S.foot=!S.foot;render();};
   $('addonPartition').onclick=function(){S.partition=!S.partition;render();};
   $('addonMeasure').onclick=function(){S.measure=!S.measure;render();};
   $('buyBtn').onclick=function(){
@@ -356,7 +357,9 @@
     var dispW=dispSz.w, dispTotalH=dispSz.h+(S.ext?30:0);
     var dir=S.t==='원슬라이딩'?'B1':(S.t==='스윙폴딩'?'B2':(S.t==='여닫이'?'B3':'B')), pre=dir;
     var subSuf=(S.t==='여닫이'&&S.sub!=='od')?'_'+S.sub:'';
-    $('bImg').src=SK('skus/12-22/'+dir+'/'+pre+'_12-22_'+S.d+'_'+S.g+'_no_'+S.h+subSuf+'.svg');
+    // 우드(wd) 도어 이미지 자산은 아직 없어 미리보기는 화이트로 대체 표시(가격·SKU 표기는 우드 그대로 반영).
+    var imgD=S.d==='wd'?'wh':S.d;
+    $('bImg').src=SK('skus/12-22/'+dir+'/'+pre+'_12-22_'+imgD+'_'+S.g+'_no_'+S.h+subSuf+'.svg');
     $('grpSub').style.display=S.t==='여닫이'?'flex':'none';
     var w=$('bWrap');Object.assign(w.style,{left:bLeft+'px',top:bTop+'px',width:bW+'px',height:bH+'px',overflow:(S.open&&(S.t==='3연동'||S.t==='원슬라이딩'))?'hidden':'visible'});
     var xf='none',xo='center';
@@ -453,13 +456,11 @@
     $('archL').classList.toggle('on',S.arch==='line');
     $('archF').classList.toggle('on',S.arch==='fill');
     $('extBtn').classList.toggle('on',S.ext);
-    $('addonFoot').classList.toggle('on',S.foot);
     $('addonPartition').classList.toggle('on',S.partition);
     $('addonMeasure').classList.toggle('on',S.measure);
     var ca=function(mm){return alpha((mm-50)/50);};
     $('picked').textContent='세로살: '+(S.cols.length?S.cols.map(ca).join(', '):'—')+' · 가로살: '+(S.rows.length?S.rows.map(function(m){return ca(m).toLowerCase();}).join(', '):'—');
     var extra=(S.cols.length||S.rows.length||S.arch)?' / 간살['+(S.arch==='line'?'간살아치·':S.arch==='fill'?'채움아치·':'')+S.cols.map(ca).join('')+S.rows.map(function(m){return ca(m).toLowerCase();}).join('')+']':'';
-    if(S.foot)extra+=' +마감판';
     if(S.partition)extra+=' +파티션';
     if(S.measure)extra+=' +출장실측신청';
     var subSku=(S.t==='여닫이')?'-'+S.sub:'';
@@ -478,14 +479,13 @@
       if(S.arch)pTotal+=PR.muntinArch||0;
       if(PR.handle)pTotal+=PR.handle[S.h]||0;
       if(PR.addon){
-        if(S.foot&&PR.addon.footFinish)pTotal+=PR.addon.footFinish;
         if(S.partition&&PR.addon.partitionAddon)pTotal+=PR.addon.partitionAddon;
       }
       var measureNote=S.measure?' (유상 출장 실측 3~10만원 별도)':'';
       $('price').textContent='예상 가격 '+pTotal.toLocaleString('ko-KR')+'원 (실측 후 확정)'+measureNote;
       $('price').style.display='block';
     }
-    var NM={d:{wh:'화이트',gr:'그레이',bk:'블랙'},g:{cl:'투명',br:'브론즈',mi:'미스트',mo:'모루',sa:'샤틴',fa:'패브릭'},h:{st:'기본',rd:'반원형',ba:'긴 바형',sb:'짧은 바형',lj:'긴 일자형',sj:'짧은 일자형'},sub:{od:'원도어',sy:'정대칭 양개형',as:'비대칭 양개형'}};
+    var NM={d:{wh:'화이트',gr:'그레이',bk:'블랙',wd:'우드'},g:{cl:'투명',br:'브론즈',mi:'미스트',mo:'모루',sa:'샤틴',fa:'패브릭'},h:{st:'기본',rd:'반원형',ba:'긴 바형',sb:'짧은 바형',lj:'긴 일자형',sj:'짧은 일자형'},sub:{od:'원도어',sy:'정대칭 양개형',as:'비대칭 양개형'}};
     var gansalTxt=[];
     if(S.arch==='line')gansalTxt.push('간살아치형');
     if(S.arch==='fill')gansalTxt.push('채움아치형');
@@ -507,7 +507,6 @@
       handleDelta=(PR.handle&&PR.handle[S.h])||0;
     }
     var rows=[['제품 유형',S.t+(S.t==='여닫이'?' · '+NM.sub[S.sub]:'')+fmtDelta(typeDelta)],['설치 규격','W'+dispW+' × H'+dispTotalH+' ('+S.size+(S.ext?', +30mm 연장':'')+')'+fmtDelta(sizeDelta)],['중문 색상',NM.d[S.d]+fmtDelta(doorDelta)],['안전창',NM.g[S.g]+fmtDelta(glassDelta)],['간살',(gansalTxt.length?gansalTxt.join(' · '):'없음')+fmtDelta(gansalDelta)],['손잡이',NM.h[S.h]+fmtDelta(handleDelta)]];
-    if(S.foot)rows.push(['마감판','추가 (기본 포함)']);
     if(S.partition)rows.push(['무타공 파티션','추가 (+40만원)']);
     if(S.measure)rows.push(['유상 출장 실측','신청 (지역별 3~10만원 별도)']);
     $('summary').innerHTML=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#8a877f;flex-shrink:0;">'+r[0]+'</span><span style="text-align:right;">'+r[1]+'</span></div>';}).join('');

@@ -386,13 +386,14 @@
       base: { "3연동": 990000, "원슬라이딩": 890000, "스윙폴딩": 990000, "여닫이": 990000 },
       baseSizeMM: { w: 1100, h: 2000 },
       sizePer100mm: { w: 10000, h: 10000 },
-      doorColor: { wh: 0, gr: 0, bk: 0 },
+      // 우드(wd)는 필름 마감(2026-08-18 대표 지시) — 금액 미확정이라 혜다움 필름 프레임 프리미엄(+3만원)과
+      // 동일하게 임시 책정. 실제 금액 확인되면 이 값만 수정.
+      doorColor: { wh: 0, gr: 0, bk: 0, wd: 30000 },
       glassPattern: { cl: 0, br: 20000, mo: 40000, mi: 40000, sa: 100000, fa: 300000 },
       muntinEach: 30000,
       muntinArch: 200000,
       handle: { st: 0, rd: 100000, ba: 100000, sb: 50000, lj: 100000, sj: 50000 },
-      // 마감판은 최초 구매 시 기본 포함이라 추가금 없음(단독 구매 가격은 accessories 상품 참고).
-      addon: { footFinish: 0, partitionAddon: 400000 },
+      addon: { partitionAddon: 400000 },
     },
   };
 
