@@ -35,8 +35,8 @@
       b.dataset.v=o[0];el.appendChild(b);
     });
   }
-  // 무타공 DIY는 현재 3연동·원슬라이딩만 판매 중(스윙폴딩·여닫이는 가격표 없음 — 선택 가능하게 두면 기본가가 누락된 채 계산됨).
-  mkGroup($('gType'),'t',[['3연동','3연동'],['원슬라이딩','원슬라이딩'],['스윙폴딩','스윙폴딩'],['여닫이','여닫이']],['스윙폴딩','여닫이']);
+  // 스윙폴딩·여닫이 2026-08-18 판매 활성화(가격표에 기본가 추가 완료).
+  mkGroup($('gType'),'t',[['3연동','3연동'],['원슬라이딩','원슬라이딩'],['스윙폴딩','스윙폴딩'],['여닫이','여닫이']],[]);
   var openBtn=document.createElement('button');openBtn.className='acc';openBtn.onclick=function(){S.open=!S.open;render();};$('gType').appendChild(openBtn);
   mkGroup($('gSub'),'sub',[['od','원도어'],['sy','정대칭 양개형'],['as','비대칭 양개형']]);
   mkGroup($('gFrame'),'a',[['sv','실버']]); S.a='sv';

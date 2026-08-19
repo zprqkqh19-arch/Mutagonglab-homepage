@@ -351,8 +351,8 @@
     types: [
       { value: "3연동", label: "3연동", prefix: "B" },
       { value: "원슬라이딩", label: "원슬라이딩", prefix: "B1" },
-      { value: "스윙폴딩", label: "스윙폴딩", disabled: true },
-      { value: "여닫이", label: "여닫이", disabled: true },
+      { value: "스윙폴딩", label: "스윙폴딩", prefix: "B2" },
+      { value: "여닫이", label: "여닫이", prefix: "B3" },
     ],
     frameColors: [{ value: "sv", label: "실버" }],
     doorColors: [
@@ -381,9 +381,9 @@
     // 없으면(로드 실패) 토글은 비활성으로 표시된다. 거실 사진을 아래 경로에 넣기만 하면 켜진다.
     background: "assets/sku/room-bg.webp",
     defaults: { sz: "12-22", t: "3연동", a: "sv", d: "wh", g: "cl", h: "st" },
-    // 가격표(2026-08-18 대표 확정) — 시공가는 배송비 개념이라 혜다움과 동일하게 책정.
+    // 가격표(2026-08-18 대표 확정, 스윙폴딩·여닫이는 2026-08-18 활성화) — 시공가는 배송비 개념이라 혜다움과 동일하게 책정.
     pricing: {
-      base: { "3연동": 990000, "원슬라이딩": 890000 },
+      base: { "3연동": 990000, "원슬라이딩": 890000, "스윙폴딩": 990000, "여닫이": 990000 },
       baseSizeMM: { w: 1100, h: 2000 },
       sizePer100mm: { w: 10000, h: 10000 },
       doorColor: { wh: 0, gr: 0, bk: 0 },
