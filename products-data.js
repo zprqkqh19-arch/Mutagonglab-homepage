@@ -450,6 +450,7 @@
       { value: "film_white", label: "화이트", finish: "film", color: "white" },
       { value: "film_gray", label: "그레이", finish: "film", color: "gray" },
       { value: "film_black", label: "블랙", finish: "film", color: "black" },
+      { value: "film_wood", label: "우드", finish: "film", color: "wood" },
     ],
     doorColors: LAYERED_CUSTOMIZER_12_22.doorColors,
     glass: LAYERED_CUSTOMIZER_12_22.glass,
@@ -479,7 +480,7 @@
       baseSizeMM: { w: 1100, h: 2000 },
       sizePer100mm: { w: 10000, h: 10000 },
       // 프레임 색상(finish+color 6종 통합) — 도장 기준 0원, 필름 +3만원(색상별 추가금은 없음)
-      frameColor: { paint_white: 0, paint_gray: 0, paint_black: 0, film_white: 30000, film_gray: 30000, film_black: 30000 },
+      frameColor: { paint_white: 0, paint_gray: 0, paint_black: 0, film_white: 30000, film_gray: 30000, film_black: 30000, film_wood: 30000 },
       doorColor: { wh: 0, gr: 0, bk: 0 },
       glassType: { general: 0, tempered: 40000 },
       glassPattern: { cl: 0, br: 20000, mo: 40000, mi: 40000, sa: 100000, fa: 300000 },

@@ -1203,7 +1203,7 @@
         '<button type="button" class="lc-opt' + (state.arch === "fill" ? " on" : "") + '" data-act="arch" data-val="fill">채움아치형</button>' +
         '<button type="button" class="lc-opt ghost" data-act="clear">간살 전체 지우기</button>';
       h += '<div class="lc-row"><div class="lc-row-label">간살</div>' +
-        '<div class="lc-hint">눈금 알파벳을 클릭해 배치합니다. (상단 대문자 = 세로살, 좌측 소문자 = 가로살)</div>' +
+        '<div class="lc-hint lc-hint-strong">눈금 알파벳을 클릭해 배치합니다. (상단 대문자 = 세로살, 좌측 소문자 = 가로살)</div>' +
         '<div class="lc-picked">세로살: ' + colsPicked + " · 가로살: " + rowsPicked + "</div>" +
         '<div class="lc-row-opts">' + garHtml + "</div></div>";
       var handleAl = allowedHandles();

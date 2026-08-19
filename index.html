@@ -247,7 +247,7 @@
       <div>* 프레임은 마감 후 가려지는 부분입니다.</div>
       <div>· 중문 색상, 안전창 디자인, 간살의 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지는 않습니다.</div>
       <div>· 우드는 필름 마감입니다.</div>
-      <div>· 지지프레임 마감판은 설치공간 사이즈에서 선택하신 중문 사이즈를 뺀 크기로 주문 제작됩니다.</div>
+      <div>· 지지프레임 마감판은 설치공간 사이즈에서 선택하신 중문 사이즈를 뺀 크기로 주문 제작됩니다. (설치공간 사이즈 - 선택 중문 사이즈 = 마감판 사이즈)</div>
       <div>· 선택하신 옵션으로 카카오톡 구매·상담이 진행되며, 상담을 통해 사이즈·옵션을 확인한 뒤 구매가 진행됩니다.</div>
       <div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div>
     </div>
@@ -360,6 +360,7 @@
     // 우드(wd) 도어 이미지 자산은 아직 없어 미리보기는 화이트로 대체 표시(가격·SKU 표기는 우드 그대로 반영).
     var imgD=S.d==='wd'?'wh':S.d;
     $('bImg').src=SK('skus/12-22/'+dir+'/'+pre+'_12-22_'+imgD+'_'+S.g+'_no_'+S.h+subSuf+'.svg');
+    $('bImg').style.filter=S.d==='wd'?'sepia(1) saturate(3.5) hue-rotate(-12deg) brightness(.78)':'none';
     $('grpSub').style.display=S.t==='여닫이'?'flex':'none';
     var w=$('bWrap');Object.assign(w.style,{left:bLeft+'px',top:bTop+'px',width:bW+'px',height:bH+'px',overflow:(S.open&&(S.t==='3연동'||S.t==='원슬라이딩'))?'hidden':'visible'});
     var xf='none',xo='center';
