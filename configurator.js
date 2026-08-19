@@ -922,13 +922,19 @@
     stage.classList.add("lc-stage");
 
     var d0 = cfg.defaults;
-    var d0Frame = cfg.frameColors.filter(function (o) { return o.value === d0.a; })[0];
     var state = {
-      sz: d0.sz, t: d0.t, a: d0.a, aFinish: d0Frame ? d0Frame.finish : null,
+      sz: d0.sz, t: d0.t,
+      aFinish: cfg.frameFinishes ? (d0.finish || cfg.frameFinishes[0].value) : null,
       d: d0.d, g: d0.g, h: d0.h, sub: d0.sub || "od", gt: d0.gt || "general",
-      cols: [], rows: [], arch: false, ext: false, bg: false, open: false,
+      cols: [], rows: [], arch: false, ext: false, bg: true, open: false,
       partition: false, auto: false,
     };
+    // frameColors가 있는 상품(현재는 없음 — 무타공 DIY는 실버 단일이라 dead path)에서만 프레임 색상 상태를 별도로 둔다.
+    if (cfg.frameColors) {
+      var d0Frame = cfg.frameColors.filter(function (o) { return o.value === d0.a; })[0];
+      state.a = d0.a;
+      if (state.aFinish == null) state.aFinish = d0Frame ? d0Frame.finish : null;
+    }
     if (overrides && overrides.doorType) {
       var pm = cfg.types.filter(function (t) { return t.value === overrides.doorType && !t.disabled; })[0];
       // 문 유형별 손잡이 허용 목록과 어긋난 기본값(state.h='st')이 남아있으면 가격 계산에서
@@ -950,14 +956,23 @@
     function typePrefix() { var x = cfg.types.filter(function (t) { return t.value === state.t; })[0]; return (x && x.prefix) ? x.prefix : "B"; }
     function allowedHandles() { return (cfg.handleAllow && cfg.handleAllow[state.t]) || null; }
     function syncHandle() { var al = allowedHandles(); if (al && al.indexOf(state.h) < 0) state.h = al[0]; }
-    // 프레임 마감(도장/필름)을 바꿀 때, 같은 색상 계열을 유지한 채 새 마감의 옵션으로 전환한다.
+    // 프레임 색상 상품(dead path)에서만 쓰는 예전 동기화 — 마감을 바꿀 때 같은 색상 계열을 유지.
     function syncFrameColor() {
-      if (!cfg.frameFinishes) return;
+      if (!cfg.frameFinishes || !cfg.frameColors) return;
       var cur = cfg.frameColors.filter(function (o) { return o.value === state.a; })[0];
       var curColor = cur ? cur.color : null;
       var next = cfg.frameColors.filter(function (o) { return o.finish === state.aFinish && o.color === curColor; })[0] ||
         cfg.frameColors.filter(function (o) { return o.finish === state.aFinish; })[0];
       if (next) state.a = next.value;
+    }
+    // 중문 마감(도장/필름)을 바꿀 때, 현재 색상이 그 마감에서 선택 불가능하면(예: 도장으로 바꿨는데 우드 선택 중)
+    // 기본 색상으로 되돌린다. doorColors에 finish 태그가 없는 상품(무타공 DIY)에서는 아무 영향 없음.
+    function syncDoorColorForFinish() {
+      var cur = cfg.doorColors.filter(function (o) { return o.value === state.d; })[0];
+      if (cur && cur.finish && cur.finish !== state.aFinish) {
+        var fallback = cfg.doorColors.filter(function (o) { return !o.finish; })[0];
+        if (fallback) state.d = fallback.value;
+      }
     }
     function doorHex() { var c = cfg.doorColors.filter(function (x) { return x.value === state.d; })[0]; return c ? c.hex : "#eeece7"; }
     function selSize() { return cfg.sizes.filter(function (s) { return s.code === state.sz; })[0] || cfg.sizes[0]; }
@@ -975,11 +990,14 @@
     }
     // SVG 자산은 12-22 세트 하나(디자인 동일)를 모든 사이즈에 스케일해 재사용
     // 여닫이는 세부 유형(원도어/정대칭/비대칭)에 따라 파일명 접미사가 붙는다(_sy, _as / 원도어는 접미사 없음).
+    // 우드(wd) 중문 이미지 자산은 아직 없어 화이트 자산을 불러온 뒤 CSS 필터로 나무결 톤을 입힌다(doorFilter 참고).
+    function bImgColor() { return state.d === "wd" ? "wh" : state.d; }
     function bSrc() {
       var p = typePrefix();
       var subSuf = (state.t === "여닫이" && state.sub && state.sub !== "od") ? "_" + state.sub : "";
-      return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.assetSize + "_" + state.d + "_" + state.g + "_no_" + state.h + subSuf + ".svg";
+      return cfg.assetBase + "/" + p + "/" + p + "_" + cfg.assetSize + "_" + bImgColor() + "_" + state.g + "_no_" + state.h + subSuf + ".svg";
     }
+    function doorFilter() { return state.d === "wd" ? "filter:sepia(1) saturate(6) hue-rotate(-20deg) brightness(.5);" : ""; }
     function aSrc() { return cfg.assetBase + "/A/A_" + cfg.assetSize + "_" + state.a + (state.ext ? "_ext" : "") + ".svg"; }
 
     // 옵션 조합에 따른 예상 가격 합산(가격표 없는 제품은 null 반환 → 가격 영역 숨김)
@@ -992,6 +1010,7 @@
         total += Math.max(0, sz.w - p.baseSizeMM.w) / 100 * p.sizePer100mm.w;
         total += Math.max(0, sz.h - p.baseSizeMM.h) / 100 * p.sizePer100mm.h;
       }
+      if (p.finish) total += p.finish[state.aFinish] || 0;
       if (p.frameColor) total += p.frameColor[state.a] || 0;
       if (p.doorColor) total += p.doorColor[state.d] || 0;
       if (p.glassType) total += p.glassType[state.gt] || 0;
@@ -1009,7 +1028,9 @@
 
     function skuCode() {
       var subLabel = (state.t === "여닫이" && cfg.subTypes) ? (cfg.subTypes.filter(function (o) { return o.value === state.sub; })[0] || {}).label : null;
-      var code = state.t + (subLabel ? " · " + subLabel : "") + " / " + state.sz + " / A-" + state.a + " / B-" + state.d + "-" + state.g + "-" + state.h;
+      var finishSeg = cfg.frameFinishes ? (cfg.frameFinishes.filter(function (o) { return o.value === state.aFinish; })[0] || {}).label + " / " : "";
+      var frameSeg = cfg.frameColors ? "A-" + state.a + " / " : "";
+      var code = state.t + (subLabel ? " · " + subLabel : "") + " / " + state.sz + " / " + finishSeg + frameSeg + "B-" + state.d + "-" + state.g + "-" + state.h;
       if (state.cols.length || state.rows.length || state.arch) {
         var pre = state.arch === "line" ? "간살아치·" : state.arch === "fill" ? "채움아치·" : "";
         var cv = state.cols.map(colAlpha).join("");
@@ -1028,17 +1049,20 @@
     // 무타공랩과 동일하게 실 HTML/CSS 레이어를 SVG 프리뷰 "바깥"에 얹는 방식으로 구현한다(syncOpenOverlay).
     function openOverlayHtml(href) {
       var t = state.t;
+      // filter는 perspective/transform-style:preserve-3d가 걸린 부모(.lc-open-fold 등)에 얹으면 3D 렌더링이
+      // 깨질 수 있어, 배경 이미지를 그리는 낱장 엘리먼트에만 개별로 필터를 건다.
+      var df = doorFilter();
       if (t === "3연동") {
         return '<div class="lc-open-wrap">' +
-          '<div class="lc-open-sp lc-open-sp1" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
-          '<div class="lc-open-sp lc-open-sp2" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
-          '<div class="lc-open-sp lc-open-sp3" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
+          '<div class="lc-open-sp lc-open-sp1" style="' + df + 'background-image:url(&quot;' + href + '&quot;)"></div>' +
+          '<div class="lc-open-sp lc-open-sp2" style="' + df + 'background-image:url(&quot;' + href + '&quot;)"></div>' +
+          '<div class="lc-open-sp lc-open-sp3" style="' + df + 'background-image:url(&quot;' + href + '&quot;)"></div>' +
           "</div>";
       }
       if (t === "스윙폴딩") {
         return '<div class="lc-open-wrap lc-open-fold">' +
-          '<div class="lc-open-segR" style="background-image:url(&quot;' + href + '&quot;)">' +
-          '<div class="lc-open-segL" style="background-image:url(&quot;' + href + '&quot;)"></div>' +
+          '<div class="lc-open-segR" style="' + df + 'background-image:url(&quot;' + href + '&quot;)">' +
+          '<div class="lc-open-segL" style="' + df + 'background-image:url(&quot;' + href + '&quot;)"></div>' +
           "</div></div>";
       }
       if (t === "여닫이") {
@@ -1047,8 +1071,8 @@
         else if (state.sub === "as") { wA = 70.18; wB = 29.82; }
         else { wA = 0; wB = 100; }
         var segs = "";
-        if (wA) segs += '<div class="lc-open-swA" style="width:' + wA + '%;background-image:url(&quot;' + href + '&quot;);background-size:' + (10000 / wA) + '% 100%"></div>';
-        segs += '<div class="lc-open-swB" style="width:' + wB + '%;background-image:url(&quot;' + href + '&quot;);background-size:' + (10000 / wB) + '% 100%"></div>';
+        if (wA) segs += '<div class="lc-open-swA" style="' + df + 'width:' + wA + '%;background-image:url(&quot;' + href + '&quot;);background-size:' + (10000 / wA) + '% 100%"></div>';
+        segs += '<div class="lc-open-swB" style="' + df + 'width:' + wB + '%;background-image:url(&quot;' + href + '&quot;);background-size:' + (10000 / wB) + '% 100%"></div>';
         return '<div class="lc-open-wrap lc-open-swing">' + segs + "</div>";
       }
       return "";
@@ -1056,6 +1080,23 @@
 
     var openOverlayEl = document.createElement("div");
     openOverlayEl.className = "lc-open-overlay";
+    // 열림 위치(transform)를 innerHTML과 같은 틱에서 같이 넣으면 브라우저가 "닫힌→열린" 중간 상태를
+    // 그릴 기회가 없어 트랜지션이 재생되지 않는다(바로 열린 채로 나타남). 그래서 무타공랩 DIY와 동일하게
+    // 구조만 먼저 그린 뒤, 다음 프레임에 transform을 적용해 CSS transition이 실제로 재생되게 한다.
+    function applyOpenTransform() {
+      var sp1 = openOverlayEl.querySelector(".lc-open-sp1");
+      var sp2 = openOverlayEl.querySelector(".lc-open-sp2");
+      var segR = openOverlayEl.querySelector(".lc-open-segR");
+      var segL = openOverlayEl.querySelector(".lc-open-segL");
+      var swA = openOverlayEl.querySelector(".lc-open-swA");
+      var swB = openOverlayEl.querySelector(".lc-open-swB");
+      if (sp1) sp1.style.transform = "translateX(178%)";
+      if (sp2) sp2.style.transform = "translateX(89%)";
+      if (segR) segR.style.transform = "rotateY(84deg)";
+      if (segL) segL.style.transform = "rotateY(-168deg)";
+      if (swA) swA.style.transform = "rotateY(-78deg)";
+      if (swB) swB.style.transform = "rotateY(78deg)";
+    }
     function syncOpenOverlay() {
       var overlayTypes = state.t === "3연동" || state.t === "스윙폴딩" || state.t === "여닫이";
       if (!state.open || !overlayTypes) {
@@ -1081,6 +1122,7 @@
       var top = (svgRect.top - stageRect.top) + offsetY + (G.innerTop - vb.y) * scale;
       openOverlayEl.style.cssText = "position:absolute; left:" + left + "px; top:" + top + "px; width:" + (G.innerW * scale) + "px; height:" + (G.innerH * scale) + "px; display:block; overflow:hidden; pointer-events:none;";
       openOverlayEl.innerHTML = openOverlayHtml(bSrc());
+      requestAnimationFrame(applyOpenTransform);
     }
 
     // ---- 프리뷰 SVG ----
@@ -1113,7 +1155,7 @@
       if (slideOpen) s += '<g clip-path="url(#lcDoorClip)">';
       var doorXf = slideOpen ? ' transform="translate(' + slideDx + ' 0)"' : "";
       s += '<image href="' + href + '" x="' + iX + '" y="' + iTop + '" width="' + iW + '" height="' + iH + '"' + doorXf +
-        (doorOpen ? ' visibility="hidden"' : "") + ' style="transition:transform .5s ease"/>';
+        (doorOpen ? ' visibility="hidden"' : "") + ' style="transition:transform .5s ease;' + doorFilter() + '"/>';
       if (slideOpen) s += "</g>";
       if (slideOpen) s += '<g clip-path="url(#lcDoorClip)">';
       s += '<g transform="translate(' + (iX + slideDx) + " " + iTop + ')" pointer-events="none"' + (doorOpen ? ' visibility="hidden"' : "") + ">";
@@ -1172,16 +1214,16 @@
       if (cfg.subTypes && state.t === "여닫이") {
         h += row("세부 유형", cfg.subTypes.map(function (o) { return optBtn("sub", o); }).join(""));
       }
-      // 프레임 색상: 도장/필름 2단 선택(cfg.frameFinishes 있을 때만) — 없으면 기존처럼 단일 나열.
+      // 중문 마감: 도장/필름 선택(cfg.frameFinishes 있을 때만). 혜다움은 별도 프레임이 없는 일반 시공형이라
+      // 예전의 "프레임 마감/색상" 2단 선택을 "중문 마감" + "중문 색상"(finish로 필터)으로 통합했다.
       if (cfg.frameFinishes) {
         var finishHtml = cfg.frameFinishes.map(function (o) { return optBtn("aFinish", o); }).join("");
-        h += row("프레임 마감", finishHtml);
-        var colorOpts = cfg.frameColors.filter(function (o) { return o.finish === state.aFinish; });
-        h += row("프레임 색상 <em>*</em>", colorOpts.map(function (o) { return optBtn("a", o); }).join(""));
-      } else {
+        h += row("중문 마감", finishHtml);
+      } else if (cfg.frameColors) {
         h += row("프레임 색상 <em>*</em>", cfg.frameColors.map(function (o) { return optBtn("a", o); }).join(""));
       }
-      h += row("중문 색상", cfg.doorColors.map(function (o) { return optBtn("d", o); }).join(""));
+      var doorColorOpts = cfg.doorColors.filter(function (o) { return !o.finish || o.finish === state.aFinish; });
+      h += row("중문 색상", doorColorOpts.map(function (o) { return optBtn("d", o); }).join(""));
       // 유리 종류(일반/강화) — 실유리를 쓰는 혜다움 전용(cfg.glassTypes 있을 때만 노출)
       if (cfg.glassTypes) {
         h += row("유리 종류", cfg.glassTypes.map(function (o) { return optBtn("gt", o); }).join(""));
@@ -1214,7 +1256,8 @@
           var on = state[o.value];
           var btn = '<button type="button" class="lc-opt ghost' + (on ? " on" : "") + '" data-act="addon" data-key="' + o.value + '">' + o.label + "</button>";
           if (o.hasExample) {
-            btn += '<button type="button" class="lc-opt ghost" data-act="partitionexample">예시 이미지 보기</button>';
+            // "예시 이미지 보기"는 파티션 추가의 하위(sub) 항목 — 같은 버튼 밑에 작은 텍스트 링크로 붙인다.
+            btn = '<span class="lc-addon-item">' + btn + '<button type="button" class="lc-example-link" data-act="partitionexample">예시 이미지 보기</button></span>';
           }
           return btn;
         }).join("");
@@ -1229,8 +1272,8 @@
         '<button type="button" class="lc-buy-btn" data-act="contact">카카오톡으로 구매·상담 문의</button>' +
         "</div>";
       h += '<div class="lc-notes"><div class="lc-notes-h">안내 사항</div>' +
-        "<div>* 프레임은 마감 후 가려지는 부분입니다.</div>" +
         "<div>· 중문 색상·" + (cfg.glassLabel || "안전창") + " 디자인·간살 위치 등은 디자인 선택을 위한 참고용이며 실제 제품과 완벽히 일치하지 않을 수 있습니다.</div>" +
+        "<div>· 선택하신 옵션으로 카카오톡 구매·상담이 진행되며, 상담을 통해 사이즈·옵션을 확인한 뒤 구매가 진행됩니다.</div>" +
         "<div>· 기타 옵션은 고객센터를 통해 문의해 주세요.</div></div>";
       return h;
     }
@@ -1266,7 +1309,7 @@
         var k = b.getAttribute("data-key");
         state[k] = b.getAttribute("data-val");
         if (k === "t") { syncHandle(); if (state.t !== "여닫이") state.sub = "od"; }
-        else if (k === "aFinish") { syncFrameColor(); }
+        else if (k === "aFinish") { syncFrameColor(); syncDoorColorForFinish(); }
       }
       else if (act === "setsz") { state.sz = b.getAttribute("data-val"); }
       else if (act === "bg") { state.bg = !state.bg; }

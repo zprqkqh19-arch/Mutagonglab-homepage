@@ -6,7 +6,7 @@
 
 (function(){
   var S = {t:'3연동',d:'wh',g:'cl',h:'st',sub:'od',size:'12-22',cols:[],rows:[],arch:false,ext:false,bg:true,open:false,partition:false,measure:false};
-  var DPAL = {wh:'#eeece7',gr:'#707074',bk:'#2b2b2e',wd:'#8a5a34'};
+  var DPAL = {wh:'#eeece7',gr:'#707074',bk:'#2b2b2e',wd:'#92704e'};
   var SIZES=[['11-20',1100,2000],['11-21',1100,2100],['11-22',1100,2200],['11-23',1100,2300],['12-20',1200,2000],['12-21',1200,2100],['12-22',1200,2200],['12-23',1200,2300],['13-22',1300,2200],['13-23',1300,2300]];
   var SIZE_MAP={}; SIZES.forEach(function(s){SIZE_MAP[s[0]]={w:s[1],h:s[2]};});
   function frameSVG(W,H,ext){
@@ -108,7 +108,7 @@
     // 우드(wd) 도어 이미지 자산은 아직 없어 미리보기는 화이트로 대체 표시(가격·SKU 표기는 우드 그대로 반영).
     var imgD=S.d==='wd'?'wh':S.d;
     $('bImg').src=SK('skus/12-22/'+dir+'/'+pre+'_12-22_'+imgD+'_'+S.g+'_no_'+S.h+subSuf+'.svg');
-    $('bImg').style.filter=S.d==='wd'?'sepia(1) saturate(3.5) hue-rotate(-12deg) brightness(.78)':'none';
+    $('bImg').style.filter=S.d==='wd'?'sepia(1) saturate(6) hue-rotate(-20deg) brightness(.5)':'none';
     $('grpSub').style.display=S.t==='여닫이'?'flex':'none';
     var w=$('bWrap');Object.assign(w.style,{left:bLeft+'px',top:bTop+'px',width:bW+'px',height:bH+'px',overflow:(S.open&&(S.t==='3연동'||S.t==='원슬라이딩'))?'hidden':'visible'});
     var xf='none',xo='center';
