@@ -1271,21 +1271,21 @@ h3{position:relative}
    문 유형별 개방 표현(3연동=3패널 슬라이드, 스윙폴딩=폴딩, 여닫이=경첩 스윙) 비율은 원본과 동일. */
 .lc-open-overlay{ display:none; overflow:hidden; }
 .lc-open-wrap{ position:absolute; left:0; top:0; width:100%; height:100%; }
-.lc-open-sp{ position:absolute; top:0; width:35.96%; height:100%; background-repeat:no-repeat; background-size:278.1% 100%; }
-.lc-open-sp1{ left:0; background-position:0% 0; transform:translateX(178%); }
-.lc-open-sp2{ left:32.02%; background-position:50% 0; transform:translateX(89%); }
+.lc-open-sp{ position:absolute; top:0; width:35.96%; height:100%; background-repeat:no-repeat; background-size:278.1% 100%; transition:transform .6s; }
+.lc-open-sp1{ left:0; background-position:0% 0; }
+.lc-open-sp2{ left:32.02%; background-position:50% 0; }
 .lc-open-sp3{ left:64.04%; background-position:100% 0; }
 .lc-open-fold{ perspective:1800px; }
 .lc-open-segR{ position:absolute; right:0; top:0; width:36.4%; height:100%; transform-origin:100% 50%;
   transform-style:preserve-3d; background-repeat:no-repeat; background-size:274.7% 100%; background-position:100% 0;
-  transform:rotateY(84deg); }
+  transition:transform .6s; }
 .lc-open-segL{ position:absolute; right:100%; top:0; width:174.7%; height:100%; transform-origin:100% 50%;
-  background-repeat:no-repeat; background-size:157.2% 100%; background-position:0 0; transform:rotateY(-168deg); }
+  background-repeat:no-repeat; background-size:157.2% 100%; background-position:0 0; transition:transform .6s; }
 .lc-open-swing{ perspective:1800px; }
 .lc-open-swA{ position:absolute; left:0; top:0; height:100%; transform-origin:0% 50%;
-  background-repeat:no-repeat; background-position:0 0; transform:rotateY(-78deg); }
+  background-repeat:no-repeat; background-position:0 0; transition:transform .6s; }
 .lc-open-swB{ position:absolute; right:0; top:0; height:100%; transform-origin:100% 50%;
-  background-repeat:no-repeat; background-position:100% 0; transform:rotateY(78deg); }
+  background-repeat:no-repeat; background-position:100% 0; transition:transform .6s; }
 
 .lc-head{ display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
 .lc-title{ font-size:var(--step-0); font-weight:700; color:var(--ink); }
@@ -1329,6 +1329,12 @@ h3{position:relative}
 .lc-bg.disabled{ border-color:var(--paper-line); color:var(--ink-soft); border-style:dashed; }
 .lc-opt.ghost{ border-style:dashed; border-color:var(--accent); color:var(--accent); }
 .lc-opt.ghost.on{ background:var(--accent); color:#fff; border-style:solid; }
+.lc-addon-item{ display:inline-flex; flex-direction:column; align-items:flex-start; gap:.3rem; }
+.lc-example-link{
+  font:inherit; font-size:.7rem; color:var(--ink-soft); background:none; border:none; padding:0 0 0 .2rem;
+  text-decoration:underline; cursor:pointer;
+}
+.lc-example-link:hover{ color:var(--accent); }
 
 .lc-hint{ font-size:.72rem; line-height:1.5; color:var(--ink-soft); }
 .lc-hint-strong{ color:var(--accent); font-weight:700; }

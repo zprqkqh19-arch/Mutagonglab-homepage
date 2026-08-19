@@ -437,22 +437,20 @@
       "스윙폴딩": ["ba", "sb"],
       "여닫이": ["rd", "ba", "sb"],
     },
-    // 프레임 색상: 도장/필름 2단 선택(1단 마감 → 2단 화이트/그레이/블랙). 실버는 삭제.
-    // 미리보기에서 프레임(A) 레이어를 그리지 않으므로 이미지 자산 유무와 무관하게 전부 선택 가능(사양 표기용).
+    // 혜다움은 알루미늄 지지 프레임이 없는 일반 시공형 중문이라 "프레임" 개념 자체가 없다(2026-08-19 대표 확정).
+    // 기존 "프레임 마감/색상" 2단 선택을 "중문 마감/색상"으로 병합 — frameFinishes를 중문 마감 선택지로 그대로 쓰고,
+    // 색상은 doorColors(finish 태그 있는 항목만 필름에서 노출)로 통합한다. 프레임 색상 그룹은 삭제.
     frameFinishes: [
       { value: "paint", label: "도장" },
       { value: "film", label: "필름" },
     ],
-    frameColors: [
-      { value: "paint_white", label: "화이트", finish: "paint", color: "white" },
-      { value: "paint_gray", label: "그레이", finish: "paint", color: "gray" },
-      { value: "paint_black", label: "블랙", finish: "paint", color: "black" },
-      { value: "film_white", label: "화이트", finish: "film", color: "white" },
-      { value: "film_gray", label: "그레이", finish: "film", color: "gray" },
-      { value: "film_black", label: "블랙", finish: "film", color: "black" },
-      { value: "film_wood", label: "우드", finish: "film", color: "wood" },
+    // 화이트/그레이/블랙은 도장·필름 공통(finish 미지정), 우드는 필름 전용(무늬목 필름이라 도장 불가).
+    doorColors: [
+      { value: "wh", label: "화이트", hex: "#eeece7" },
+      { value: "gr", label: "그레이", hex: "#707074" },
+      { value: "bk", label: "블랙", hex: "#2b2b2e" },
+      { value: "wd", label: "우드", hex: "#92704e", finish: "film" },
     ],
-    doorColors: LAYERED_CUSTOMIZER_12_22.doorColors,
     glass: LAYERED_CUSTOMIZER_12_22.glass,
     // 유리 예시 이미지 보기 팝업용 실사 자료(assets/glass/, 9장).
     glassExamples: [
@@ -473,15 +471,15 @@
       { value: "tempered", label: "강화유리" },
     ],
     background: "assets/sku/room-bg.webp",
-    defaults: { sz: "12-22", t: "3연동", a: "paint_white", d: "wh", g: "cl", h: "st", sub: "od", gt: "general" },
-    // 가격표(2026-08-18 대표 확정)
+    defaults: { sz: "12-22", t: "3연동", finish: "paint", d: "wh", g: "cl", h: "st", sub: "od", gt: "general" },
+    // 가격표(2026-08-18 대표 확정, 2026-08-19 프레임→중문 마감/색상 통합)
     pricing: {
       base: { "3연동": 990000, "원슬라이딩": 890000, "스윙폴딩": 990000, "여닫이": 990000 },
       baseSizeMM: { w: 1100, h: 2000 },
       sizePer100mm: { w: 10000, h: 10000 },
-      // 프레임 색상(finish+color 6종 통합) — 도장 기준 0원, 필름 +3만원(색상별 추가금은 없음)
-      frameColor: { paint_white: 0, paint_gray: 0, paint_black: 0, film_white: 30000, film_gray: 30000, film_black: 30000, film_wood: 30000 },
-      doorColor: { wh: 0, gr: 0, bk: 0 },
+      // 중문 마감 — 도장 기준 0원, 필름 +3만원(색상과 무관하게 마감 자체에 붙는 추가금)
+      finish: { paint: 0, film: 30000 },
+      doorColor: { wh: 0, gr: 0, bk: 0, wd: 0 },
       glassType: { general: 0, tempered: 40000 },
       glassPattern: { cl: 0, br: 20000, mo: 40000, mi: 40000, sa: 100000, fa: 300000 },
       muntinEach: 30000,
