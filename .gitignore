@@ -56,7 +56,7 @@ _받은패치/
 # 어떤 경로에 있든 절대 커밋되지 않게 방어. CLAUDE.md 4-5항 참조.
 *.env
 !.env.example
-openai.env
+*.envrc
 API?KEY*
 *api*key*
 *.pem
