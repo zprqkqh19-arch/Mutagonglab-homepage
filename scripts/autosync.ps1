@@ -34,6 +34,35 @@ try {
     git fetch --quiet origin 2>$null
     if ($LASTEXITCODE -ne 0) { Log "건너뜀 — 원격 접속 실패(네트워크?)"; exit 0 }
 
+    # 0-A) 낡은 기기 감지 — 오래 꺼져 있던 기기가 낡은 내용을 자동 커밋해 충돌내는 것 방지
+    $behind = 0
+    $bh = git rev-list --count "HEAD..origin/$br" 2>$null
+    if ($bh -match '^\d+$') { $behind = [int]$bh }
+    if ($behind -ge 20 -and (git status --porcelain)) {
+        New-Item $halt -ItemType File -Force *>$null
+        @"
+자동 동기화를 멈췄습니다 — 이 기기가 오래 꺼져 있었습니다.
+
+이 기기는 다른 기기보다 커밋 $behind 개만큼 뒤처져 있는데,
+저장하지 않은 변경까지 남아 있습니다.
+
+이대로 자동 커밋하면 최신 작업과 충돌하거나 덮어쓸 수 있어서
+아무것도 건드리지 않고 멈췄습니다. (작업 내용은 그대로 있습니다.)
+
+클로드에게 이 파일을 보여주시면 정리해 드립니다.
+직접 하시려면 PowerShell 에서:
+
+  cd $repo
+  git status
+
+정리가 끝나면 아래를 실행하면 자동 동기화가 다시 시작됩니다:
+
+  Remove-Item .git\AUTOSYNC_HALTED, "_동기화_중단됨_읽어보세요.txt"
+"@ | Set-Content $note -Encoding UTF8
+        Log "⚠️ 낡은 기기 — 원격보다 $behind 커밋 뒤처진 상태에서 로컬 변경 발견. 자동 커밋 중단."
+        exit 1
+    }
+
     # 0) 받은 패치 자동 반영 (_받은패치\ 에 넣어두면 여기서 풀어 적용)
     $inbox = Join-Path $repo '_받은패치'
     $done  = Join-Path $inbox '처리완료'
@@ -88,7 +117,7 @@ try {
     if ($LASTEXITCODE -ne 0) {
         git rebase --abort 2>$null
         New-Item $halt -ItemType File -Force *>$null
-        @'
+        @"
 자동 동기화가 멈췄습니다.
 
 같은 파일을 두 기기에서 동시에 고쳐서 Git이 스스로 합칠 수 없는 상태입니다.
@@ -97,13 +126,13 @@ try {
 클로드에게 이 파일을 보여주시면 정리해 드립니다.
 직접 하시려면 PowerShell 에서:
 
-  cd C:\Users\FORYOUCOM\dev\Mutagonglab-homepage
+  cd $repo
   git status
 
 정리가 끝나면 아래를 실행하면 자동 동기화가 다시 시작됩니다:
 
   Remove-Item .git\AUTOSYNC_HALTED, "_동기화_중단됨_읽어보세요.txt"
-'@ | Set-Content $note -Encoding UTF8
+"@ | Set-Content $note -Encoding UTF8
         Log "⚠️ 충돌 — 자동 동기화 중단"
         exit 1
     }

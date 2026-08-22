@@ -34,6 +34,34 @@ BR="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
 
 git fetch --quiet origin 2>/dev/null || { log "건너뜀 — 원격 접속 실패(네트워크?)"; exit 0; }
 
+# 0-A) 낡은 기기 감지 — 오래 꺼져 있던 기기가 낡은 내용을 자동 커밋해 충돌내는 것 방지
+BEHIND="$(git rev-list --count "HEAD..origin/$BR" 2>/dev/null || echo 0)"
+case "$BEHIND" in ''|*[!0-9]*) BEHIND=0 ;; esac
+if [ "$BEHIND" -ge 20 ] && [ -n "$(git status --porcelain)" ]; then
+  touch "$HALT"
+  cat > "$NOTE" <<TXT
+자동 동기화를 멈췄습니다 — 이 기기가 오래 꺼져 있었습니다.
+
+이 기기는 다른 기기보다 커밋 $BEHIND 개만큼 뒤처져 있는데,
+저장하지 않은 변경까지 남아 있습니다.
+
+이대로 자동 커밋하면 최신 작업과 충돌하거나 덮어쓸 수 있어서
+아무것도 건드리지 않고 멈췄습니다. (작업 내용은 그대로 있습니다.)
+
+클로드에게 이 파일을 보여주시면 정리해 드립니다.
+직접 하시려면 터미널에서:
+
+  cd "$REPO"
+  git status
+
+정리가 끝나면 아래를 실행하면 자동 동기화가 다시 시작됩니다:
+
+  rm .git/AUTOSYNC_HALTED "_동기화_중단됨_읽어보세요.txt"
+TXT
+  log "⚠️ 낡은 기기 — 원격보다 $BEHIND 커밋 뒤처진 상태에서 로컬 변경 발견. 자동 커밋 중단."
+  exit 1
+fi
+
 # 0) 받은 패치 자동 반영 (_받은패치/ 에 넣어두면 여기서 풀어 적용)
 INBOX="$REPO/_받은패치"
 mkdir -p "$INBOX/처리완료"
@@ -89,7 +117,7 @@ fi
 if ! git pull --rebase --autostash --quiet 2>>"$LOG"; then
   git rebase --abort 2>/dev/null
   touch "$HALT"
-  cat > "$NOTE" <<'TXT'
+  cat > "$NOTE" <<TXT
 자동 동기화가 멈췄습니다.
 
 같은 파일을 두 기기에서 동시에 고쳐서 Git이 스스로 합칠 수 없는 상태입니다.
@@ -98,7 +126,7 @@ if ! git pull --rebase --autostash --quiet 2>>"$LOG"; then
 클로드에게 이 파일을 보여주시면 정리해 드립니다.
 직접 하시려면 터미널에서:
 
-  cd ~/dev/Mutagonglab-homepage
+  cd "$REPO"
   git status
 
 정리가 끝나면 아래를 실행하면 자동 동기화가 다시 시작됩니다:

@@ -23,18 +23,30 @@
 |---|---|
 | 저장소 | `github.com/zprqkqh19-arch/Mutagonglab-homepage` |
 | 맥북 | `~/dev/Mutagonglab-homepage` |
-| 데스크탑(Windows) | `C:\Users\FORYOUCOM\dev\Mutagonglab-homepage` (기기명 `SHIM`) |
+| 데스크탑 A (현재 주력) | `C:\Users\FORYOUCOM\dev\Mutagonglab-homepage` · 기기명 `SHIM` |
+| 데스크탑 B (이전 PC) | `C:\Users\blood\dev\Mutagonglab-homepage` · 기기명 `DESKTOP-CR83K33` |
 | 사이트 구성 | 정적 사이트 (HTML/CSS/JS, 빌드 도구 없음) |
 | 주요 파일 | `index.html`(무타공랩 홈, 루트), `hyedaum.html`(혜다움 홈), `product.html`, `styles.css`, `products-data.js`, `configurator.js`, `customizer-embed.js` |
 | SKU 도면 | `assets/sku/12-22/` (SVG 542개) |
 
 ## 3. 자동 동기화
 
-- 두 기기 모두 백그라운드에서 10분마다 `scripts/autosync.sh` (맥) / `scripts/autosync.ps1` (Windows) 실행
+> **기기 3대 운영 주의.** 2026-08-22 부터 맥북·데스크탑 A·데스크탑 B 세 대를 오간다.
+> autosync 는 각 기기에서 독립적으로 10분마다 돌기 때문에, 오래 안 켠 기기를 다시 켜면
+> 그 기기의 낡은 작업이 자동 커밋되어 충돌을 일으킬 수 있다.
+> **한동안 안 쓴 기기를 켤 때는 그 기기에서 먼저 `start` 스크립트를 돌려 상태를 확인한다.**
+> 쓰지 않을 기기는 autosync 를 꺼둔다 (Windows: `Unregister-ScheduledTask -TaskName 'MutagonglabAutoSync' -Confirm:$false`).
+
+
+- 각 기기에서 백그라운드로 10분마다 `scripts/autosync.sh` (맥) / `scripts/autosync.ps1` (Windows) 실행
 - 하는 일: 로컬 변경 자동 커밋 → `git pull --rebase` → `git push`
 - 기록: `.git/autosync.log`
+- **낡은 기기 안전장치 (2026-08-22 추가).** 이 기기가 원격보다 **20커밋 이상 뒤처진 상태에서 저장 안 된 변경까지 있으면**,
+  자동 커밋을 하지 않고 멈춘다. 오래 꺼져 있던 기기가 낡은 내용을 올려 충돌내는 것을 막기 위한 것이다.
+  멈추면 아래 충돌과 동일하게 `AUTOSYNC_HALTED` 와 안내 파일이 생긴다.
 - **충돌 시 자동으로 멈춘다.** `.git/AUTOSYNC_HALTED` 와 `_동기화_중단됨_읽어보세요.txt` 가 생긴다.
   사용자가 이 파일을 가져오면 양쪽 내용을 모두 살리는 방향으로 정리하고, 두 파일을 지워 재개시킨다.
+- 안내 파일에 적히는 복구 경로는 실행 중인 기기의 실제 경로로 자동 계산된다 (하드코딩 아님).
 
 ## 4. 하지 말 것 — 과거에 실제로 사고가 났던 것들
 
