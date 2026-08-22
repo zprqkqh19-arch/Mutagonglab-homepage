@@ -97,7 +97,7 @@ try {
 클로드에게 이 파일을 보여주시면 정리해 드립니다.
 직접 하시려면 PowerShell 에서:
 
-  cd C:\Users\blood\dev\Mutagonglab-homepage
+  cd C:\Users\FORYOUCOM\dev\Mutagonglab-homepage
   git status
 
 정리가 끝나면 아래를 실행하면 자동 동기화가 다시 시작됩니다:
