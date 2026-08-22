@@ -23,7 +23,7 @@
 |---|---|
 | 저장소 | `github.com/zprqkqh19-arch/Mutagonglab-homepage` |
 | 맥북 | `~/dev/Mutagonglab-homepage` |
-| 데스크탑(Windows) | `C:\Users\blood\dev\Mutagonglab-homepage` |
+| 데스크탑(Windows) | `C:\Users\FORYOUCOM\dev\Mutagonglab-homepage` (기기명 `SHIM`) |
 | 사이트 구성 | 정적 사이트 (HTML/CSS/JS, 빌드 도구 없음) |
 | 주요 파일 | `index.html`(무타공랩 홈, 루트), `hyedaum.html`(혜다움 홈), `product.html`, `styles.css`, `products-data.js`, `configurator.js`, `customizer-embed.js` |
 | SKU 도면 | `assets/sku/12-22/` (SVG 542개) |
@@ -39,9 +39,10 @@
 ## 4. 하지 말 것 — 과거에 실제로 사고가 났던 것들
 
 1. **GitHub 웹 "Add files via upload" 금지.** 병합이 아니라 통째 덮어쓰기라 반대편 기기 작업이 소리 없이 사라진다. 2026년 8월에 이것 때문에 커밋 11개 분량의 작업이 유실됐다.
-2. **저장소를 클라우드 드라이브(OneDrive·iCloud·Dropbox) 안에 두지 않는다.** `.git` 내부 파일을 양쪽이 동시에 써서 저장소가 깨진다. 원래 `OneDrive\바탕 화면\...` 안에 있었고 그래서 깨졌다.
+2. **저장소를 클라우드 드라이브(OneDrive·구글 드라이브·iCloud·Dropbox) 안에 두지 않는다.** `.git` 내부 파일을 양쪽이 동시에 써서 저장소가 깨진다. 원래 `OneDrive\바탕 화면\...` 안에 있었고 그래서 깨졌다. 2026년 8월 데스크탑 교체 때도 구글 드라이브가 동기화한 `바탕화면\혜미\무타공랩\홈페이지` 사본이 36커밋 뒤처진 채 `.git` 이 깨진 상태로 발견됐다 — 폐기하고 `~\dev\` 밑으로 새로 clone 했다.
 3. **한글 파일명은 NFC 로만.** 맥에서 만든 NFD 이름은 Windows 에서 다른 파일로 취급된다. 양쪽 모두 `core.precomposeunicode=true` 설정됨.
 4. **작업 폴더를 새로 만들지 않는다.** 위 표의 경로만 쓴다. 중복 폴더가 갈라짐의 원인이었다.
+5. **API 키·자격증명을 저장소 안에 두지 않는다.** `바탕화면\혜미\API\` 에 `openai.env` 와 `API KEY.docx` 가 평문으로 있고 구글 드라이브로 동기화되고 있다. 이 파일들을 저장소 폴더나 `_받은패치\` 로 복사하면 autosync 가 그대로 커밋해 공개 저장소에 올린다. `혜미` 폴더 최상위에서 `git init` 하는 것도 금지 — 그 순간 `API` 폴더가 저장소에 포함된다. (2026-08-22 기준 공개 저장소 전체 히스토리 스캔 결과 유출 없음.)
 
 ## 5. 받은 패치 자동 반영
 

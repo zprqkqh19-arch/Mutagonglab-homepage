@@ -50,3 +50,17 @@ _이전버전_*/
 
 _받은패치/
 무타공랩_2차중간평가*.md
+
+
+# ── API 키·자격증명 (2026-08-22 추가) ──
+# 어떤 경로에 있든 절대 커밋되지 않게 방어. CLAUDE.md 4-5항 참조.
+*.env
+!.env.example
+openai.env
+API?KEY*
+*api*key*
+*.pem
+*.p12
+*.pfx
+credentials.json
+service-account*.json
